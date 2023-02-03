@@ -1,0 +1,234 @@
+:root {
+  --darkBlue-: #000b18;
+  --pink-: #ff70df;
+  --primary-: #ffffff;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  line-height: 1.5em;
+}
+
+
+
+body {
+  background-color: var(--darkBlue-);
+  font-family: "Poppins", "helvetica", "sans";
+}
+
+.move-to-right {
+  margin-left: 200px;
+}
+
+/* top navs */
+.top-nav > div > p,
+.top-nav i {
+  color: var(--primary-);
+  padding: 0;
+  margin: 0;
+}
+
+.wrapper {
+  padding: 10px 20px;
+}
+
+/* navs */
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.navs {
+  width: 100%;
+}
+
+.navs ul li a {
+  line-height: 50px;
+  height: 50px;
+  padding: 15px 15px 15px 20px;
+  color: var(--primary-);
+  text-decoration: none;
+  font-size: 12px;
+}
+.navs ul li {
+  transition: all 0.3s ease;
+}
+
+.navs ul li:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* sidebar and wrapper animation */
+.wrapper,
+.sidebar {
+  transition: 0.5s ease-in-out;
+}
+
+/* side bar */
+.sidebar .logo {
+  margin: 0 auto;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.sidebar .logo p {
+  font-weight: 700;
+}
+
+.sidebar .logo img {
+  width: 100px;
+  height: 100px;
+}
+
+.sidebar {
+  width: 200px;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: -200px;
+  background-color: #00172d;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  padding-top: 20px;
+}
+
+/* admin title */
+.adminTable h5 {
+  color: var(--primary-);
+}
+
+/* buttons */
+.btns {
+  border: none;
+  border-radius: 20px;
+  background-color: var(--pink-);
+  color: var(--primary-);
+  padding: 8px 15px;
+}
+
+/* modal for adding new admin */
+.modal-color {
+  background-color: #1f2f69;
+  width: 375px;
+  height: 550px;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+.modal-color .shape,
+.modal-color .car {
+  position: absolute;
+}
+
+.modal-color .shape {
+  bottom: 0px;
+  left: 0;
+}
+
+.modal-color .shape img {
+  width: 373px;
+  height: 365px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.modal-color .car {
+  top: 10px;
+  left: 0px;
+}
+
+.modal-color .car img {
+  width: 100%;
+  height: 260px;
+  opacity: 0.1;
+}
+.dark {
+  background-color: #424242;
+  width: 100%;
+}
+
+.gray {
+  color: #eeeeee;
+}
+
+.fullwidth {
+  width: 100%;
+}
+
+/* search and filter */
+.filterBtn,
+.live-search input[type="search"]  {
+  
+  font-size: 14px;
+  border: none;
+  outline: none;
+  border-radius: 2px;
+}
+
+.filterBtn {
+  padding: 8px 15px;
+  background-color: var(--pink-);
+  font-weight: 700;
+}
+
+.live-search input {
+  padding: 6px 14px;
+  margin-right: 10px;
+  background-color: #00172D;
+  color: var(--primary-)
+}
+
+/* admin accounts table */
+.displayAccount{
+    overflow-y: scroll;
+    width: 100%;
+    border-radius: 10px;
+    height: 400px;
+}
+
+.displayAccount .adminAcc-table{
+    width: 100%;
+}
+
+.displayAccount .adminAcc-table th, .displayAccount .adminAcc-table td{
+    font-size: 12px;
+    padding: 10px;
+    color: var(--primary-);
+}
+
+.displayAccount .adminAcc-table th{
+    background-color: rgba(238, 238, 238, 29%);
+}
+
+
+.displayAccount .adminAcc-table tr:nth-last-of-type(even){
+    background-color: #eeeeee0d;
+}
+
+/* clients Table */
+.displayAccount table .img{
+  width: 50px;
+  height: 50px;
+}
+
+.modal-client{
+  height: auto;
+}
+
+.small-font{
+  font-size: 13px;
+}
+
+/* client view docs */
+.docs {
+  text-align: center;
+}
+
+
