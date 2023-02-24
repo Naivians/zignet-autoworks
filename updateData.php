@@ -2,38 +2,30 @@
 
 include "includes/config.php";
 include "functions.php";
-include "includes/date.php";
 
 if (isset($_POST['editBtn'])) {
-
+    
     $adminName = $conn->escape_string($_POST['editName']);
     $role = $conn->escape_string($_POST['editRole']);
     $username = $conn->escape_string($_POST['editUsername']);
     $password = $conn->escape_string($_POST['editPassword']);
     $updateID = $conn->escape_string($_POST['updateID']);
 
-    $validateInput = [
-         $adminName,
-         $username,
-         $password
-    ];
+    $validateInput = [$adminName, $username, $password];
+    $validInputs = true; //counter
 
-    $validInputs = true;
-    
+
     // SERVER SIDE VALIDATIONS
-
     // check for empty fields
     foreach ($validateInput as $input) {
-
         if (strlen($input) == 0) {
             $validInputs = false;
         }
     }
 
     // check if role is empty
-    // check for the size if < 8 characters long
     if ($validInputs) {
-
+        // check for the length if < 8 characters long
         foreach ($validateInput as $input) {
             if (strlen($input) < 8) {
                 $validInputs = false;
@@ -43,21 +35,51 @@ if (isset($_POST['editBtn'])) {
         if ($validInputs) {
 
             $retrievedRole = '';
-            $verifyPassword = '';
-            
-            // set role if it's empty
-            if(strlen($role) == 0) {
-                $res = getById("admins", $updateID);
-                $res  = $res->fetch_assoc();
-                $retrievedRole = $res['role'];
-                $verifyPassword = $res['password'];
-            }else{
+            $hash = '';
 
+            $res = getById("admins", $updateID);
+            $res  = $res->fetch_assoc();
+            $retrievedAdmin = $res['adminName'];
+            $retrievedUsername = $res['username'];
+            $retrievedPass = $res['password'];
+
+
+            if ($password != $retrievedPass) {
+
+                $password = password_hash($password, PASSWORD_DEFAULT);
+                $res = updateAdminAccount($updateID, $adminName, $username, $password, $role);
+
+                if (!$res) {
+                    $response = [
+                        "status" => 500,
+                        "message" => "Failed to updated accounts. Please check your query"
+                    ];
+                    echo json_encode($response);
+                } else {
+                    $response = [
+                        "status" => 200,
+                        "message" => "Update Successfully"
+                    ];
+                    echo json_encode($response);
+                }
+            } else {
+
+                $res = updateAdminAccount($updateID, $adminName, $username, $password, $role);
+                if (!$res) {
+                    $response = [
+                        "status" => 500,
+                        "message" => "Failed to updated accounts. Please check your query"
+                    ];
+                    echo json_encode($response);
+                } else {
+                    $response = [
+                        "status" => 200,
+                        "message" => "Update Successfully"
+                    ];
+                    echo json_encode($response);
+                }
             }
-            // if not empty then update the role
-
         }
-
     } else {
         $response = [
             "status" => 422,
@@ -65,6 +87,4 @@ if (isset($_POST['editBtn'])) {
         ];
         echo json_encode($response);
     }
-
-
 }

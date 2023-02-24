@@ -1,3 +1,15 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['role'])) {
+    header("Location:login.php");
+} else {
+    if ($_SESSION['role'] != "super admin") {
+        header("Location:logout.php?access=1");
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -32,7 +44,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="" class="form-label text-secondary small-font">Role</label>
+                        <label for="" class="form-label text-light small-font">Role</label>
                         <input type="text" name="fname" id="viewRole" class="form-control text-dark" disabled>
                     </div>
 
@@ -46,10 +58,8 @@
                         <input type="password" name="fname" id="viewPassword" class="form-control text-dark" disabled>
                     </div>
 
-
-
                     <div class="mb-3">
-                        <label for="" class="form-label text-light small-font">Date Added</label>
+                        <label for="" class="form-label text-secondary small-font">Date Added</label>
                         <input type="text" name="fname" id="viewDateAdded" class="form-control text-dark" disabled>
                     </div>
 
@@ -199,18 +209,19 @@
         <div class="filter d-flex align-items-center mt-3 mb-3">
 
             <div class="live-search">
-                <input type="search" name="search" id="search" placeholder="Try Something">
+                <input type="search" id="search" placeholder="Try Something">
             </div>
 
             <!-- Example single danger button -->
             <div class="btn-group">
-                <select name="" id="filter" class="filterBtn form-select" onchange="filterBy()">
-                    <option disabled selected>Filter by</option>
-                    <option value="fname">First Name</option>
-                    <option value="lname">Last Name</option>
+                <select name="" id="columnName" class="filterBtn form-select" onchange="filterBy()">
+                    <option disabled selected>Sort by</option>
+                    <option value="adminName">Admin Name</option>
+                    <option value="username">Username</option>
                     <option value="role">Role</option>
                     <option value="dateAdded">Date Added</option>
                     <option value="dateModified">Date Modified</option>
+                    <option value="retrievedDate">Date Retrieved</option>
                 </select>
             </div>
 
@@ -219,6 +230,7 @@
         <div class="displayAccount mt-4" id="adminTable">
             <!-- table for admin accounts -->
         </div>
+
     </div>
 
     <!-- import sidebar -->
@@ -230,7 +242,32 @@
     <script>
         $(document).ready(() => {
             displayAccounts();
+
+            $("#search").keyup(function() {
+                var search = $(this).val();
+
+                if (search != "") {
+                    var data = {
+                        search: search,
+                        action: 1,
+                        btn: "adminSearch",
+                        table: "admins"
+                    }
+                    $.ajax({
+                        url: "displayData.php",
+                        method: "POST",
+                        data: data,
+                        success: (res, status) => {
+                            $("#adminTable").html(res);
+                        }
+                    });
+                } else {
+                    displayAccounts();
+                }
+
+            });
         });
+
 
         function updateAccount(e) {
             e.preventDefault();
@@ -244,13 +281,14 @@
             var editUsername = $("#editUsername").val();
             var editPassword = $("#editPassword").val();
 
+
             var data = {
                 updateID: $("#updateID").val(),
                 editName: $("#editName").val(),
                 editRole: $("#editRole").val(),
                 editUsername: $("#editUsername").val(),
                 editPassword: $("#editPassword").val(),
-                editBtn:1
+                editBtn: 1
             }
 
             // first client side validation
@@ -279,11 +317,18 @@
 
                             var response = JSON.parse(res);
 
-                            if (response.status != 200) {
+                            if (response.status == 422) {
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Oops...',
-                                    text: 'Failed to update accounts. Please check your query',
+                                    text: response.message,
+                                    // response.message
+                                });
+                            } else if (response.status == 500) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: response.message,
                                     // response.message
                                 });
                             } else {
@@ -294,6 +339,9 @@
                                     showConfirmButton: false,
                                     timer: 1500
                                 });
+                                // hide modal
+                                $("#editModal").modal('hide');
+                                displayAccounts();
                             }
                         }
                     });
@@ -301,11 +349,30 @@
             }
         }
 
+        function filterBy() {
+            let columnName = $("#columnName").val();
+
+            $.ajax({
+                url: "displayData.php",
+                method: "POST",
+                data: {
+                    filterBtn: 1,
+                    columnName: columnName
+                },
+                success: (res) => {
+                    $("#adminTable").html(res);
+                    $("#search").val('');
+                }
+            });
+        }
+
         function askDelete(id) {
 
             var data = {
                 id: id,
-                deleteBtn: 1
+                deletedAccBtn: "delete",
+                action:1,
+                table:"admins"
             };
 
             Swal.fire({
@@ -376,7 +443,8 @@
                         $("#editName").val(response.adminName);
                         $("#editUsername").val(response.username);
                         $("#editPassword").val(response.password);
-
+                        $("#editRole").val(response.role);
+                        // editRole
                         $("#editModal").modal('show');
                     } else {
                         Swal.fire({
@@ -391,6 +459,7 @@
         }
 
         function viewAdminAccount(id) {
+            
 
             $("#viewModal").modal('show');
             var data = {
@@ -402,10 +471,12 @@
                 method: "post",
                 data: data,
                 success: (res, status) => {
+                    
                     var response = JSON.parse(res);
 
+                    // // console.log(response);
                     if (status == "success") {
-
+                    
                         $("#viewName").val(response.adminName);
                         $("#viewPassword").val(response.password);
                         $("#viewDateAdded").val(response.dateAdded);

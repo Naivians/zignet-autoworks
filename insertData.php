@@ -11,24 +11,23 @@ if (isset($_POST['action'])) {
 
     // validation for server
     if ($role == "" || $password == "" || $adminName == "" || $username == "") {
-        
+
         $response = [
             "status" => 422,
             "message" => "all fields are mandatory"
         ];
         echo json_encode($response);
-
     } else {
 
         // check the leck of the username
-        if (strlen($username) < 7 || strlen($password) < 7) {
+        if (strlen($username) < 8 || strlen($password) < 8 || strlen($adminName) < 8) {
             $response = [
                 "status" => 422,
-                "message" => "Username and Password must be atleast 8 character long"
+                "message" => "Admin Name, Username and Password must be atleast 8 character long"
             ];
             echo json_encode($response);
         } else {
-            
+
             // check if username already exist
             if (checkForUsername($username) > 0) {
                 $response = [
@@ -56,7 +55,47 @@ if (isset($_POST['action'])) {
                     echo json_encode($response);
                 }
             }
-
         }
     }
+}
+
+
+if (isset($_POST['retrievedAction'])) {
+
+    $retrievedID = $conn->escape_string($_POST['retrievedID']);
+    $retrievedBtn = $conn->escape_string($_POST['retrievedBtn']);
+    $retrievalTable = $conn->escape_string($_POST['table']);
+
+    // retirieved by id
+    if($retrievedBtn == "retrievedAdmin"){
+        $res = retrievedById($retrievalTable, $retrievedID);
+        $retrieve = $res->fetch_assoc();
+
+        // insert this retrieved account to admin table
+        retrievedAdmin($retrieve['adminName'], $retrieve['username'], $retrieve['password'], $retrieve['role'], $retrieve['dateAdded'], $retrieve['dateModified']);
+
+        // delete that retrieved account to deleted admin account table
+        $res = deleteData($retrievalTable, $retrievedID);
+
+        if(!$res){
+
+
+            $response = [
+                "status" => 500,
+                "message" => "Failed to retrieved account. Please contact the developer to fix it!",
+            ];
+            echo json_encode($response);
+
+
+        }else{
+
+            $response = [
+                "status"=>200,
+                "message"=>"Retrieved Successfully!",
+            ];
+
+           echo json_encode($response);
+        }
+    }
+
 }

@@ -1,25 +1,11 @@
 <?php
-include "functions.php";
-$retrieved = getData("admins");
-
-$username = "";
-$password = "";
-
-if (isset($_POST['login'])) {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-
-    // check if the input fields is empty
-
-    if($username == ""){
-       $usernameError = "border: 1px solid red;";
-    }elseif($password == ""){
-        $passwordError = "border: 1px solid red;";
-    }else{
-        //  to be continue
-    }
-
+session_start();
+if (isset($_SESSION['role'])) {
+    header("location:supAdminAccount.php");
 }
+
+
+
 ?>
 
 <!DOCTYPE html>
@@ -31,7 +17,7 @@ if (isset($_POST['login'])) {
     <title>Home | Login to your Account</title>
 
     <!-- custom css -->
-    <link rel="stylesheet" href="css/login.css?v=<?=time()?>">
+    <link rel="stylesheet" href="css/login.css?v=<?= time() ?>">
 
     <!-- not working on external css -->
     <style>
@@ -43,51 +29,43 @@ if (isset($_POST['login'])) {
 </head>
 
 <body>
+    <?php
+    if (isset($_GET['unautorized_access'])) {
+    ?>
+        <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
+            <strong>Oppppp!</strong> <?= $_GET['unautorized_access'] ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <?php
+    }
+
+    ?>
     <div class="wrapper">
         <!-- NAVIGATIONS FOR LOGIN-->
-        <div class="navigation-bar">
+        <div class="navigation-bar ">
             <div class="logo">
                 <img src="./img/logo.svg" alt="">
             </div>
-            <div class="navs">
-                <ul>
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">Services</a></li>
-                    <li><a href="#">Contact Us</a></li>
-                </ul>
-            </div>
         </div>
-
         <!-- HERO DESIGN -->
         <section class="hero mt-5">
             <div class="hero-left">
                 <div class="hero-title">
                     <h1>Welcome to <span id="title">Zignet Autoworks</span> please login to your account</h1>
                 </div>
+
                 <div class="form">
-                    <form method="post" action="login.php">
+                    <form>
                         <!-- username -->
                         <div class="mb3">
-                            <input type="text" name="username" id="username" placeholder="Enter Username" autocomplete="off" style="<?=  $usernameError?>" 
-                            value="<?php if(isset($username)){echo $username;}?>">
+                            <input type="text" name="username" id="username" placeholder="Enter Username" autocomplete="off">
                         </div>
                         <!-- password -->
                         <div class="mb3">
-                            <input type="password" name="password" id="password" placeholder="Enter Password" autocomplete="off" style="<?= $passwordError?>"  value="<?php if(isset($password)){echo $password;}?>">
+                            <input type="password" name="password" id="password" placeholder="Enter Password" autocomplete="off">
                         </div>
 
-                        <!-- buttons -->
-                        <div class="mb3 mt-3">
-                            <button type="submit" name="login">
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                                <span></span> Login
-                            </button>
-                        </div>
-                        
-
+                        <button type="button"  onclick="login()">Login now!</button>
                     </form>
                 </div>
             </div>
@@ -133,6 +111,46 @@ if (isset($_POST['login'])) {
             //     prevEl: ".swiper-button-prev",
             // },
         });
+
+
+        function login() {
+            let username = $("#username").val();
+            let password = $("#password").val();
+
+            let data = {
+                username: username,
+                password: password,
+                loginBtn: 1
+            }
+
+            if (username != "" || password != "") {
+                $.ajax({
+                    url: "validate.php",
+                    method: "POST",
+                    data: data,
+
+                    success: (res) => {
+                        if (res == "login successfully") {
+                            window.location.reload();
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: res,
+                            });
+                        }
+                    }
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: "All fields are mandatory",
+                });
+            }
+
+        }
+
     </script>
 </body>
 
