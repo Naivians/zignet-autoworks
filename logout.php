@@ -3,7 +3,7 @@ include "functions.php";
 session_start();
 
 $LoginID = $_SESSION['currently_loginID'];
-logout($LoginID);
+// logout($LoginID);
 
 $_SESSION = [];
 session_unset();

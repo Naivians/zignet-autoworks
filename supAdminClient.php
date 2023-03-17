@@ -1,72 +1,52 @@
+<?php
+
+session_start();
+
+if (!isset($_SESSION['role'])) {
+    header("Location:login.php");
+} else {
+    if ($_SESSION['role'] != "super admin") {
+        header("Location:logout.php?access=1");
+    }
+}
+
+include "includes/config.php";
+$errorMessage = array();
+// customer
+if (isset($_POST['create']) && isset($_FILES['docs'])) {
+
+    // validate for empty fields
+    $customerName = $conn->escape_string($_POST['customerName']);
+    $csNumber = $conn->escape_string($_POST['csNumber']);
+    $company = $conn->escape_string($_POST['company']);
+    $model = $conn->escape_string($_POST['model']);
+
+    if ($customerName == "" || $csNumber == "" || $company == "" || $model == "") {
+        $errorMessage['emptyFieldsError'] = "All Fields is required!";
+    }
+
+    // file info
+    $img_name = $_FILES['docs']['name'];
+    $tmp_name = $_FILES['docs']['tmp_name'];
+    $type = $_FILES['docs']['type'];
+    $size = $_FILES['docs']['size'];
+    $error = $_FILES['docs']['error'];
+}
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <?php include "includes/header.php"; ?>
     <link rel="stylesheet" href="css/dashboard.css?v=<?= time(); ?>">
-
-
     <title>Admin | Client</title>
 </head>
 
 <body>
-
-    <!-- Add new Client Modal -->
-    <div class="modal fade" id="adminModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog ">
-            <div class="modal-content modal-color modal-client">
-                <div class="car">
-                    <img src="img/car3.png" alt="cars">
-                </div>
-
-                <div class="shape">
-                    <img src="img/Rectangle.png" alt="rectangle shape">
-                </div>
-                <h5 class="text-center text-light mt-2">Add New Client</h5>
-                <form>
-                    <div class="modal-body">
-                        <!-- form here -->
-                        <div class="mb-3">
-                            <label for="" class="form-label gray small-font">Customer Name</label>
-                            <input type="text" name="fname" id="customerName" placeholder="John Doe" class="form-control text-dark">
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="" class="form-label text-light small-font">CS Number</label>
-                            <input type="text" name="fname" id="csNumber" placeholder="SSEDRFF" class="form-control text-dark">
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="" class="form-label text-light small-font">Car Model</label>
-                            <input type="text" name="fname" id="model" placeholder="GDHBNFF" class="form-control text-dark">
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="" class="form-label text-secondary small-font">Company Name</label>
-
-                            <select class="form-select small-font" aria-label="Default select example" id="company">
-                                <option selected disabled>Select Company</option>
-                                <option value="1">Lexus</option>
-                                <option value="2">BMW</option>
-                            </select>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="" class="form-label text-secondary small-font">Upload Docs</label>
-                            <input type="file" name="" id="docs" class="form-control">
-                        </div>
-
-                        <div class="mt-4 mb-2">
-                            <button class="btns fullwidth mb-2 small-font" onclick="addCustomer()">Create</button>
-                            <button type="button" class="btns fullwidth dark small-font" data-bs-dismiss="modal">Close</button>
-                        </div>
-
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
+    
     <!-- Edit Modal -->
     <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog ">
@@ -119,7 +99,6 @@
     </div>
 
 
-
     <!-- View Client Modal-->
     <div class="modal fade " id="viewModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <!-- move -->
@@ -163,19 +142,18 @@
     <div class="wrapper" id="wrapper">
         <!-- import TopNavbar -->
         <?php include "includes/navBar.php"; ?>
-
+    
         <div class="adminTable d-flex justify-content-between align-items-center mt-4">
             <h5>Customers Account</h5>
-            <button data-bs-toggle="modal" data-bs-target="#adminModal" class="btns">Add New Client</button>
+            <a href="admin_insert_client.php" class="btns psuedo_design">Add New Client</a>
         </div>
-
+        
         <!-- live search -->
         <div class="filter d-flex align-items-center mt-3 mb-3">
 
             <div class="live-search">
                 <input type="search" name="search" id="search" placeholder="Try Something">
             </div>
-
 
             <!-- Example single danger button -->
             <div class="btn-group">
@@ -188,7 +166,6 @@
                     <option value="dateModified">Date Modified</option>
                 </select>
             </div>
-
         </div>
 
         <div class="displayAccount mt-4" id="adminTable">
@@ -250,7 +227,7 @@
     <script src="includes/app.js"></script>
 
 
-     <script>
+    <script>
         $(document).ready(() => {
             displayAccounts();
 
@@ -278,8 +255,7 @@
 
             });
         });
-
-
+        
         function updateAccount(e) {
             e.preventDefault();
             // editName
@@ -382,8 +358,8 @@
             var data = {
                 id: id,
                 deletedAccBtn: "delete",
-                action:1,
-                table:"admins"
+                action: 1,
+                table: "admins"
             };
 
             Swal.fire({
@@ -470,7 +446,7 @@
         }
 
         function viewAdminAccount(id) {
-            
+
 
             $("#viewModal").modal('show');
             var data = {
@@ -482,12 +458,12 @@
                 method: "post",
                 data: data,
                 success: (res, status) => {
-                    
+
                     var response = JSON.parse(res);
 
                     // // console.log(response);
                     if (status == "success") {
-                    
+
                         $("#viewName").val(response.adminName);
                         $("#viewPassword").val(response.password);
                         $("#viewDateAdded").val(response.dateAdded);
@@ -520,64 +496,6 @@
                     $("#adminTable").html(res);
                 }
             });
-        }
-
-    
-        function addCustomer() {
-            // e.preventDefault();
-            var customerName = $("#customerName").val();
-            var csNumber = $("#csNumber").val();
-            var model = $("#model").val();
-            var company = $("#company").val();
-            var docs = $("#docs").val();
-
-            var data = {
-                customerName: $("#customerName").val(),
-                csNumber: $("#csNumber").val(),
-                company: $("#company").val(),
-                model: $("#username").val(),
-                docs: $("#docs").val(),
-                addCustomerBtn: 1
-            }
-
-            // client side validations
-            if (name == "" || pass == "" || role == null) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'all fields are mandatory',
-                });
-            } else {
-                // process data
-                $.ajax({
-                    url: "insertData.php",
-                    method: "post",
-                    data: data,
-                    success: (res) => {
-
-                        var response = JSON.parse(res);
-                        if (response.status == 200) {
-                            Swal.fire({
-                                position: 'top-center',
-                                icon: 'success',
-                                title: response.message,
-                                showConfirmButton: false,
-                                timer: 1500
-                            });
-                            reset();
-                            $("#adminModal").modal("hide");
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Oops...',
-                                text: response.message,
-                            });
-                        }
-
-                        displayAccounts();
-                    }
-                });
-            }
         }
     </script>
 

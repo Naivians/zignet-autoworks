@@ -67,7 +67,7 @@ if (isset($_POST['retrievedAction'])) {
     $retrievalTable = $conn->escape_string($_POST['table']);
 
     // retirieved by id
-    if($retrievedBtn == "retrievedAdmin"){
+    if ($retrievedBtn == "retrievedAdmin") {
         $res = retrievedById($retrievalTable, $retrievedID);
         $retrieve = $res->fetch_assoc();
 
@@ -77,7 +77,7 @@ if (isset($_POST['retrievedAction'])) {
         // delete that retrieved account to deleted admin account table
         $res = deleteData($retrievalTable, $retrievedID);
 
-        if(!$res){
+        if (!$res) {
 
 
             $response = [
@@ -85,17 +85,15 @@ if (isset($_POST['retrievedAction'])) {
                 "message" => "Failed to retrieved account. Please contact the developer to fix it!",
             ];
             echo json_encode($response);
-
-
-        }else{
+        } else {
 
             $response = [
-                "status"=>200,
-                "message"=>"Retrieved Successfully!",
+                "status" => 200,
+                "message" => "Retrieved Successfully!",
             ];
 
-           echo json_encode($response);
+            echo json_encode($response);
         }
     }
-
 }
+

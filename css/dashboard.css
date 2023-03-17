@@ -30,6 +30,14 @@ body {
   margin: 0;
 }
 
+.psuedo_design{
+  text-decoration: none;
+  cursor: pointer;
+}
+.pad{
+  padding: 11px 15px !important;
+}
+
 .wrapper {
   padding: 10px 20px;
 }
@@ -231,4 +239,8 @@ ul {
   text-align: center;
 }
 
-
+/* insert client design */
+.short_width{
+  width: 40%;
+  margin: 0  auto;
+}

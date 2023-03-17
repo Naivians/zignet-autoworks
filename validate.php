@@ -27,7 +27,7 @@ if (isset($_POST['loginBtn'])) {
 
             // save login history
             $lastInsertId = loginHistory($res['id'], $res['adminName'], $res['username'], $res['role']);
-            $_SESSION['currently_loginID'] = $lastInsertId;
+            // $_SESSION['currently_loginID'] = $lastInsertId;
 
             echo "login successfully";
 
