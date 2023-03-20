@@ -76,7 +76,7 @@ function retrievedAdmin($adminName, $username, $password, $role, $dateAdded, $da
 
     $sql = "INSERT INTO `admins` (`adminName`, `role`, `username`, `password`, `dateAdded`,`dateModified`,`retrievedDate`) VALUES(?,?,?,?,?,?,?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sssssss", $adminName, $role, $username, $password, $dateAdded, $dateModified,$today);
+    $stmt->bind_param("sssssss", $adminName, $role, $username, $password, $dateAdded, $dateModified, $today);
 
     // return true of false
     return $stmt->execute();
@@ -126,6 +126,27 @@ function getDeletedAdminaccount($adminID, $adminName, $role, $username, $passwor
     $stmt->execute();
 }
 
+function insert_client_data($img_path, $customerName, $csNumber, $model, $company)
+{
+    // 	
+    global $conn, $today;
+    $sql = "INSERT INTO `customer` (`img_path`, `customerName`, `csNumber`, `model`, `company`, `dateAdded`) VALUES(?, ?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ssssss",$img_path, $customerName, $csNumber, $model, $company, $today);
+    
+    return $stmt->execute();
+}
+// customerName	csNumber	paymentStatus	dateAdded	
+function insert_client_transactions($reciept, $customerName, $csNumber, $paymentStatus)
+{
+    // 	
+    global $conn, $today;
+    $sql = "INSERT INTO `transactions_history` (`reciept`, `customerName`, `csNumber`,`paymentStatus`, `dateAdded`) VALUES(?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("sssss",$reciept, $customerName, $csNumber, $paymentStatus, $today);
+    
+    return $stmt->execute();
+}
 
 // END OF INSERTION
 
@@ -171,12 +192,11 @@ function deleteData($table, $id)
         $stmt->bind_param('i', $id);
         return $stmt->execute();
     }
-    
+
     if ($table == "deleted_admin_account") {
         $sql = "DELETE FROM `$table` WHERE `adminID` = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param('i', $id);
         return $stmt->execute();
     }
-
 }

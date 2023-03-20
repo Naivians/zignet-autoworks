@@ -11,10 +11,12 @@ if (!isset($_SESSION['role'])) {
 }
 
 include "includes/config.php";
+include "functions.php";
 $errorMessage = array();
 $customer_name = '';
 $cs_number = '';
 $models = '';
+
 // customer
 if (isset($_POST['create'])) {
 
@@ -25,17 +27,15 @@ if (isset($_POST['create'])) {
     $model = $conn->escape_string($_POST['model']);
 
 
-
-
     if ($customerName == "") {
         $errorMessage['Cliet_empty_error'] = "Client is required!";
-    }else{
+    } else {
         $customer_name = $customerName;
     }
 
     if ($csNumber == "") {
         $errorMessage['cs_empty_error'] = "CS Number is required!";
-    }else{
+    } else {
         $cs_number = $csNumber;
     }
 
@@ -45,17 +45,19 @@ if (isset($_POST['create'])) {
 
     if ($model == "") {
         $errorMessage['model_empty_error'] = "Model is required!";
-    }else{
+    } else {
         $models = $model;
     }
 
     // file info declarations
     define("MB", 1000000);
+
     $upload_error = array(
         1 => "File size should not be exceed to 1mb",
         4 => "No file was uploaded.",
-        3 => "",
+        3 => "You can't upload file of this type!",
         "unknown_error" => "Unknown error occured!",
+        "file_upload_error" => "Failed to save to the right directory!",
     );
 
     $allowed_img_extentions = ['jpg', "jpeg", "png"];
@@ -71,23 +73,48 @@ if (isset($_POST['create'])) {
     if ($img_error == 0) {
         if ($img_size > MB) {
             $errorMessage['max_upload_size_error'] = $upload_error[1];
-        }else{
+        } else {
             $img_extentions = pathinfo($img_name, PATHINFO_EXTENSION);
+            $img_extentions = strtolower($img_extentions);
 
+            if (!in_array($img_extentions, $allowed_img_extentions)) {
+                $errorMessage['ext_not_allowed'] = $upload_error[3];
+            }
         }
-    } 
-    else {
-        if($img_error == 4){
+    } else {
+        if ($img_error == 4) {
             $errorMessage['no_file_upload_error'] = $upload_error[4];
-        }else{
-            $errorMessage['no_file_upload_error'] = $upload_error["unknown_error"];
+        } else {
+            $errorMessage['unknown_error'] = $upload_error["unknown_error"];
         }
     }
-    
+
+    // if no error
+    if (count($errorMessage) === 0) {
+        // upload files, get all information then insert to DB
+        $new_img_name = uniqid("IMG-", true) . "." . $img_extentions;
+        $img_upload_path = 'uploads/' . $new_img_name;
+
+        if (!move_uploaded_file($tmp_name, $img_upload_path)) {
+            $errorMessage['file_upload_error'] = $upload_error["file_upload_error"];
+        } else {
+            // insert to client and transactions
+            insert_client_data($new_img_name, $customerName, $csNumber, $model, $company);
+
+            // insert transactions
+            
+            insert_client_transactions("default_img.jpg", $customerName, $csNumber, "unpaid");
+
+            $_SESSION['success'] = "Successfully added new client";
+            header("location:supAdminClient.php");
+            exit;
+        }
+    }
 }
 
 
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -132,17 +159,23 @@ if (isset($_POST['create'])) {
                             <!-- form here -->
                             <div class="mb-3">
                                 <label for="" class="form-label text-dark small-font">Customer Name</label>
-                                <input type="text" name="customerName" id="customerName" placeholder="John Doe" class="form-control text-dark" value="<?php if(isset($customer_name)){echo $customer_name;} ?>">
+                                <input type="text" name="customerName" id="customerName" placeholder="John Doe" class="form-control text-dark" value="<?php if (isset($customer_name)) {
+                                                                                                                                                            echo $customer_name;
+                                                                                                                                                        } ?>">
                             </div>
 
                             <div class="mb-3">
                                 <label for="" class="form-label text-dark small-font">CS Number</label>
-                                <input type="text" name="csNumber" id="csNumber" placeholder="SSEDRFF" class="form-control text-dark" value="<?php if(isset($cs_number)){echo $cs_number;} ?>">
+                                <input type="text" name="csNumber" id="csNumber" placeholder="SSEDRFF" class="form-control text-dark" value="<?php if (isset($cs_number)) {
+                                                                                                                                                    echo $cs_number;
+                                                                                                                                                } ?>">
                             </div>
 
                             <div class="mb-3">
                                 <label for="" class="form-label text-dark small-font">Car Model</label>
-                                <input type="text" name="model" id="model" placeholder="GDHBNFF" class="form-control text-dark" value="<?php if(isset($models)){echo $models;} ?>">
+                                <input type="text" name="model" id="model" placeholder="GDHBNFF" class="form-control text-dark" value="<?php if (isset($models)) {
+                                                                                                                                            echo $models;
+                                                                                                                                        } ?>">
                             </div>
 
                             <div class="mb-3">

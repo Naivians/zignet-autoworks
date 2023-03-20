@@ -11,28 +11,6 @@ if (!isset($_SESSION['role'])) {
 }
 
 include "includes/config.php";
-$errorMessage = array();
-// customer
-if (isset($_POST['create']) && isset($_FILES['docs'])) {
-
-    // validate for empty fields
-    $customerName = $conn->escape_string($_POST['customerName']);
-    $csNumber = $conn->escape_string($_POST['csNumber']);
-    $company = $conn->escape_string($_POST['company']);
-    $model = $conn->escape_string($_POST['model']);
-
-    if ($customerName == "" || $csNumber == "" || $company == "" || $model == "") {
-        $errorMessage['emptyFieldsError'] = "All Fields is required!";
-    }
-
-    // file info
-    $img_name = $_FILES['docs']['name'];
-    $tmp_name = $_FILES['docs']['tmp_name'];
-    $type = $_FILES['docs']['type'];
-    $size = $_FILES['docs']['size'];
-    $error = $_FILES['docs']['error'];
-}
-
 
 ?>
 
@@ -46,7 +24,8 @@ if (isset($_POST['create']) && isset($_FILES['docs'])) {
 </head>
 
 <body>
-    
+
+
     <!-- Edit Modal -->
     <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog ">
@@ -137,17 +116,39 @@ if (isset($_POST['create']) && isset($_FILES['docs'])) {
             </div>
         </div>
     </div>
-
+    <!-- $_SESSION['success'] -->
     <!-- main content -->
     <div class="wrapper" id="wrapper">
         <!-- import TopNavbar -->
         <?php include "includes/navBar.php"; ?>
-    
+
         <div class="adminTable d-flex justify-content-between align-items-center mt-4">
             <h5>Customers Account</h5>
+            <?php
+            if (isset($_SESSION['failed_to_insert'])) {
+            ?>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <strong>Error!</strong> <?= $_SESSION['failed_to_insert'] ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php
+            }
+
+            if (isset($_SESSION['success'])) {
+            ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <strong>Success!</strong> <?= $_SESSION['success'] ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php
+            }
+            unset($_SESSION['failed_to_insert']);
+            unset($_SESSION['success']);
+            ?>
+
             <a href="admin_insert_client.php" class="btns psuedo_design">Add New Client</a>
         </div>
-        
+
         <!-- live search -->
         <div class="filter d-flex align-items-center mt-3 mb-3">
 
@@ -168,7 +169,7 @@ if (isset($_POST['create']) && isset($_FILES['docs'])) {
             </div>
         </div>
 
-        <div class="displayAccount mt-4" id="adminTable">
+        <div class="displayAccount mt-4" id="client_table">
             <!-- table for admin accounts -->
             <table class="adminAcc-table">
                 <thead>
@@ -226,11 +227,20 @@ if (isset($_POST['create']) && isset($_FILES['docs'])) {
     <?php include "includes/sidebar.php"; ?>
     <script src="includes/app.js"></script>
 
-
     <script>
         $(document).ready(() => {
             displayAccounts();
 
+            // nice scroll js
+            $("#client_table").niceScroll({
+                cursorwidth: "8px",
+                autohidemode: false,
+                zindex: 999,
+                cursorcolor: "#FF70DF",
+                cursorborder: "none",
+            });
+
+            // live search
             $("#search").keyup(function() {
                 var search = $(this).val();
 
@@ -246,7 +256,7 @@ if (isset($_POST['create']) && isset($_FILES['docs'])) {
                         method: "POST",
                         data: data,
                         success: (res, status) => {
-                            $("#adminTable").html(res);
+                            $("#client_table").html(res);
                         }
                     });
                 } else {
@@ -255,7 +265,7 @@ if (isset($_POST['create']) && isset($_FILES['docs'])) {
 
             });
         });
-        
+
         function updateAccount(e) {
             e.preventDefault();
             // editName
@@ -490,10 +500,10 @@ if (isset($_POST['create']) && isset($_FILES['docs'])) {
                 url: "displayData.php",
                 method: "post",
                 data: {
-                    getBtn: 1
+                    display_client: 1
                 },
                 success: (res) => {
-                    $("#adminTable").html(res);
+                    $("#client_table").html(res);
                 }
             });
         }

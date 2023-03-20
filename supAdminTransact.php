@@ -60,48 +60,8 @@
         </div>
 
 
-        <div class="displayAccount mt-4" id="adminTable">
-            <!-- table for admin accounts -->
-            <table class="adminAcc-table">
-                <thead>
-                    <tr>
-                        <th>Documents</th>
-                        <th>Client's Name</th>
-                        <th>CS Nmber</th>
-                        <th>Model</th>
-                        <th>Company</th>
-                        <th>Payment Status</th>
-                        <th>Date Added</th>
-                        <th>Date Modified</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            <img src="img/car1.png" alt="cars" class="img">
-                        </td>
-                        <td>John Doe</td>
-                        <td>SSHDE</td>
-                        <td>HESST</td>
-                        <td>Lexus</td>
-                        <td><span class="badge text-bg-success">Paid</span></td>
-                        <td>1/1/23</td>
-                        <td></td>
-                        <td>
+        <div class="displayAccount mt-4" id="transaction_table">
 
-                            <!-- three btns for view, edit, and delete -->
-
-                            <!-- view -->
-                            <button class="btn" data-bs-toggle="modal" data-bs-target="#viewModal">
-                                <img src="icons/view.svg" alt="view image" class="text-success">
-                            </button>
-
-                        </td>
-                    </tr>
-
-                </tbody>
-            </table>
         </div>
     </div>
     <!-- import sidebar -->
@@ -110,6 +70,288 @@
 
     <script src="includes/app.js"></script>
 
+    <script>
+        $(document).ready(() => {
+            displayAccounts();
+
+            // nice scroll js
+            $("#transction_table").niceScroll({
+                cursorwidth: "8px",
+                autohidemode: false,
+                zindex: 999,
+                cursorcolor: "#FF70DF",
+                cursorborder: "none",
+            });
+
+            // live search
+            $("#search").keyup(function() {
+                var search = $(this).val();
+
+                if (search != "") {
+                    var data = {
+                        search: search,
+                        action: 1,
+                        btn: "adminSearch",
+                        table: "admins"
+                    }
+                    $.ajax({
+                        url: "displayData.php",
+                        method: "POST",
+                        data: data,
+                        success: (res, status) => {
+                            $("#transction_table").html(res);
+                        }
+                    });
+                } else {
+                    displayAccounts();
+                }
+
+            });
+        });
+
+        function updateAccount(e) {
+            e.preventDefault();
+            // editName
+            // editRole
+            // editUsername
+            // editPassword
+
+            var editName = $("#editName").val();
+            var editRole = $("#editRole").val();
+            var editUsername = $("#editUsername").val();
+            var editPassword = $("#editPassword").val();
+
+
+            var data = {
+                updateID: $("#updateID").val(),
+                editName: $("#editName").val(),
+                editRole: $("#editRole").val(),
+                editUsername: $("#editUsername").val(),
+                editPassword: $("#editPassword").val(),
+                editBtn: 1
+            }
+
+            // first client side validation
+
+            if (editName.length == 0 || editUsername.length == 0 || editPassword.length == 0) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'All fields are mandatory',
+                });
+            } else {
+                // check the size of a string
+                if (editName.length < 8 || editUsername.length < 8 || editPassword.length < 8) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Name, Username & Password must be atleast 8 characters long',
+                    });
+                } else {
+                    // process the data
+                    $.ajax({
+                        url: "updateData.php",
+                        method: "post",
+                        data: data,
+                        success: (res) => {
+
+                            var response = JSON.parse(res);
+
+                            if (response.status == 422) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: response.message,
+                                    // response.message
+                                });
+                            } else if (response.status == 500) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: response.message,
+                                    // response.message
+                                });
+                            } else {
+                                Swal.fire({
+                                    position: 'top-center',
+                                    icon: 'success',
+                                    title: response.message,
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                                // hide modal
+                                $("#editModal").modal('hide');
+                                displayAccounts();
+                            }
+                        }
+                    });
+                }
+            }
+        }
+
+        function filterBy() {
+            let columnName = $("#columnName").val();
+
+            $.ajax({
+                url: "displayData.php",
+                method: "POST",
+                data: {
+                    filterBtn: 1,
+                    columnName: columnName
+                },
+                success: (res) => {
+                    $("#adminTable").html(res);
+                    $("#search").val('');
+                }
+            });
+        }
+
+        function askDelete(id) {
+
+            var data = {
+                id: id,
+                deletedAccBtn: "delete",
+                action: 1,
+                table: "admins"
+            };
+
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!",
+            }).then((result) => {
+
+
+                if (result.isConfirmed) {
+
+                    $.ajax({
+                        url: "deleteData.php",
+                        method: "post",
+                        data: data,
+                        success: (res) => {
+                            var response = JSON.parse(res);
+                            if (response.status == 200) {
+                                if (result.isConfirmed) {
+                                    Swal.fire("Deleted!", response.message, "success");
+                                }
+                                displayAccounts();
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: response.messsage,
+                                });
+                            }
+                        }
+                    });
+
+                    Swal.fire(
+                        'Deleted!',
+                        'Your file has been deleted.',
+                        'success'
+                    )
+                }
+
+
+            });
+        }
+
+        function viewEditAccount(id) {
+            $("#updateID").val(id);
+
+            // editName
+            // editRole
+            // editUsername
+            // editPassword
+
+            var data = {
+                id: id,
+                viewEditBtn: 1
+            }
+
+            $.ajax({
+                url: "displayData.php",
+                method: "post",
+                data: data,
+                success: (res, status) => {
+                    var response = JSON.parse(res);
+                    if (status == "success") {
+                        $("#editName").val(response.adminName);
+                        $("#editUsername").val(response.username);
+                        $("#editPassword").val(response.password);
+                        $("#editRole").val(response.role);
+                        // editRole
+                        $("#editModal").modal('show');
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Failed to retirevd',
+                        });
+                    }
+
+                }
+            });
+        }
+
+        function viewAdminAccount(id) {
+
+
+            $("#viewModal").modal('show');
+            var data = {
+                id: id,
+                viewBtn: 1
+            }
+            $.ajax({
+                url: "displayData.php",
+                method: "post",
+                data: data,
+                success: (res, status) => {
+
+                    var response = JSON.parse(res);
+
+                    // // console.log(response);
+                    if (status == "success") {
+
+                        $("#viewName").val(response.adminName);
+                        $("#viewPassword").val(response.password);
+                        $("#viewDateAdded").val(response.dateAdded);
+                        $("#viewDateModified").val(response.dateModified);
+                        $("#viewDateRetrieved").val(response.retrievedDate);
+                        $("#viewRole").val(response.role);
+                        $("#viewUsername").val(response.username);
+
+                        $("#viewModal").modal('show');
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Failed to retirevd',
+                        });
+                    }
+
+                }
+            });
+        }
+
+        function displayAccounts() {
+            $.ajax({
+                url: "displayData.php",
+                method: "post",
+                data: {
+                    display_transaction: 1
+                },
+                success: (res) => {
+                    $("#transaction_table").html(res);
+                    // console.log(res);
+                }
+            });
+        }
+    </script>
 </body>
 
 </html>
