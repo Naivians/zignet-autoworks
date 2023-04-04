@@ -21,6 +21,7 @@ include "includes/config.php";
     <?php include "includes/header.php"; ?>
     <link rel="stylesheet" href="css/dashboard.css?v=<?= time(); ?>">
     <title>Admin | Client</title>
+
 </head>
 
 <body>
@@ -43,31 +44,28 @@ include "includes/config.php";
                         <!-- form here -->
                         <div class="mb-3">
                             <label for="" class="form-label gray small-font">Customer Name</label>
-                            <input type="text" name="fname" id="fname" placeholder="John Doe" class="form-control text-dark">
+                            <input type="text" name="fname" id="edit_customer_name" placeholder="John Doe" class="form-control text-dark">
                         </div>
+
+                        <input type="hidden" name="updateID" id="updateID">
 
                         <div class="mb-3">
                             <label for="" class="form-label text-light small-font">CS Number</label>
-                            <input type="text" name="fname" id="fname" placeholder="SSEDRFF" class="form-control text-dark">
+                            <input type="text" name="fname" id="edit_cs_number" placeholder="SSEDRFF" class="form-control text-dark">
                         </div>
 
                         <div class="mb-3">
-                            <label for="" class="form-label text-light small-font">Car Model</label>
-                            <input type="text" name="fname" id="fname" placeholder="GDHBNFF" class="form-control text-dark">
+                            <label for="" class="form-label text-dark small-font">Car Model</label>
+                            <input type="text" name="fname" id="edit_model" placeholder="GDHBNFF" class="form-control text-dark">
                         </div>
 
                         <div class="mb-3">
                             <label for="" class="form-label text-secondary small-font">Company Name</label>
-                            <input type="text" name="fname" id="fname" placeholder="Lexus" class="form-control text-dark">
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="" class="form-label text-secondary small-font">Upload Docs</label>
-                            <input type="file" name="" id="img" class="form-control">
+                            <input type="text" name="" id="edit_company" class="form-control">
                         </div>
 
                         <div class="mt-4 mb-2">
-                            <button class="btns fullwidth mb-2 small-font">Update</button>
+                            <button type="button" class="btns fullwidth mb-2 small-font" onclick="updateAccount()">Update</button>
                             <button type="button" class="btns fullwidth dark small-font" data-bs-dismiss="modal">Close</button>
                         </div>
 
@@ -85,37 +83,39 @@ include "includes/config.php";
             <!-- modal-client -->
             <div class="modal-content">
 
-                <h5 class="text-center text-light mt-2">Customer Full Details</h5>
-
                 <div class="docs" id="zoom-container">
-                    <img src="forms/bmw.jpg">
+                    <img src="forms/bmw.jpg" id="docs">
                 </div>
+
+                <h5 class="text-center text-dark mt-4">Client's Full Details</h5>
 
                 <div class="modal-body">
                     <!-- form here -->
                     <div class="mb-2">
                         <label for="" class="form-label text-secondary small-font">Clients Name</label>
-                        <input type="text" name="fname" id="fname" placeholder="John Doe" class="form-control text-dark" disabled>
+                        <input type="text" name="fname" id="client_name" class="form-control text-dark" disabled>
                     </div>
 
                     <div class="mb-2">
                         <label for="" class="form-label text-secondary small-font">CS Number</label>
-                        <input type="text" name="fname" id="fname" placeholder="SSEDRFF" class="form-control text-dark" disabled>
+                        <input type="text" name="fname" id="cs_number" class="form-control text-dark" disabled>
                     </div>
 
                     <div class="mb-2">
                         <label for="" class="form-label text-secondary small-font">Car Model</label>
-                        <input type="text" name="fname" id="fname" placeholder="GDHBNFF" class="form-control text-dark" disabled>
+                        <input type="text" name="fname" id="model" class="form-control text-dark" disabled>
                     </div>
 
                     <div class="mb-3">
                         <label for="" class="form-label text-secondary small-font">Company Name</label>
-                        <input type="text" name="fname" id="fname" placeholder="Lexus" class="form-control text-dark" disabled>
+                        <input type="text" name="fname" id="company" class="form-control text-dark" disabled>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+
     <!-- $_SESSION['success'] -->
     <!-- main content -->
     <div class="wrapper" id="wrapper">
@@ -158,68 +158,21 @@ include "includes/config.php";
 
             <!-- Example single danger button -->
             <div class="btn-group">
-                <select name="" id="filter" class="filterBtn form-select" onchange="filterBy()">
+                <select name="" id="columnName" class="filterBtn form-select" onchange="filterBy()">
                     <option disabled selected>Filter by</option>
-                    <option value="client">Customer's Name</option>
+                    <option value="customerName">Customer's Name</option>
                     <option value="csNumber">CS Number</option>
                     <option value="model">Model</option>
                     <option value="dateAdded">Date Added</option>
                     <option value="dateModified">Date Modified</option>
+                    <option value="retrievedDate">Retrieved Date</option>
+                    <option value="company">Company</option>
                 </select>
             </div>
         </div>
 
         <div class="displayAccount mt-4" id="client_table">
-            <!-- table for admin accounts -->
-            <table class="adminAcc-table">
-                <thead>
-                    <tr>
-                        <th>Documents</th>
-                        <th>Customer's Name</th>
-                        <th>CS Nmber</th>
-                        <th>Model</th>
-                        <th>Company</th>
-                        <th>Date Added</th>
-                        <th>Date Modified</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-
-                    <tr>
-                        <td>
-                            <img src="img/car1.png" alt="cars" class="img">
-                        </td>
-                        <td>John Doe</td>
-                        <td>SSHDE</td>
-                        <td>HESST</td>
-                        <td>Lexus</td>
-                        <td>1/1/23</td>
-                        <td></td>
-                        <td>
-                            <!-- three btns for view, edit, and delete -->
-                            <!-- view -->
-                            <button class="btn" data-bs-toggle="modal" data-bs-target="#viewModal">
-                                <img src="icons/view.svg" alt="view image" class="text-success">
-                            </button>
-
-                            <!-- edit -->
-                            <button class="btn" data-bs-toggle="modal" data-bs-target="#editModal">
-                                <img src="icons/edit.svg" alt="view image" class="text-primary">
-                            </button>
-
-                            <!--  viewModal -->
-
-                            <!-- delete -->
-                            <button class="btn" onclick="askDelete()">
-                                <img src="icons/delete.svg" alt="view image" class="text-danger">
-                            </button>
-
-                        </td>
-                    </tr>
-
-                </tbody>
-            </table>
+            <!-- display clients data using ajax and jquery -->
         </div>
     </div>
     <!-- import sidebar -->
@@ -248,8 +201,8 @@ include "includes/config.php";
                     var data = {
                         search: search,
                         action: 1,
-                        btn: "adminSearch",
-                        table: "admins"
+                        btn: "client_search",
+                        table: "customer"
                     }
                     $.ajax({
                         url: "displayData.php",
@@ -266,83 +219,62 @@ include "includes/config.php";
             });
         });
 
-        function updateAccount(e) {
-            e.preventDefault();
-            // editName
-            // editRole
-            // editUsername
-            // editPassword
+        function updateAccount() {
 
-            var editName = $("#editName").val();
-            var editRole = $("#editRole").val();
-            var editUsername = $("#editUsername").val();
-            var editPassword = $("#editPassword").val();
+            var id = $("#updateID").val();
+
+            var edit_customer_name = $("#edit_customer_name").val();
+            var edit_company = $("#edit_company").val();
+            var edit_model = $("#edit_model").val();
+            var edit_cs_number = $("#edit_cs_number").val();
+
 
 
             var data = {
-                updateID: $("#updateID").val(),
-                editName: $("#editName").val(),
-                editRole: $("#editRole").val(),
-                editUsername: $("#editUsername").val(),
-                editPassword: $("#editPassword").val(),
-                editBtn: 1
+                client_id: $("#updateID").val(), 
+                edit_customer_name: $("#edit_customer_name").val(),
+                edit_company: $("#edit_company").val(),
+                edit_model: $("#edit_model").val(),
+                edit_cs_number: $("#edit_cs_number").val(),
+                update_client_btn: 1
             }
 
             // first client side validation
 
-            if (editName.length == 0 || editUsername.length == 0 || editPassword.length == 0) {
+            if (edit_customer_name.length == 0 || edit_company.length == 0 || edit_model.length == 0 || edit_cs_number.length == 0) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
                     text: 'All fields are mandatory',
                 });
             } else {
-                // check the size of a string
-                if (editName.length < 8 || editUsername.length < 8 || editPassword.length < 8) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'Name, Username & Password must be atleast 8 characters long',
-                    });
-                } else {
-                    // process the data
-                    $.ajax({
-                        url: "updateData.php",
-                        method: "post",
-                        data: data,
-                        success: (res) => {
+                // process the data
+                $.ajax({
+                    url: "updateData.php",
+                    method: "post",
+                    data: data,
+                    success: (res) => {
+                        if (res != "success") {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: res,
+                                // response.message
+                            });
+                        } else {
+                            Swal.fire({
+                                position: 'top-center',
+                                icon: 'success',
+                                title: "Successfully update",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
 
-                            var response = JSON.parse(res);
-
-                            if (response.status == 422) {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Oops...',
-                                    text: response.message,
-                                    // response.message
-                                });
-                            } else if (response.status == 500) {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Oops...',
-                                    text: response.message,
-                                    // response.message
-                                });
-                            } else {
-                                Swal.fire({
-                                    position: 'top-center',
-                                    icon: 'success',
-                                    title: response.message,
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                });
-                                // hide modal
-                                $("#editModal").modal('hide');
-                                displayAccounts();
-                            }
+                            $("#editModal").modal('hide');
+                            displayAccounts();
                         }
-                    });
-                }
+                    }
+                });
             }
         }
 
@@ -353,11 +285,11 @@ include "includes/config.php";
                 url: "displayData.php",
                 method: "POST",
                 data: {
-                    filterBtn: 1,
+                    filter_client: 1,
                     columnName: columnName
                 },
                 success: (res) => {
-                    $("#adminTable").html(res);
+                    $("#client_table").html(res);
                     $("#search").val('');
                 }
             });
@@ -367,9 +299,9 @@ include "includes/config.php";
 
             var data = {
                 id: id,
-                deletedAccBtn: "delete",
+                delete_client_btn: "delete_client_btn",
                 action: 1,
-                table: "admins"
+                table: "customer"
             };
 
             Swal.fire({
@@ -382,7 +314,6 @@ include "includes/config.php";
                 confirmButtonText: "Yes, delete it!",
             }).then((result) => {
 
-
                 if (result.isConfirmed) {
 
                     $.ajax({
@@ -390,7 +321,11 @@ include "includes/config.php";
                         method: "post",
                         data: data,
                         success: (res) => {
+
+                            console.log(res);
+
                             var response = JSON.parse(res);
+
                             if (response.status == 200) {
                                 if (result.isConfirmed) {
                                     Swal.fire("Deleted!", response.message, "success");
@@ -405,12 +340,6 @@ include "includes/config.php";
                             }
                         }
                     });
-
-                    Swal.fire(
-                        'Deleted!',
-                        'Your file has been deleted.',
-                        'success'
-                    )
                 }
 
 
@@ -420,14 +349,9 @@ include "includes/config.php";
         function viewEditAccount(id) {
             $("#updateID").val(id);
 
-            // editName
-            // editRole
-            // editUsername
-            // editPassword
-
             var data = {
                 id: id,
-                viewEditBtn: 1
+                view_client_btn: 1
             }
 
             $.ajax({
@@ -436,11 +360,12 @@ include "includes/config.php";
                 data: data,
                 success: (res, status) => {
                     var response = JSON.parse(res);
+
                     if (status == "success") {
-                        $("#editName").val(response.adminName);
-                        $("#editUsername").val(response.username);
-                        $("#editPassword").val(response.password);
-                        $("#editRole").val(response.role);
+                        $("#edit_customer_name").val(response.customerName);
+                        $("#edit_cs_number").val(response.csNumber);
+                        $("#edit_model").val(response.model);
+                        $("#edit_company").val(response.company);
                         // editRole
                         $("#editModal").modal('show');
                     } else {
@@ -456,12 +381,12 @@ include "includes/config.php";
         }
 
         function viewAdminAccount(id) {
+            
+            // $("#viewModal").modal('show');
 
-
-            $("#viewModal").modal('show');
             var data = {
                 id: id,
-                viewBtn: 1
+                view_client_btn: 1
             }
             $.ajax({
                 url: "displayData.php",
@@ -473,15 +398,13 @@ include "includes/config.php";
 
                     // // console.log(response);
                     if (status == "success") {
+                        $("#client_name").val(response.customerName);
+                        $("#cs_number").val(response.csNumber);
+                        $("#model").val(response.model);
+                        $("#company").val(response.company);
+                        var img = document.getElementById("docs").src = `uploads/` + `${response.img_path}`;
 
-                        $("#viewName").val(response.adminName);
-                        $("#viewPassword").val(response.password);
-                        $("#viewDateAdded").val(response.dateAdded);
-                        $("#viewDateModified").val(response.dateModified);
-                        $("#viewDateRetrieved").val(response.retrievedDate);
-                        $("#viewRole").val(response.role);
-                        $("#viewUsername").val(response.username);
-
+                        console.log(img);
                         $("#viewModal").modal('show');
                     } else {
                         Swal.fire({

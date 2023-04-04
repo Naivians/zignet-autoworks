@@ -236,6 +236,66 @@ if (isset($_POST['action'])) {
         }
     }
 
+    // search_client
+
+    if ($searchBtn == "client_search") {
+        $res = seacrh_client($table, $searchItem);
+
+        if ($res->num_rows > 0) {
+            $table = '<table class="adminAcc-table">
+                <thead>
+                    <tr>
+                        <th>Document</th>
+                        <th>Client"s Name</th>
+                        <th>CS Number</th>
+                        <th>Model</th>
+                        <th>Company</th>
+                        <th>Date Added</th>
+                        <th>Date Modified</th>
+                        <th>Date Retrieved</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>';
+
+            while ($row = $res->fetch_assoc()) {
+                $table .= ' <tr>
+                        <td> <img src="uploads/' . $row['img_path'] . '" alt="document form" class="img"></td>
+                        <td>' . $row['customerName'] . '</td>
+                        <td>' . $row['csNumber'] . '</td>
+                        <td>' . $row['model'] . '</td>
+                        <td>' . $row['company'] . '</td>
+                        <td>' . $row['dateAdded'] . '</td>
+                        <td>' . $row['dateModified'] . '</td>
+                        <td>' . $row['retrievedDate'] . '</td>
+                        <td>
+                            <!-- three btns for view, edit, and delete -->
+
+                            <!-- view -->
+                            <button class="btn" onclick="viewAdminAccount(' . $row['client_id'] . ')" >
+                                <img src="icons/view.svg" alt="view image" class="text-success">
+                            </button>
+
+                            <!-- edit -->   
+                            <button class="btn" onclick="viewEditAccount(' . $row['client_id'] . ')">
+                                <img src="icons/edit.svg" alt="view image" class="text-primary">
+                            </button>
+
+                            <!-- delete -->
+                            <button class="btn" onclick="askDelete(' . $row['client_id'] . ')">
+                                <img src="icons/delete.svg" alt="view image" class="text-danger">
+                            </button>
+
+                        </td>
+                    </tr>';
+            }
+            $table .= "</table>";
+
+            echo $table;
+        } else {
+            echo "<h6 class='text-danger'>No data found</h6>";
+        }
+    }
+
 
     // deleted admin search
     if ($searchBtn == "deletedSearch") {
@@ -287,6 +347,9 @@ if (isset($_POST['action'])) {
             echo "<h6 class='text-danger'>No data found</h6>";
         }
     }
+
+
+    
 }
 
 // ARCHIVES
@@ -368,7 +431,7 @@ if (isset($_POST['deletedAdmin'])) {
     echo $table;
 }
 
-// display_client
+
 // CLIENT INFO
 if (isset($_POST['display_client'])) {
 
@@ -378,7 +441,7 @@ if (isset($_POST['display_client'])) {
     $table = '<table class="adminAcc-table">
     <thead>
         <tr>
-            <th>Document form</th>
+            <th>Document</th>
             <th>Client"s Name</th>
             <th>CS Number</th>
             <th>Model</th>
@@ -392,7 +455,7 @@ if (isset($_POST['display_client'])) {
 
     while ($row = $res->fetch_assoc()) {
         $table .= ' <tr>
-                        <td> <img src="uploads/' . $row['img_path'] . '" alt="document form" class="img"></td>
+                        <td> <a href="edit_form.php?id=' . $row['client_id'] . '"><img src="uploads/' . $row['img_path'] . '" alt="document form" class="img"></a> </td>
                         <td>' . $row['customerName'] . '</td>
                         <td>' . $row['csNumber'] . '</td>
                         <td>' . $row['model'] . '</td>
@@ -404,17 +467,17 @@ if (isset($_POST['display_client'])) {
                             <!-- three btns for view, edit, and delete -->
 
                             <!-- view -->
-                            <button class="btn" onclick="viewAdminAccount(' . $row['id'] . ')" >
+                            <button class="btn" onclick="viewAdminAccount(' . $row['client_id'] . ')" >
                                 <img src="icons/view.svg" alt="view image" class="text-success">
                             </button>
 
                             <!-- edit -->   
-                            <button class="btn" onclick="viewEditAccount(' . $row['id'] . ')">
+                            <button class="btn" onclick="viewEditAccount(' . $row['client_id'] . ')">
                                 <img src="icons/edit.svg" alt="view image" class="text-primary">
                             </button>
 
                             <!-- delete -->
-                            <button class="btn" onclick="askDelete(' . $row['id'] . ')">
+                            <button class="btn" onclick="askDelete(' . $row['client_id'] . ')">
                                 <img src="icons/delete.svg" alt="view image" class="text-danger">
                             </button>
 
@@ -425,7 +488,6 @@ if (isset($_POST['display_client'])) {
 
     echo $table;
 }
-
 
 // display_transaction
 if (isset($_POST['display_transaction'])) {
@@ -482,3 +544,79 @@ if (isset($_POST['display_transaction'])) {
 
     echo $table;
 }
+
+
+if (isset($_POST['filter_client'])) {
+    $columnName = $_POST['columnName'];
+    $res = sortBy("customer", $columnName);
+
+    $table = '<table class="adminAcc-table">
+                <thead>
+                    <tr>
+                        <th>Document</th>
+                        <th>Client"s Name</th>
+                        <th>CS Number</th>
+                        <th>Model</th>
+                        <th>Company</th>
+                        <th>Date Added</th>
+                        <th>Date Modified</th>
+                        <th>Date Retrieved</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>';
+
+    while ($row = $res->fetch_assoc()) {
+        $table .= ' <tr>
+                        <td> <img src="uploads/' . $row['img_path'] . '" alt="document form" class="img"></td>
+                        <td>' . $row['customerName'] . '</td>
+                        <td>' . $row['csNumber'] . '</td>
+                        <td>' . $row['model'] . '</td>
+                        <td>' . $row['company'] . '</td>
+                        <td>' . $row['dateAdded'] . '</td>
+                        <td>' . $row['dateModified'] . '</td>
+                        <td>' . $row['retrievedDate'] . '</td>
+                        <td>
+                            <!-- three btns for view, edit, and delete -->
+
+                            <!-- view -->
+                            <button class="btn" onclick="viewAdminAccount(' . $row['id'] . ')" >
+                                <img src="icons/view.svg" alt="view image" class="text-success">
+                            </button>
+
+                            <!-- edit -->   
+                            <button class="btn" onclick="viewEditAccount(' . $row['id'] . ')">
+                                <img src="icons/edit.svg" alt="view image" class="text-primary">
+                            </button>
+
+                            <!-- delete -->
+                            <button class="btn" onclick="askDelete(' . $row['id'] . ')">
+                                <img src="icons/delete.svg" alt="view image" class="text-danger">
+                            </button>
+
+                        </td>
+                    </tr>';
+    }
+    $table .= "</table>";
+
+    echo $table;
+}
+
+
+// View Client
+
+if(isset($_POST['view_client_btn'])){
+
+    $id = $conn->escape_string($_POST['id']);
+
+    $res = get_customer_by_clientID("customer", $id);
+    $response = array();
+    
+    while ($row = $res->fetch_assoc()) {
+        $response = $row;
+    }
+    
+    echo json_encode($response);
+}
+
+?>
+

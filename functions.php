@@ -23,6 +23,17 @@ function getById($table, $id)
     return $stmt->get_result();
 }
 
+function get_customer_by_clientID($table, $client_id)
+{
+    global $conn;
+    $sql = "SELECT * FROM `$table` WHERE `client_id` = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $client_id);
+    $stmt->execute();
+    return $stmt->get_result();
+}
+
+
 function retrievedById($table, $id)
 {
     global $conn;
@@ -70,6 +81,13 @@ function liveSearch($table, $searhcItem)
     return $conn->query($sql);
 }
 
+function seacrh_client($table, $searhcItem)
+{
+    global $conn;
+    $sql = "SELECT * FROM `$table` WHERE `customerName` LIKE '%{$searhcItem}%' ";
+    return $conn->query($sql);
+}
+
 function retrievedAdmin($adminName, $username, $password, $role, $dateAdded, $dateModified)
 {
     global $conn, $today;
@@ -84,8 +102,6 @@ function retrievedAdmin($adminName, $username, $password, $role, $dateAdded, $da
 
 
 // END OF RETIREVAL
-
-
 
 
 // INSERT
@@ -126,33 +142,53 @@ function getDeletedAdminaccount($adminID, $adminName, $role, $username, $passwor
     $stmt->execute();
 }
 
-function insert_client_data($img_path, $customerName, $csNumber, $model, $company)
+/*
+INSERT INTO deleted_client_account 
+SELECT * FROM customer WHERE customer.client_id = '2562619197';
+*/
+
+function get_deleted_client($client_id)
+{
+    global $conn;
+
+    $sql =  "
+    INSERT INTO deleted_client_account 
+    SELECT * FROM customer WHERE customer.client_id = '$client_id';
+    ";
+
+    return $conn->query($sql);
+}
+
+function get_deleted_transactions($client_id){
+    global $conn;
+    $sql =" INSERT INTO deleted_transactions_history
+    SELECT * FROM transactions_history WHERE transactions_history.client_id = '$client_id';";
+    return $conn->query($sql);
+}
+
+function insert_client_data($client_id, $img_path, $customerName, $csNumber, $model, $company)
 {
     // 	
     global $conn, $today;
-    $sql = "INSERT INTO `customer` (`img_path`, `customerName`, `csNumber`, `model`, `company`, `dateAdded`) VALUES(?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO `customer` (`client_id`, `img_path`, `customerName`, `csNumber`, `model`, `company`, `dateAdded`) VALUES(?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssssss",$img_path, $customerName, $csNumber, $model, $company, $today);
-    
+    $stmt->bind_param("issssss", $client_id, $img_path, $customerName, $csNumber, $model, $company, $today);
+
     return $stmt->execute();
 }
 // customerName	csNumber	paymentStatus	dateAdded	
-function insert_client_transactions($reciept, $customerName, $csNumber, $paymentStatus)
+function insert_client_transactions($client_id, $reciept, $customerName, $csNumber, $paymentStatus)
 {
     // 	
     global $conn, $today;
-    $sql = "INSERT INTO `transactions_history` (`reciept`, `customerName`, `csNumber`,`paymentStatus`, `dateAdded`) VALUES(?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO `transactions_history` (`client_id`, `reciept`, `customerName`, `csNumber`,`paymentStatus`, `dateAdded`) VALUES(?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sssss",$reciept, $customerName, $csNumber, $paymentStatus, $today);
-    
+    $stmt->bind_param("isssss", $client_id, $reciept, $customerName, $csNumber, $paymentStatus, $today);
+
     return $stmt->execute();
 }
 
 // END OF INSERTION
-
-
-
-
 
 
 // UPDATE
@@ -166,8 +202,18 @@ function updateAdminAccount($updateId, $adminName, $username, $password, $role)
     // return true of false
     return $stmt->execute();
 }
-// END OF UPDATE
 
+function update_img($img_path, $img_id)
+{
+    global $conn, $today;
+
+    $sql = "UPDATE `customer` SET `img_path`=? WHERE id=?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("si", $img_path, $img_id);
+    // return true of false
+    return $stmt->execute();
+}
+// END OF UPDATE
 function logout($adminID)
 {
     global $conn, $today;
@@ -199,4 +245,24 @@ function deleteData($table, $id)
         $stmt->bind_param('i', $id);
         return $stmt->execute();
     }
+}
+
+// delete from multiple tables
+function delete_client_and_transactions($client_id)
+{
+    global $conn;
+    $sql = "DELETE transactions_history, customer
+    FROM transactions_history
+    INNER JOIN customer ON transactions_history.client_id = customer.client_id
+    WHERE transactions_history.client_id='$client_id';";
+
+    return $conn->query($sql);
+}
+
+function update_client_and_transactions($client_id, $model, $company, $customer_name, $cs_number)
+{
+    global $conn, $today;
+    $sql = "UPDATE customer, transactions_history SET customer.customerName = '$customer_name', customer.csNumber = '$cs_number', customer.model='$model', customer.company='$company', customer.dateModified='$today', transactions_history.customerName='$customer_name', transactions_history.csNumber = '$cs_number' WHERE customer.client_id='$client_id' AND transactions_history.client_id='$client_id';";
+
+    return $conn->query($sql);
 }

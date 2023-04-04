@@ -12,47 +12,18 @@ if (!isset($_SESSION['role'])) {
 
 include "includes/config.php";
 include "functions.php";
-include "includes/date.php";
-
 $errorMessage = array();
-$customer_name = '';
-$cs_number = '';
-$models = '';
+
+$img_id = "";
+
+if (isset($_GET['id'])) {
+    $img_id = $_GET['id'];
+    $res = getById("customer", $img_id);
+    $res = $res->fetch_assoc();
+}
+
 // customer
 if (isset($_POST['create'])) {
-
-    // for ($i = 1; $i <= 10; $i++) {
-    //     $client_id .= rand(1, 9);
-    // }
-        
-    // validate for empty fields
-    $customerName = $conn->escape_string($_POST['customerName']);
-    $csNumber = $conn->escape_string($_POST['csNumber']);
-    $company = $conn->escape_string($_POST['company']);
-    $model = $conn->escape_string($_POST['model']);
-
-
-    if ($customerName == "") {
-        $errorMessage['Cliet_empty_error'] = "Client is required!";
-    } else {
-        $customer_name = $customerName;
-    }
-
-    if ($csNumber == "") {
-        $errorMessage['cs_empty_error'] = "CS Number is required!";
-    } else {
-        $cs_number = $csNumber;
-    }
-
-    if ($company == "") {
-        $errorMessage['company_empty_error'] = "Company is required!";
-    }
-
-    if ($model == "") {
-        $errorMessage['model_empty_error'] = "Model is required!";
-    } else {
-        $models = $model;
-    }
 
     // file info declarations
     define("MB", 1000000);
@@ -103,23 +74,15 @@ if (isset($_POST['create'])) {
         if (!move_uploaded_file($tmp_name, $img_upload_path)) {
             $errorMessage['file_upload_error'] = $upload_error["file_upload_error"];
         } else {
-            $client_id = '';
-
-            for($i = 1; $i <= 10; $i++){
-                $client_id .= rand(1,9);
-            }
-            
-            // insert to client and transactions
-            insert_client_data($client_id, $new_img_name, $customerName, $csNumber, $model, $company);
-            // insert transactions
-            insert_client_transactions($client_id, "default_img.jpg", $customerName, $csNumber, "unpaid");
-
-            $_SESSION['success'] = "Successfully added new client";
+            // insert to client and transactions    
+            update_img($new_img_name, $img_id);
+            $_SESSION['success'] = "Successfully update document form";
             header("location:supAdminClient.php");
             exit;
         }
     }
 }
+
 
 
 ?>
@@ -133,7 +96,7 @@ if (isset($_POST['create'])) {
     <link rel="stylesheet" href="css/dashboard.css?v=<?= time(); ?>">
 
 
-    <title>Admin | Add Client</title>
+    <title>Admin | Change Image Form</title>
 </head>
 
 <body>
@@ -166,36 +129,9 @@ if (isset($_POST['create'])) {
                     <form method="POST" enctype="multipart/form-data">
                         <div>
                             <!-- form here -->
-                            <div class="mb-3">
-                                <label for="" class="form-label text-dark small-font">Customer Name</label>
-                                <input type="text" name="customerName" id="customerName" placeholder="John Doe" class="form-control text-dark" value="<?php if (isset($customer_name)) {
-                                                                                                                                                            echo $customer_name;
-                                                                                                                                                        } ?>">
+                            <div class="mb-3 docs">
+                                <img src="uploads/<?= $res['img_path'] ?>" alt="">
                             </div>
-
-                            <div class="mb-3">
-                                <label for="" class="form-label text-dark small-font">CS Number</label>
-                                <input type="text" name="csNumber" id="csNumber" placeholder="SSEDRFF" class="form-control text-dark" value="<?php if (isset($cs_number)) {
-                                                                                                                                                    echo $cs_number;
-                                                                                                                                                } ?>">
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="" class="form-label text-dark small-font">Car Model</label>
-                                <input type="text" name="model" id="model" placeholder="GDHBNFF" class="form-control text-dark" value="<?php if (isset($models)) {
-                                                                                                                                            echo $models;
-                                                                                                                                        } ?>">
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="" class="form-label text-dark small-font">Company Name</label>
-                                <select name="company" id="" class="form-control">
-                                    <option value="">Select Company</option>
-                                    <option value="lexus">Lexus</option>
-                                    <option value="bmw">BMW</option>
-                                </select>
-                            </div>
-
                             <div class="mb-3">
                                 <label for="docs" class="form-label text-dark small-font">Upload Docs</label>
                                 <input type="file" name="docs" id="docs" class="form-control">

@@ -88,3 +88,24 @@ if (isset($_POST['editBtn'])) {
         echo json_encode($response);
     }
 }
+
+
+// Client
+
+if(isset($_POST['update_client_btn'])){
+    $client_id = $conn->escape_string($_POST['client_id']);
+    $edit_customer_name = $conn->escape_string($_POST['edit_customer_name']);
+    $edit_company = $conn->escape_string($_POST['edit_company']);
+    $edit_model = $conn->escape_string($_POST['edit_model']);
+    $edit_cs_number = $conn->escape_string($_POST['edit_cs_number']);
+
+    if($client_id == "" || $edit_customer_name == "" || $edit_company == "" || $edit_model == "" || $edit_cs_number == ""){
+        echo "All fields are mandatory";
+    }else{
+        // update customer and some of transaction history
+        update_client_and_transactions($client_id, $edit_model, $edit_company, $edit_customer_name, $edit_cs_number);
+
+        echo "success";
+    }
+
+}

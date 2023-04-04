@@ -11,8 +11,6 @@
   line-height: 1.5em;
 }
 
-
-
 body {
   background-color: var(--darkBlue-);
   font-family: "Poppins", "helvetica", "sans";
@@ -30,11 +28,11 @@ body {
   margin: 0;
 }
 
-.psuedo_design{
+.psuedo_design {
   text-decoration: none;
   cursor: pointer;
 }
-.pad{
+.pad {
   padding: 11px 15px !important;
 }
 
@@ -172,8 +170,7 @@ ul {
 
 /* search and filter */
 .filterBtn,
-.live-search input[type="search"]  {
-  
+.live-search input[type="search"] {
   font-size: 14px;
   border: none;
   outline: none;
@@ -189,48 +186,48 @@ ul {
 .live-search input {
   padding: 6px 14px;
   margin-right: 10px;
-  background-color: #00172D;
-  color: var(--primary-)
+  background-color: #00172d;
+  color: var(--primary-);
 }
 
 /* admin accounts table */
-.displayAccount{
-    overflow-y: scroll;
-    width: 100%;
-    border-radius: 10px;
-    height: 400px;
+.displayAccount {
+  overflow-y: scroll;
+  width: 100%;
+  border-radius: 10px;
+  height: 400px;
 }
 
-.displayAccount .adminAcc-table{
-    width: 100%;
+.displayAccount .adminAcc-table {
+  width: 100%;
 }
 
-.displayAccount .adminAcc-table th, .displayAccount .adminAcc-table td{
-    font-size: 12px;
-    padding: 10px;
-    color: var(--primary-);
+.displayAccount .adminAcc-table th,
+.displayAccount .adminAcc-table td {
+  font-size: 12px;
+  padding: 10px;
+  color: var(--primary-);
 }
 
-.displayAccount .adminAcc-table th{
-    background-color: rgba(238, 238, 238, 29%);
+.displayAccount .adminAcc-table th {
+  background-color: rgba(238, 238, 238, 29%);
 }
 
-
-.displayAccount .adminAcc-table tr:nth-last-of-type(even){
-    background-color: #eeeeee0d;
+.displayAccount .adminAcc-table tr:nth-last-of-type(even) {
+  background-color: #eeeeee0d;
 }
 
 /* clients Table */
-.displayAccount table .img{
+.displayAccount table .img {
   width: 50px;
   height: 50px;
 }
 
-.modal-client{
+.modal-client {
   height: auto;
 }
 
-.small-font{
+.small-font {
   font-size: 13px;
 }
 
@@ -239,8 +236,24 @@ ul {
   text-align: center;
 }
 
+.docs img {
+  width: 100%;
+  height: auto;
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
+  z-index: 3;
+  transition: .3s ease-in;
+ 
+}
+
+.docs img:hover {
+  scale: 1.5;
+  position: relative;
+  z-index: 4;
+}
+
 /* insert client design */
-.short_width{
+.short_width {
   width: 40%;
-  margin: 0  auto;
+  margin: 0 auto;
 }
