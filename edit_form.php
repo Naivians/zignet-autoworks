@@ -18,8 +18,23 @@ $img_id = "";
 
 if (isset($_GET['id'])) {
     $img_id = $_GET['id'];
-    $res = getById("customer", $img_id);
+
+    $res = getBY_clientID("customer", $img_id);
+
     $res = $res->fetch_assoc();
+    $_SSESION['variable'] = "id";
+}
+
+if (isset($_GET['transact_id'])) {
+    $img_id = $_GET['transact_id'];
+
+    $res = getBY_clientID("transactions_history", $img_id);
+
+    $res = $res->fetch_assoc();
+
+    // echo $res['reciept'];
+    $_SSESION['variable'] = "transact_id";
+
 }
 
 // customer
@@ -75,10 +90,22 @@ if (isset($_POST['create'])) {
             $errorMessage['file_upload_error'] = $upload_error["file_upload_error"];
         } else {
             // insert to client and transactions    
-            update_img($new_img_name, $img_id);
-            $_SESSION['success'] = "Successfully update document form";
-            header("location:supAdminClient.php");
-            exit;
+            //  update_transact_img($img_path, $img_id)
+
+            if($_SSESION['variable'] == "transact_id"){
+                update_transact_img($new_img_name, $img_id);
+                $_SESSION['success_upload'] = "Successfully Upload";
+                header("location:supAdminTransact.php");
+                exit;
+            }
+
+            if($_SSESION['variable'] == "id"){
+                update_img($new_img_name, $img_id);
+                $_SESSION['success'] = "Successfully update document form";
+                header("location:supAdminClient.php");
+                exit;
+            }
+            
         }
     }
 }
@@ -103,7 +130,7 @@ if (isset($_POST['create'])) {
     <!-- main content -->
     <div class="wrapper" id="wrapper">
         <div class="container short_width">
-            <h1 class="text-light text-center mt-3 mb-2">Add client</h1>
+            <h1 class="text-light text-center mt-3 mb-2">Edit Form / Reciept</h1>
             <div class="card">
                 <div class="card-body">
                     <?php
@@ -125,12 +152,25 @@ if (isset($_POST['create'])) {
 
                     ?>
 
-
                     <form method="POST" enctype="multipart/form-data">
                         <div>
                             <!-- form here -->
                             <div class="mb-3 docs">
-                                <img src="uploads/<?= $res['img_path'] ?>" alt="">
+                                <?php
+                                if (isset($_GET['id'])) {
+                                ?>
+                                    <img src="uploads/<?= $res['img_path'] ?>" alt="">
+                                <?php
+                                }
+
+                                if (isset($_GET['transact_id'])) {
+                                ?>
+                                    <img src="uploads/<?= $res['reciept'] ?>" alt="">
+                                <?php
+                                }
+
+                                ?>
+
                             </div>
                             <div class="mb-3">
                                 <label for="docs" class="form-label text-dark small-font">Upload Docs</label>
@@ -138,7 +178,22 @@ if (isset($_POST['create'])) {
                             </div>
 
                             <div class="mt-4 mb-2">
-                                <a href="supAdminClient.php" class="btns psuedo_design pad dark small-font">Close</a>
+                            <?php
+                                if (isset($_GET['id'])) {
+                                    ?>
+                                        <a href="supAdminClient.php" class="btns psuedo_design pad dark small-font">Close</a>
+                                    <?php
+                                }
+
+                                if (isset($_GET['transact_id'])) {
+                                    ?>
+                                        <a href="supAdminTransact.php" class="btns psuedo_design pad dark small-font">Close</a>
+                                    <?php
+                                }
+                                    
+                                ?>
+
+                                
                                 <button type="submit" class="btns small-font" name="create">Create</button>
                             </div>
 

@@ -370,7 +370,7 @@ if (!isset($_SESSION['role'])) {
 
             var data = {
                 id: id,
-                deletedAccBtn: "delete",
+                delete_client_btn: "delete",
                 action:1,
                 table:"admins"
             };
@@ -408,12 +408,6 @@ if (!isset($_SESSION['role'])) {
                             }
                         }
                     });
-
-                    Swal.fire(
-                        'Deleted!',
-                        'Your file has been deleted.',
-                        'success'
-                    )
                 }
 
 

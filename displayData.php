@@ -138,6 +138,56 @@ if (isset($_POST['filterBtn'])) {
     echo $table;
 }
 
+// filter_transact
+
+if (isset($_POST['filter_transact'])) {
+
+    $columnName = $_POST['columnName'];
+
+    $res = sortBy("transactions_history", $columnName);
+
+    $table = '<table class="adminAcc-table">
+    <thead>
+        <tr>
+            <th>Reciept</th>
+            <th>Client"s Name</th>
+            <th>CS Number</th>
+            <th>Payment Status</th>
+            <th>Date Added</th>
+            <th>Date Paid</th>
+            <th>Date Retrieved</th>
+            <th>Actions</th>
+        </tr>
+    </thead>';
+
+    while ($row = $res->fetch_assoc()) {
+        $table .= ' <tr>
+                        <td> <img src="uploads/' . $row['reciept'] . '" alt="reciept" class="img"></td>
+                        <td>' . $row['customerName'] . '</td>
+                        <td>' . $row['csNumber'] . '</td>
+                        <td>' . $row['paymentStatus'] . '</td>
+                        <td>' . $row['dateAdded'] . '</td>
+                        <td>' . $row['date_paid'] . '</td>
+                        <td>' . $row['dateRetrieved'] . '</td>
+                        <td>    
+        
+                            <!-- three btns for view, edit, and delete -->
+                            <button class="btn" onclick="upload_reciept(' . $row['client_id'] . ')">
+                                <i class="bx bxs-download text-success"></i>
+                            </button>
+
+                            <button class="btn" onclick="viewAdminAccount(' . $row['client_id'] . ')">
+                                <img src="icons/view.svg" alt="view image" class="text-success">
+                            </button> 
+                            
+                        </td>
+                    </tr>';
+    }
+    $table .= "</table>";
+
+    echo $table;
+}
+
 // searchBtn
 
 if (isset($_POST['action'])) {
@@ -349,7 +399,157 @@ if (isset($_POST['action'])) {
     }
 
 
+
+    if ($searchBtn == "search_deleted_client") {
+        $res = seacrh_client($table, $searchItem);
+
+        if ($res->num_rows > 0) {
+            $table = '<table class="adminAcc-table">
+                <thead>
+                    <tr>
+                        <th>Document</th>
+                        <th>Client"s Name</th>
+                        <th>CS Number</th>
+                        <th>Model</th>
+                        <th>Company</th>
+                        <th>Date Added</th>
+                        <th>Date Modified</th>
+                        <th>Date Retrieved</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>';
+
+            while ($row = $res->fetch_assoc()) {
+                $table .= ' <tr>
+                        <td> <img src="uploads/' . $row['img_path'] . '" alt="document form" class="img"></td>
+                        <td>' . $row['customerName'] . '</td>
+                        <td>' . $row['csNumber'] . '</td>
+                        <td>' . $row['model'] . '</td>
+                        <td>' . $row['company'] . '</td>
+                        <td>' . $row['dateAdded'] . '</td>
+                        <td>' . $row['dateModified'] . '</td>
+                        <td>' . $row['retrievedDate'] . '</td>
+                        <td>
+                            <!-- three btns for view, edit, and delete -->
+
+                            <button class="btn" onclick="retrieved(' . $row['client_id'] . ')" data-toggle="tooltip" data-placement="bottom" title="Retrieved Button">
+                            <i class="bx bxs-download text-success"></i>
+                            </button>
+                            
+                            <!-- delete -->
+                            <button class="btn" onclick="askDelete(' . $row['client_id'] . ')">
+                                <img src="icons/delete.svg" alt="view image" class="text-danger">
+                            </button>
+
+                        </td>
+                    </tr>';
+            }
+            $table .= "</table>";
+
+            echo $table;
+        } else {
+            echo "<h6 class='text-danger'>No data found</h6>";
+        }
+    }
     
+    if ($searchBtn == "transact_search") {
+        $res = seacrh_client($table, $searchItem);
+
+        if ($res->num_rows > 0) {
+            $table = '<table class="adminAcc-table">
+            <thead>
+                <tr>
+                    <th>Reciept</th>
+                    <th>Client"s Name</th>
+                    <th>CS Number</th>
+                    <th>Payment Status</th>
+                    <th>Date Added</th>
+                    <th>Date Paid</th>
+                    <th>Date Retrieved</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>';
+
+            while ($row = $res->fetch_assoc()) {
+                $table .= ' <tr>
+                        <td> <img src="uploads/' . $row['reciept'] . '" alt="reciept" class="img"></td>
+                        <td>' . $row['customerName'] . '</td>
+                        <td>' . $row['csNumber'] . '</td>
+                        <td>' . $row['paymentStatus'] . '</td>
+                        <td>' . $row['dateAdded'] . '</td>
+                        <td>' . $row['date_paid'] . '</td>
+                        <td>' . $row['dateRetrieved'] . '</td>
+                        <td>    
+        
+                            <!-- three btns for view, edit, and delete -->
+                            <button class="btn" onclick="upload_reciept(' . $row['client_id'] . ')">
+                                <i class="bx bxs-download text-success"></i>
+                            </button>
+
+                            <button class="btn" onclick="viewAdminAccount(' . $row['client_id'] . ')">
+                                <img src="icons/view.svg" alt="view image" class="text-success">
+                            </button> 
+
+                            <button class="btn" onclick="updateAccount(' . $row['client_id'] . ')">
+                                <img src="icons/edit.svg" alt="view image" class="text-success">
+                            </button> 
+                            
+                            
+                        </td>
+                    </tr>';
+            }
+            $table .= "</table>";
+
+            echo $table;
+        } else {
+            echo "<h6 class='text-danger'>No data found</h6>";
+        }
+    }
+
+
+    // search_deleted_transactions
+
+    if ($searchBtn == "search_deleted_transactions") {
+        $res = seacrh_client($table, $searchItem);
+
+        if ($res->num_rows > 0) {
+            $table = '<table class="adminAcc-table">
+            <thead>
+                <tr>
+                    <th>Reciept</th>
+                    <th>Client"s Name</th>
+                    <th>CS Number</th>
+                    <th>Payment Status</th>
+                    <th>Date Added</th>
+                    <th>Date Paid</th>
+                    <th>Date Retrieved</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>';
+
+            while ($row = $res->fetch_assoc()) {
+                $table .= ' <tr>
+                        <td> <img src="uploads/' . $row['reciept'] . '" alt="reciept" class="img"></td>
+                        <td>' . $row['customerName'] . '</td>
+                        <td>' . $row['csNumber'] . '</td>
+                        <td>' . $row['paymentStatus'] . '</td>
+                        <td>' . $row['dateAdded'] . '</td>
+                        <td>' . $row['date_paid'] . '</td>
+                        <td>' . $row['dateRetrieved'] . '</td>
+                        <td>
+                            <button class="btn" onclick="viewAdminAccount(' . $row['client_id'] . ')">
+                                <img src="icons/view.svg" alt="view image" class="text-success">
+                            </button> 
+                        </td>
+                    </tr>';
+            }
+            $table .= "</table>";
+
+            echo $table;
+        } else {
+            echo "<h6 class='text-danger'>No data found</h6>";
+        }
+    }
 }
 
 // ARCHIVES
@@ -431,6 +631,55 @@ if (isset($_POST['deletedAdmin'])) {
     echo $table;
 }
 
+if (isset($_POST['deleted_client'])) {
+    $res = getData("deleted_client_account");
+
+    $table = '<table class="adminAcc-table">
+    <thead>
+        <tr>
+            <th>FORM</th>
+            <th>Client ID</th>
+            <th>Client Name</th>
+            <th>CS Number</th>
+            <th>Model</th>
+            <th>Company</th>
+            <th>Date Added</th>
+            <th>Date Modified</th>
+            <th>Actions</th>
+        </tr>
+    </thead>';
+    /*
+        client_id	img_path	customerName	csNumber	model	company	dateAdded	dateModified	
+    */
+    while ($row = $res->fetch_assoc()) {
+        $table .= ' <tr>
+                        <td><img src="uploads/' . $row['img_path'] . '" alt="client_img" class="img"></td>
+                        <td>' . $row['client_id'] . '</td>
+                        <td>' . $row['customerName'] . '</td>
+                        <td>' . $row['csNumber'] . '</td>
+                        <td>' . $row['model'] . '</td>
+                        <td>' . $row['company'] . '</td>
+                        <td>' . $row['dateAdded'] . '</td>
+                        <td>' . $row['dateModified'] . '</td>
+                        <td>
+                            <!-- three btns for view, edit, and delete -->
+
+                            <button class="btn" onclick="retrieved(' . $row['client_id'] . ')" data-toggle="tooltip" data-placement="bottom" title="Retrieved Button">
+                            <i class="bx bxs-download text-success"></i>
+                            </button>
+                            
+                            <!-- delete -->
+                            <button class="btn" onclick="askDelete(' . $row['client_id'] . ')">
+                                <img src="icons/delete.svg" alt="view image" class="text-danger">
+                            </button>
+
+                        </td>
+                    </tr>';
+    }
+    $table .= "</table>";
+
+    echo $table;
+}
 
 // CLIENT INFO
 if (isset($_POST['display_client'])) {
@@ -514,29 +763,21 @@ if (isset($_POST['display_transaction'])) {
                         <td> <img src="uploads/' . $row['reciept'] . '" alt="reciept" class="img"></td>
                         <td>' . $row['customerName'] . '</td>
                         <td>' . $row['csNumber'] . '</td>
-                        
+                        <td>' . $row['paymentStatus'] . '</td>
                         <td>' . $row['dateAdded'] . '</td>
                         <td>' . $row['date_paid'] . '</td>
                         <td>' . $row['dateRetrieved'] . '</td>
                         <td>
-                            <!-- three btns for view, edit, and delete -->
-                            
-                            <?php
-                                if (' . $row['paymentStatus'] . ' == "unpaid") {
-                                ?>
-                                    <button class="btn" onclick="upload_reciept(' . $row['id'] . ')">
-                                        <img src="icons/download.svg" alt="view image" class="text-light">
-                                    </button>
-                                <?php
-                                } else {
-                                ?>
-                                    <button class="btn" onclick="viewAdminAccount(' . $row['id'] . ')">
-                                        <img src="icons/view.svg" alt="view image" class="text-success">
-                                    </button>
-                                <?php
-                                }
-                            ?>
 
+                            <!-- three btns for view, edit, and delete -->
+                        
+                            <a href="edit_form.php?transact_id=' . $row['client_id'] . '" class="btn">
+                                <i class="bx bxs-download text-success"></i>
+                            </a>
+
+                            <button class="btn" onclick="viewAdminAccount(' . $row['client_id'] . ')">
+                                <img src="icons/view.svg" alt="view image" class="text-success">
+                            </button> 
                         </td>
                     </tr>';
     }
@@ -545,6 +786,67 @@ if (isset($_POST['display_transaction'])) {
     echo $table;
 }
 
+
+// deleted_transactions
+if (isset($_POST['deleted_transactions'])) {
+
+
+    $res = getData("deleted_transactions_history");
+
+    $table = '<table class="adminAcc-table">
+    <thead>
+        <tr>
+            <th>Reciept</th>
+            <th>Transaction ID</th>
+            <th>Client"s Name</th>
+            <th>CS Number</th>
+            <th>Payment Status</th>
+            <th>Date Added</th>
+            <th>Date Paid</th>
+            <th>Date Retrieved</th>
+            <th>Actions</th>
+        </tr>
+    </thead>';
+
+    while ($row = $res->fetch_assoc()) {
+        $table .= ' <tr>
+                        <td> <img src="uploads/' . $row['reciept'] . '" alt="reciept" class="img"></td>
+                        <td>' . $row['client_id'] . '</td>
+                        <td>' . $row['customerName'] . '</td>
+                        <td>' . $row['csNumber'] . '</td>
+                        <td>' . $row['paymentStatus'] . '</td>
+                        <td>' . $row['dateAdded'] . '</td>
+                        <td>' . $row['date_paid'] . '</td>
+                        <td>' . $row['dateRetrieved'] . '</td>
+                        <td>
+
+                            <!-- three btns for view, edit, and delete -->
+                        
+                            <button class="btn" onclick="viewAdminAccount(' . $row['client_id'] . ')">
+                                <img src="icons/view.svg" alt="view image" class="text-success">
+                            </button> 
+                        </td>
+                    </tr>';
+    }
+    $table .= "</table>";
+
+    echo $table;
+}
+
+// view_reciept
+if (isset($_POST['view_reciept'])) {
+    $client_id = $conn->escape_string($_POST['id']);
+
+    $res = getBY_clientID("transactions_history", $client_id);
+
+
+    if ($res->num_rows > 0) {
+        $res = $res->fetch_assoc();
+        echo $res['reciept'];
+    } else {
+        echo "empty";
+    }
+}
 
 if (isset($_POST['filter_client'])) {
     $columnName = $_POST['columnName'];
@@ -604,19 +906,29 @@ if (isset($_POST['filter_client'])) {
 
 // View Client
 
-if(isset($_POST['view_client_btn'])){
+if (isset($_POST['view_client_btn'])) {
 
     $id = $conn->escape_string($_POST['id']);
 
     $res = get_customer_by_clientID("customer", $id);
     $response = array();
-    
+
     while ($row = $res->fetch_assoc()) {
         $response = $row;
     }
-    
+
     echo json_encode($response);
 }
 
-?>
 
+if (isset($_POST["view_deleted_transact_btn"])) {
+    $client_id = $conn->escape_string($_POST['client_id']);
+    $res = get_customer_by_clientID("deleted_transactions_history", $client_id);
+
+    if ($res->num_rows > 0) {
+        $res = $res->fetch_assoc();
+        echo $res['reciept'];
+    } else {
+        echo "empty";
+    }
+}

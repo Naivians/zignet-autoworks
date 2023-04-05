@@ -98,7 +98,7 @@ if (isset($_POST['create'])) {
     if (count($errorMessage) === 0) {
         // upload files, get all information then insert to DB
         $new_img_name = uniqid("IMG-", true) . "." . $img_extentions;
-        $img_upload_path = 'uploads/' . $new_img_name;
+        $img_upload_path = 'uploads/' . $new_img_name; // PATH
 
         if (!move_uploaded_file($tmp_name, $img_upload_path)) {
             $errorMessage['file_upload_error'] = $upload_error["file_upload_error"];

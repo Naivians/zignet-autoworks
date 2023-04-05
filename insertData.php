@@ -97,3 +97,44 @@ if (isset($_POST['retrievedAction'])) {
     }
 }
 
+
+// retrieved_deleted_client_and_transactions
+if (isset($_POST['retrieved_deleted_client_and_transactions'])) {
+    $client_id = $conn->escape_string($_POST['retrievedID']);
+    $res = get_customer_by_clientID("deleted_client_account", $client_id);
+
+    if ($res->num_rows > 0) {
+
+        $res = $res->fetch_assoc();
+
+        
+
+        $client = retrieved_client($res['client_id'], $res['img_path'], $res['customerName'], $res['csNumber'], $res['model'], $res['company'], $res['dateAdded'], $res['dateModified']);
+
+        if (!$client) {
+            echo "Failed to retrieved deleted client";
+        } else {
+            $res = get_customer_by_clientID("deleted_transactions_history", $client_id);
+            if ($res->num_rows > 0) {
+                $res = $res->fetch_assoc();
+                $results = retrieved_transactions($res['client_id'], $res['reciept'], $res['customerName'], $res['csNumber'], $res['paymentStatus'], $res['dateAdded'], $res['date_paid']);
+
+                if (!$results) {
+                    echo "Failed to retrieved deleted transactions_history";
+                } else {
+                    $res = permanently_deleted_client_and_transactions($client_id);
+                    if(!$res){
+                        echo "Failed to retrieved deleted transactions_history";
+                    }else{
+                        echo "success";
+                    }
+                   
+                }
+            }else{
+                echo "Account does not exist in the database";
+            }
+        }
+    } else {
+        echo "Account does not exist in the database";
+    }
+}

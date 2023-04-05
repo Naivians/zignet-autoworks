@@ -19,7 +19,7 @@ if (!isset($_SESSION['role'])) {
     // include "includes/sweetalert.php";
     ?>
     <link rel="stylesheet" href="css/dashboard.css?v=<?= time(); ?>">
-    <title>Admin | Archive</title>
+    <title>Admin | Archive </title>
 </head>
 
 <body>
@@ -30,7 +30,7 @@ if (!isset($_SESSION['role'])) {
         <?php include "includes/navBar.php"; ?>
 
         <div class="adminTable d-flex justify-content-between align-items-center mt-4">
-            <h5>Deleted Admin Account</h5>
+            <h5>Deleted Client Account</h5>
             <!-- live search -->
             <div class="filter d-flex align-items-center mt-3 mb-3">
                 <div class="live-search">
@@ -64,8 +64,8 @@ if (!isset($_SESSION['role'])) {
                     var data = {
                         search: search,
                         action: 1,
-                        btn: "deletedSearch",
-                        table: "deleted_admin_account"
+                        btn: "search_deleted_client",
+                        table: "deleted_client_account"
                     }
 
                     $.ajax({
@@ -85,13 +85,11 @@ if (!isset($_SESSION['role'])) {
 
 
 
-        function askDelete(id) {
+        function askDelete(client_id) {
 
             var data = {
-                id: id,
-                delete_client_btn: "deletedBTN",
-                action: 1,
-                table: "deleted_admin_account"
+                client_id: client_id,
+                deleted_client_and_transactions: "deleted_client_and_transactions",
             };
 
 
@@ -113,18 +111,17 @@ if (!isset($_SESSION['role'])) {
                         method: "POST",
                         data: data,
                         success: (res) => {
-                            var response = JSON.parse(res);
 
-                            if (response.status == 200) {
+                            if (res == "success") {
                                 if (result.isConfirmed) {
-                                    Swal.fire("Deleted!", response.message, "success");
+                                    Swal.fire("Deleted!", "Successfully deleted client and their transactions permanently", "success");
                                 }
                                 displayAccounts();
                             } else {
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Oops...',
-                                    text: response.messsage,
+                                    text: res,
                                 });
                             }
                         }
@@ -139,7 +136,7 @@ if (!isset($_SESSION['role'])) {
                 url: "displayData.php",
                 method: "post",
                 data: {
-                    deletedAdmin: 1
+                    deleted_client: 1
                 },
                 success: (res) => {
                     $("#adminTable").html(res);
@@ -148,12 +145,11 @@ if (!isset($_SESSION['role'])) {
         }
 
         function retrieved(retrievedID) {
+            
             // go to insert and retrieved this account by the id 
             var data = {
                 retrievedID: retrievedID,
-                retrievedBtn: "retrievedAdmin",
-                retrievedAction: 1,
-                table: "deleted_admin_account"
+                retrieved_deleted_client_and_transactions: "retrieved_deleted_client_and_transactions",
             };
 
             Swal.fire({
@@ -173,22 +169,21 @@ if (!isset($_SESSION['role'])) {
                         data: data,
                         success: (res) => {
 
-                            var response = JSON.parse(res);
-
-                            if (response.status == 200) {
-                                if (result.isConfirmed) {
-                                    Swal.fire("Retrieved!", response.message, "success");
-                                }
-                                displayAccounts();
-                            } else {
+                            if (res != "success") {
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Oops...',
-                                    text: response.messsage,
+                                    text: res,
                                 });
+                            } else {
+                                if (result.isConfirmed) {
+                                    Swal.fire("Retrieved!", "Successfully retrieved client and their transactions", "success");
+                                }
+                                displayAccounts();
                             }
                         }
                     });
+
                 }
 
             });

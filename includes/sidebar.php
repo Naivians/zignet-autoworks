@@ -35,6 +35,12 @@
                      <i class='bx bxs-bank me-2'></i>
                      Transactions</a>
              </li>
+
+             <li>
+                 <a href="report.php" class="small-font">
+                 <i class='bx bxs-report me-2'></i>
+                    Report</a>
+             </li>
          </ul>
      </div>
  </aside>

@@ -79,3 +79,20 @@ if (isset($_POST['action'])) {
         }
     }
 }
+
+// 
+
+// deleted_client_and_transactions
+if(isset($_POST['deleted_client_and_transactions'])){
+    $client_id = $conn->escape_string($_POST['client_id']);
+    
+    // echo $client_id;
+    $res = permanently_deleted_client_and_transactions($client_id);
+
+    if(!$res){
+        echo "Failed to deleted client related data";
+    }else{
+        echo "success";
+    }
+
+}

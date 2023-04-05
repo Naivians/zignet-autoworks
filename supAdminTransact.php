@@ -1,3 +1,15 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['role'])) {
+    header("Location:login.php");
+} else {
+    if ($_SESSION['role'] != "super admin") {
+        header("Location:logout.php?access=1");
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -19,7 +31,7 @@
                 <h5 class="text-center text-dark mt-4 mb-4">View Reciept</h5>
 
                 <div class="docs p-3" id="zoom-container">
-                    <img src="forms/bmw.jpg">
+                    <img src="forms/bmw.jpg" id="forms">
                 </div>
 
             </div>
@@ -36,8 +48,20 @@
 
         <div class="adminTable d-flex justify-content-between align-items-center mt-4">
             <h5>Transaction History</h5>
+            <?php
+            if (isset($_SESSION['success_upload'])) {
+                ?>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <strong>Success!</strong> <?= $_SESSION['success_upload'] ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                <?php
+                unset($_SESSION['success_upload']);
+            }
+        ?>
         </div>
 
+    
         <!-- live search -->
         <div class="filter d-flex align-items-center mt-3 mb-3">
 
@@ -47,13 +71,14 @@
 
             <!-- Example single danger button -->
             <div class="btn-group">
-                <select name="" id="filter" class="filterBtn form-select" onchange="filterBy()">
+                <select name="" id="columnName" class="filterBtn form-select" onchange="filterBy()">
                     <option disabled selected>Filter by</option>
-                    <option value="client">Client's Name</option>
+                    <option value="customerName">Client's Name</option>
                     <option value="csNumber">CS Number</option>
-                    <option value="model">Model</option>
+                    <option value="paymentStatus">Payment Status</option>
                     <option value="dateAdded">Date Added</option>
-                    <option value="dateModified">Date Modified</option>
+                    <option value="date_paid">Date Paid</option>
+                    <option value="dateRetrieved">Date Retrieved</option>
                 </select>
             </div>
 
@@ -75,7 +100,7 @@
             displayAccounts();
 
             // nice scroll js
-            $("#transction_table").niceScroll({
+            $("#transaction_table").niceScroll({
                 cursorwidth: "8px",
                 autohidemode: false,
                 zindex: 999,
@@ -91,15 +116,16 @@
                     var data = {
                         search: search,
                         action: 1,
-                        btn: "adminSearch",
-                        table: "admins"
+                        btn: "transact_search",
+                        table: "transactions_history"
                     }
                     $.ajax({
                         url: "displayData.php",
                         method: "POST",
                         data: data,
                         success: (res, status) => {
-                            $("#transction_table").html(res);
+                            // console.log(res)
+                            $("#transaction_table").html(res);
                         }
                     });
                 } else {
@@ -109,6 +135,7 @@
             });
         });
 
+    
         function updateAccount(e) {
             e.preventDefault();
             // editName
@@ -191,75 +218,22 @@
 
         function filterBy() {
             let columnName = $("#columnName").val();
-
+            // alert(columnName)
             $.ajax({
                 url: "displayData.php",
                 method: "POST",
                 data: {
-                    filterBtn: 1,
+                    filter_transact: 1,
                     columnName: columnName
                 },
                 success: (res) => {
-                    $("#adminTable").html(res);
+                    // console.log(res)
+                    $("#transaction_table").html(res);
                     $("#search").val('');
                 }
             });
         }
-
-        function askDelete(id) {
-
-            var data = {
-                id: id,
-                deletedAccBtn: "delete",
-                action: 1,
-                table: "admins"
-            };
-
-            Swal.fire({
-                title: "Are you sure?",
-                text: "You won't be able to revert this!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Yes, delete it!",
-            }).then((result) => {
-
-
-                if (result.isConfirmed) {
-
-                    $.ajax({
-                        url: "deleteData.php",
-                        method: "post",
-                        data: data,
-                        success: (res) => {
-                            var response = JSON.parse(res);
-                            if (response.status == 200) {
-                                if (result.isConfirmed) {
-                                    Swal.fire("Deleted!", response.message, "success");
-                                }
-                                displayAccounts();
-                            } else {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Oops...',
-                                    text: response.messsage,
-                                });
-                            }
-                        }
-                    });
-
-                    Swal.fire(
-                        'Deleted!',
-                        'Your file has been deleted.',
-                        'success'
-                    )
-                }
-
-
-            });
-        }
-
+        
         function viewEditAccount(id) {
             $("#updateID").val(id);
 
@@ -300,11 +274,9 @@
 
         function viewAdminAccount(id) {
 
-
-            $("#viewModal").modal('show');
             var data = {
                 id: id,
-                viewBtn: 1
+                view_reciept: 1
             }
             $.ajax({
                 url: "displayData.php",
@@ -312,28 +284,14 @@
                 data: data,
                 success: (res, status) => {
 
-                    var response = JSON.parse(res);
-
                     // // console.log(response);
-                    if (status == "success") {
-
-                        $("#viewName").val(response.adminName);
-                        $("#viewPassword").val(response.password);
-                        $("#viewDateAdded").val(response.dateAdded);
-                        $("#viewDateModified").val(response.dateModified);
-                        $("#viewDateRetrieved").val(response.retrievedDate);
-                        $("#viewRole").val(response.role);
-                        $("#viewUsername").val(response.username);
-
+                    if (res != "empty") {
                         $("#viewModal").modal('show');
+                        var img = document.getElementById('forms').src = `uploads/` + `${res}`;
+                        console.log(img);
                     } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: 'Failed to retirevd',
-                        });
+                        document.getElementById('forms').src = `uploads/default_img.jpg`;
                     }
-
                 }
             });
         }

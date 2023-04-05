@@ -23,12 +23,24 @@ function getById($table, $id)
     return $stmt->get_result();
 }
 
+function getBY_clientID($table, $client_id)
+{
+    global $conn;
+    $sql = "SELECT * FROM `$table` WHERE `client_id` = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $client_id);
+    $stmt->execute();
+    return $stmt->get_result();
+}
+
+
+
 function get_customer_by_clientID($table, $client_id)
 {
     global $conn;
     $sql = "SELECT * FROM `$table` WHERE `client_id` = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $client_id);
+    $stmt->bind_param("s", $client_id);
     $stmt->execute();
     return $stmt->get_result();
 }
@@ -159,9 +171,10 @@ function get_deleted_client($client_id)
     return $conn->query($sql);
 }
 
-function get_deleted_transactions($client_id){
+function get_deleted_transactions($client_id)
+{
     global $conn;
-    $sql =" INSERT INTO deleted_transactions_history
+    $sql = " INSERT INTO deleted_transactions_history
     SELECT * FROM transactions_history WHERE transactions_history.client_id = '$client_id';";
     return $conn->query($sql);
 }
@@ -188,8 +201,39 @@ function insert_client_transactions($client_id, $reciept, $customerName, $csNumb
     return $stmt->execute();
 }
 
-// END OF INSERTION
+function retrieved_client($client_id, $img_path, $customerName, $csNumber, $model, $company, $dateAdded, $dateModified)
+{	
+    global $conn, $today;
+    $sql = "INSERT INTO `customer` (`client_id`, `img_path`, `customerName`, `csNumber`, `model`, `company`, `dateAdded`, `dateModified`, `retrievedDate`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("sssssssss", $client_id, $img_path, $customerName, $csNumber, $model, $company, $dateAdded, $dateModified, $today);
 
+    return $stmt->execute();
+}
+
+function retrieved_transactions($client_id, $reciept, $customerName, $csNumber, $paymentStatus, $dateAdded, $date_paid)
+
+{
+    /**
+     * 	
+    client_id	
+    reciept	
+    customerName	
+    csNumber	
+    paymentStatus	
+    dateAdded	
+    date_paid	
+    dateRetrieved
+     */
+
+    global $conn, $today;
+    $sql = "INSERT INTO `transactions_history` (`client_id`, `reciept`, `customerName`, `csNumber`,`paymentStatus`, `dateAdded`, `date_paid`,`dateRetrieved`) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ssssssss", $client_id, $reciept, $customerName, $csNumber, $paymentStatus, $dateAdded, $date_paid, $today);
+
+    return $stmt->execute();
+}
+// END OF INSERTION
 
 // UPDATE
 function updateAdminAccount($updateId, $adminName, $username, $password, $role)
@@ -207,12 +251,24 @@ function update_img($img_path, $img_id)
 {
     global $conn, $today;
 
-    $sql = "UPDATE `customer` SET `img_path`=? WHERE id=?";
+    $sql = "UPDATE `customer` SET `img_path`=? WHERE `client_id`=?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("si", $img_path, $img_id);
+    $stmt->bind_param("ss", $img_path, $img_id);
     // return true of false
     return $stmt->execute();
 }
+
+function update_transact_img($img_path, $img_id)
+{
+    global $conn, $today;
+
+    $sql = "UPDATE `transactions_history` SET `reciept` = ?, `paymentStatus` = 'paid', `date_paid` = '$today' WHERE `client_id` = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ss", $img_path, $img_id);
+    // return true of false
+    return $stmt->execute();
+}
+
 // END OF UPDATE
 function logout($adminID)
 {
@@ -255,6 +311,17 @@ function delete_client_and_transactions($client_id)
     FROM transactions_history
     INNER JOIN customer ON transactions_history.client_id = customer.client_id
     WHERE transactions_history.client_id='$client_id';";
+
+    return $conn->query($sql);
+}
+
+function permanently_deleted_client_and_transactions($client_id)
+{
+    global $conn;
+    $sql = "DELETE deleted_transactions_history, deleted_client_account
+    FROM deleted_transactions_history
+    INNER JOIN deleted_client_account ON deleted_transactions_history.client_id = deleted_client_account.client_id
+    WHERE deleted_transactions_history.client_id='$client_id';";
 
     return $conn->query($sql);
 }

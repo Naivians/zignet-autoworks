@@ -18,18 +18,18 @@
 
              <!-- accounts -->
              <li>
-                 <a href="supAdminClient.php" class="small-font">
+                 <a href="deleted_client_account.php" class="small-font">
                      <i class='bx bxs-user-detail me-2'></i>
-                     Deleted Customer</a>
+                     Deleted Clients</a>
              </li>
-
+            
              <!-- transaction history -->
              <li>
-                 <a href="supAdminTransact.php" class="small-font">
+                 <a href="deleted_transactions.php" class="small-font">
                      <i class='bx bxs-bank me-2'></i>
                      Deleted Transactions</a>
              </li>
-
+                
              <li>
                  <a href="loginHistory.php" class="small-font">
                      <i class='bx bxs-bank me-2'></i>
