@@ -72,7 +72,7 @@ if (isset($_SESSION['role'])) {
 
             <div class="hero-car">
             </div>
-
+            
             <!-- Swiper -->
             <div class="swiper mySwiper">
                 <div class="swiper-wrapper">
@@ -122,7 +122,7 @@ if (isset($_SESSION['role'])) {
                 password: password,
                 loginBtn: 1
             }
-
+            
             if (username != "" || password != "") {
                 $.ajax({
                     url: "validate.php",
@@ -131,7 +131,7 @@ if (isset($_SESSION['role'])) {
 
                     success: (res) => {
                         if (res == "login successfully") {
-                            window.location.reload();
+                            window.location.href = "supAdminDashboard.php";
                         } else {
                             Swal.fire({
                                 icon: 'error',

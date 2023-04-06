@@ -23,7 +23,7 @@ if (!isset($_SESSION['role'])) {
 </head>
 
 <body>
-
+    
     <!-- View Modal -->
     <div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog ">
@@ -367,13 +367,12 @@ if (!isset($_SESSION['role'])) {
         }
 
         function askDelete(id) {
-
-            var data = {
-                id: id,
-                delete_client_btn: "delete",
-                action:1,
-                table:"admins"
-            };
+            // var data = {
+            //     id: id,
+            //     delete_client_btn: "delete",
+            //     action:1,
+            //     table:"admins"
+            // };
 
             Swal.fire({
                 title: "Are you sure?",

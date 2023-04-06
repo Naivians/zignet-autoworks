@@ -132,8 +132,8 @@ function addAdmin($adminName, $username, $password, $role)
 function loginHistory($adminID, $adminName, $username, $role)
 {
     // adminID	adminName	username	role	login = date today	
-    global $conn, $today;
-    $loginDate = $today;
+    global $conn, $login_date;
+    $loginDate = $login_date;
 
     $sql = "INSERT INTO `login_history` (`adminID`, `adminName`,`username`,`role`,`login`) VALUES(?,?,?,?,?)";
 
@@ -154,10 +154,7 @@ function getDeletedAdminaccount($adminID, $adminName, $role, $username, $passwor
     $stmt->execute();
 }
 
-/*
-INSERT INTO deleted_client_account 
-SELECT * FROM customer WHERE customer.client_id = '2562619197';
-*/
+
 
 function get_deleted_client($client_id)
 {
@@ -190,13 +187,13 @@ function insert_client_data($client_id, $img_path, $customerName, $csNumber, $mo
     return $stmt->execute();
 }
 // customerName	csNumber	paymentStatus	dateAdded	
-function insert_client_transactions($client_id, $reciept, $customerName, $csNumber, $paymentStatus)
+function insert_client_transactions($client_id, $reciept, $customerName, $csNumber,$company, $paymentStatus)
 {
     // 	
     global $conn, $today;
-    $sql = "INSERT INTO `transactions_history` (`client_id`, `reciept`, `customerName`, `csNumber`,`paymentStatus`, `dateAdded`) VALUES(?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO `transactions_history` (`client_id`, `reciept`, `customerName`, `csNumber`, `company` ,`paymentStatus`, `dateAdded`) VALUES(?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("isssss", $client_id, $reciept, $customerName, $csNumber, $paymentStatus, $today);
+    $stmt->bind_param("issssss", $client_id, $reciept, $customerName, $csNumber,$company, $paymentStatus, $today);
 
     return $stmt->execute();
 }
@@ -272,9 +269,9 @@ function update_transact_img($img_path, $img_id)
 // END OF UPDATE
 function logout($adminID)
 {
-    global $conn, $today;
+    global $conn, $login_date;
 
-    $logoutDate = $today;
+    $logoutDate = $login_date;
 
     $sql = "UPDATE `login_history` SET `logout`=? WHERE `loginID`=? LIMIT 1";
     $stmt = $conn->prepare($sql);
@@ -329,7 +326,7 @@ function permanently_deleted_client_and_transactions($client_id)
 function update_client_and_transactions($client_id, $model, $company, $customer_name, $cs_number)
 {
     global $conn, $today;
-    $sql = "UPDATE customer, transactions_history SET customer.customerName = '$customer_name', customer.csNumber = '$cs_number', customer.model='$model', customer.company='$company', customer.dateModified='$today', transactions_history.customerName='$customer_name', transactions_history.csNumber = '$cs_number' WHERE customer.client_id='$client_id' AND transactions_history.client_id='$client_id';";
+    $sql = "UPDATE customer, transactions_history SET customer.customerName = '$customer_name', customer.csNumber = '$cs_number', customer.model='$model', customer.company='$company', customer.dateModified='$today', transactions_history.customerName='$customer_name', transactions_history.csNumber = '$cs_number', transactions_history.company = '$company' WHERE customer.client_id='$client_id' AND transactions_history.client_id='$client_id';";
 
     return $conn->query($sql);
 }

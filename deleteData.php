@@ -88,7 +88,7 @@ if(isset($_POST['deleted_client_and_transactions'])){
     
     // echo $client_id;
     $res = permanently_deleted_client_and_transactions($client_id);
-
+    
     if(!$res){
         echo "Failed to deleted client related data";
     }else{

@@ -242,8 +242,7 @@ ul {
   border-top-right-radius: 5px;
   border-top-left-radius: 5px;
   z-index: 3;
-  transition: .3s ease-in;
- 
+  transition: 0.3s ease-in;
 }
 
 .docs img:hover {
@@ -256,4 +255,38 @@ ul {
 .short_width {
   width: 40%;
   margin: 0 auto;
+}
+
+/* REPORT.PHP */
+.report {
+  border: 1px solid #fff;
+  border-radius: 10px;
+  padding: 15px;
+  width: 300px;
+  height: auto;
+  color: #fff;
+
+  margin-left: 10px;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.msg-container {
+  width: 500px;
+  background-color: #fff;
+  border-radius: 20px;
+  position: absolute;
+  top: 0%;
+  left: 50%;
+  transform: translate(-50%, 50%);
+  text-align: center;
+}
+
+.message {
+  padding: 20px;
 }

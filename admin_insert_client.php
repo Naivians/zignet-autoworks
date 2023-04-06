@@ -18,6 +18,9 @@ $errorMessage = array();
 $customer_name = '';
 $cs_number = '';
 $models = '';
+
+$res = getData("customer");
+$total_clients = $res->num_rows;
 // customer
 if (isset($_POST['create'])) {
 
@@ -103,17 +106,14 @@ if (isset($_POST['create'])) {
         if (!move_uploaded_file($tmp_name, $img_upload_path)) {
             $errorMessage['file_upload_error'] = $upload_error["file_upload_error"];
         } else {
-            $client_id = '';
 
-            for($i = 1; $i <= 10; $i++){
-                $client_id .= rand(1,9);
-            }
-            
+            $client_id = $year . '' . $month . '' . $day . '' . $total_clients+1 ; 
+
             // insert to client and transactions
             insert_client_data($client_id, $new_img_name, $customerName, $csNumber, $model, $company);
             // insert transactions
-            insert_client_transactions($client_id, "default_img.jpg", $customerName, $csNumber, "unpaid");
-
+            insert_client_transactions($client_id, "default_img.jpg", $customerName, $csNumber,$company, "unpaid");
+            
             $_SESSION['success'] = "Successfully added new client";
             header("location:supAdminClient.php");
             exit;

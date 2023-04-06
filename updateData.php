@@ -104,7 +104,7 @@ if(isset($_POST['update_client_btn'])){
     }else{
         // update customer and some of transaction history
         update_client_and_transactions($client_id, $edit_model, $edit_company, $edit_customer_name, $edit_cs_number);
-
+        
         echo "success";
     }
 

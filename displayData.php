@@ -152,6 +152,7 @@ if (isset($_POST['filter_transact'])) {
             <th>Reciept</th>
             <th>Client"s Name</th>
             <th>CS Number</th>
+            <th>Company</th>
             <th>Payment Status</th>
             <th>Date Added</th>
             <th>Date Paid</th>
@@ -165,6 +166,7 @@ if (isset($_POST['filter_transact'])) {
                         <td> <img src="uploads/' . $row['reciept'] . '" alt="reciept" class="img"></td>
                         <td>' . $row['customerName'] . '</td>
                         <td>' . $row['csNumber'] . '</td>
+                        <td>' . $row['company'] . '</td>
                         <td>' . $row['paymentStatus'] . '</td>
                         <td>' . $row['dateAdded'] . '</td>
                         <td>' . $row['date_paid'] . '</td>
@@ -462,6 +464,7 @@ if (isset($_POST['action'])) {
                     <th>Reciept</th>
                     <th>Client"s Name</th>
                     <th>CS Number</th>
+                    <th>Company</th>
                     <th>Payment Status</th>
                     <th>Date Added</th>
                     <th>Date Paid</th>
@@ -475,6 +478,7 @@ if (isset($_POST['action'])) {
                         <td> <img src="uploads/' . $row['reciept'] . '" alt="reciept" class="img"></td>
                         <td>' . $row['customerName'] . '</td>
                         <td>' . $row['csNumber'] . '</td>
+                        <td>' . $row['company'] . '</td>
                         <td>' . $row['paymentStatus'] . '</td>
                         <td>' . $row['dateAdded'] . '</td>
                         <td>' . $row['date_paid'] . '</td>
@@ -519,6 +523,7 @@ if (isset($_POST['action'])) {
                     <th>Reciept</th>
                     <th>Client"s Name</th>
                     <th>CS Number</th>
+                    <th>Company</th>
                     <th>Payment Status</th>
                     <th>Date Added</th>
                     <th>Date Paid</th>
@@ -532,6 +537,7 @@ if (isset($_POST['action'])) {
                         <td> <img src="uploads/' . $row['reciept'] . '" alt="reciept" class="img"></td>
                         <td>' . $row['customerName'] . '</td>
                         <td>' . $row['csNumber'] . '</td>
+                        <td>' . $row['company'] . '</td>
                         <td>' . $row['paymentStatus'] . '</td>
                         <td>' . $row['dateAdded'] . '</td>
                         <td>' . $row['date_paid'] . '</td>
@@ -750,6 +756,7 @@ if (isset($_POST['display_transaction'])) {
             <th>Reciept</th>
             <th>Client"s Name</th>
             <th>CS Number</th>
+            <th>Company</th>
             <th>Payment Status</th>
             <th>Date Added</th>
             <th>Date Paid</th>
@@ -763,6 +770,7 @@ if (isset($_POST['display_transaction'])) {
                         <td> <img src="uploads/' . $row['reciept'] . '" alt="reciept" class="img"></td>
                         <td>' . $row['customerName'] . '</td>
                         <td>' . $row['csNumber'] . '</td>
+                        <td>' . $row['company'] . '</td>
                         <td>' . $row['paymentStatus'] . '</td>
                         <td>' . $row['dateAdded'] . '</td>
                         <td>' . $row['date_paid'] . '</td>
@@ -800,6 +808,7 @@ if (isset($_POST['deleted_transactions'])) {
             <th>Transaction ID</th>
             <th>Client"s Name</th>
             <th>CS Number</th>
+            <th>Company</th>
             <th>Payment Status</th>
             <th>Date Added</th>
             <th>Date Paid</th>
@@ -814,6 +823,7 @@ if (isset($_POST['deleted_transactions'])) {
                         <td>' . $row['client_id'] . '</td>
                         <td>' . $row['customerName'] . '</td>
                         <td>' . $row['csNumber'] . '</td>
+                        <td>' . $row['company'] . '</td>
                         <td>' . $row['paymentStatus'] . '</td>
                         <td>' . $row['dateAdded'] . '</td>
                         <td>' . $row['date_paid'] . '</td>
