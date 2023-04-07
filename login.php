@@ -24,6 +24,19 @@ if (isset($_SESSION['role'])) {
         body {
             background-color: #000B18;
         }
+
+        .home_btn {
+            text-decoration: none;
+            color: var(--primary-);
+            background-color: #dc3545;
+            padding: 5px 15px;
+            border-radius: 40px;
+            transition: 0.3s ease-in;
+        }
+
+        .home_btn:hover {
+            background-color: #dc3521;
+        }
     </style>
 
 </head>
@@ -44,8 +57,12 @@ if (isset($_SESSION['role'])) {
         <!-- NAVIGATIONS FOR LOGIN-->
         <div class="navigation-bar ">
             <div class="logo">
-                <img src="./img/logo.svg" alt="">
+                <a href="index.php" class="text-decoration-none">
+                    <img src="./img/logo.svg" alt="">
+                </a>
+
             </div>
+            <a href="index.php" class="text-decoration-none text-light home_btn">Home</a>
         </div>
         <!-- HERO DESIGN -->
         <section class="hero mt-5">
@@ -65,14 +82,14 @@ if (isset($_SESSION['role'])) {
                             <input type="password" name="password" id="password" placeholder="Enter Password" autocomplete="off">
                         </div>
 
-                        <button type="button"  onclick="login()">Login now!</button>
+                        <button type="button" onclick="login()">Login now!</button>
                     </form>
                 </div>
             </div>
 
             <div class="hero-car">
             </div>
-            
+
             <!-- Swiper -->
             <div class="swiper mySwiper">
                 <div class="swiper-wrapper">
@@ -91,6 +108,7 @@ if (isset($_SESSION['role'])) {
     </div>
 
     <?php include "includes/script.php" ?>
+    <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
     <script src="includes/app.js"></script>
 
     <script>
@@ -122,7 +140,7 @@ if (isset($_SESSION['role'])) {
                 password: password,
                 loginBtn: 1
             }
-            
+
             if (username != "" || password != "") {
                 $.ajax({
                     url: "validate.php",
@@ -150,7 +168,6 @@ if (isset($_SESSION['role'])) {
             }
 
         }
-
     </script>
 </body>
 
