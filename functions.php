@@ -3,6 +3,46 @@
 include "includes/config.php";
 include "includes/date.php";
 
+// DATES
+function todays_client()
+{
+    global $conn, $year, $month, $date;
+    $sql = "SELECT * FROM `customer` WHERE dateAdded=CURDATE();";
+    return $conn->query($sql);
+}
+
+
+// /*check_schedule
+// $queryWeek = "SELECT count(*) as `week` from `patient_visits` where YEARWEEK(`visit_date`) = YEARWEEK('$date');";
+// $queryYear = "SELECT count(*) as `year` from `patient_visits` where YEAR(`visit_date`) = YEAR('$date');";
+// $queryMonth = "SELECT count(*) as `month` from `patient_visits` where YEAR(`visit_date`) = $year and MONTH(`visit_date`) = $month;";
+// $sql = "SELECT count(*) as `month` FROM `tbl_patient` WHERE YEAR(`patient_preffered_day_treatment`) = '$year' AND  MONTH('patient_preffered_day_treatment') = $month;";
+// select * from users where MONTH(order_date) = MONTH(now()) and YEAR(order_date) = YEAR(now());
+// */
+function current_week_client()
+{
+    global $conn, $year, $month, $date;
+    $sql = "SELECT * FROM customer WHERE YEARWEEK(dateAdded) = YEARWEEK(NOW());";
+    return $conn->query($sql);
+}
+
+function current_month_client()
+{
+    global $conn, $year, $month, $date;
+    $sql = "SELECT * FROM customer WHERE MONTH(dateAdded)=MONTH(now()) and YEAR(dateAdded)=YEAR(now());";
+    return $conn->query($sql);
+}
+
+function current_year_client()
+{
+    global $conn, $year, $month, $date;
+    $sql = "SELECT * FROM customer WHERE YEAR(dateAdded) = YEAR(CURRENT_DATE())";
+    return $conn->query($sql);
+}
+
+
+
+
 // RETRIEVE
 function getData($table)
 {
@@ -187,19 +227,19 @@ function insert_client_data($client_id, $img_path, $customerName, $csNumber, $mo
     return $stmt->execute();
 }
 // customerName	csNumber	paymentStatus	dateAdded	
-function insert_client_transactions($client_id, $reciept, $customerName, $csNumber,$company, $paymentStatus)
+function insert_client_transactions($client_id, $reciept, $customerName, $csNumber, $company, $paymentStatus)
 {
     // 	
     global $conn, $today;
     $sql = "INSERT INTO `transactions_history` (`client_id`, `reciept`, `customerName`, `csNumber`, `company` ,`paymentStatus`, `dateAdded`) VALUES(?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("issssss", $client_id, $reciept, $customerName, $csNumber,$company, $paymentStatus, $today);
+    $stmt->bind_param("issssss", $client_id, $reciept, $customerName, $csNumber, $company, $paymentStatus, $today);
 
     return $stmt->execute();
 }
 
 function retrieved_client($client_id, $img_path, $customerName, $csNumber, $model, $company, $dateAdded, $dateModified)
-{	
+{
     global $conn, $today;
     $sql = "INSERT INTO `customer` (`client_id`, `img_path`, `customerName`, `csNumber`, `model`, `company`, `dateAdded`, `dateModified`, `retrievedDate`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
@@ -270,12 +310,10 @@ function update_transact_img($img_path, $img_id)
 function logout($adminID)
 {
     global $conn, $login_date;
-
-    $logoutDate = $login_date;
-
+    
     $sql = "UPDATE `login_history` SET `logout`=? WHERE `loginID`=? LIMIT 1";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("si", $logoutDate, $adminID);
+    $stmt->bind_param("si", $login_date, $adminID);
     // return true of false
     $stmt->execute();
 }

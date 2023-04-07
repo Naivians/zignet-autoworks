@@ -39,7 +39,6 @@ if (isset($_POST['between_two_dates'])) {
 
 
 if (isset($_POST['all_data'])) {
-
     $tables = $conn->escape_string($_POST['tables']);
     $_SESSION["client"] = "all_data";
 }

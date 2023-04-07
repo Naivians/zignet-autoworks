@@ -8,6 +8,46 @@ if (!isset($_SESSION['role'])) {
         header("Location:logout.php?access=1");
     }
 }
+
+include "includes/config.php";
+include "functions.php";
+
+$todays_client = 0;
+$current_week = 0;
+$current_month = 0;
+$current_year = 0;
+
+
+$res = todays_client();
+while($row = $res->fetch_assoc()){
+    $todays_client += 1;
+}
+
+// current_week_client()
+
+$res = current_week_client();
+while($row = $res->fetch_assoc()){
+    $current_week += 1;
+}
+
+
+// current_month_client()
+$res = current_month_client();
+while($row = $res->fetch_assoc()){
+    $current_month += 1;
+}
+
+// current_year_client
+$res = current_year_client();
+while($row = $res->fetch_assoc()){
+    $current_year += 1;
+}
+
+$total_client = getData("customer");
+$total_transactions = getData("transactions_history");
+$total_client = $total_client->num_rows;
+$total_transactions = $total_transactions->num_rows;
+
 ?>
 
 <!DOCTYPE html>
@@ -19,7 +59,7 @@ if (!isset($_SESSION['role'])) {
     // include "includes/sweetalert.php";
     ?>
     <link rel="stylesheet" href="css/dashboard.css?v=<?= time(); ?>">
-    <title>Admin | Archive</title>
+    <title>Admin | Dashbaord</title>
 </head>
 
 <body>
@@ -34,33 +74,61 @@ if (!isset($_SESSION['role'])) {
         </div>
 
         <div class="row">
-            <div class="col-md-3 btn text-light btn-outline-success d-flex align-items-center justify-content-between p-4 me-3">
-                <div class="title">
-                    <h3>25+</h3>
-                    <p>Clients</p>
-                </div>
-                <i class='bx bxs-user-circle fs-1'></i>
-            </div>
-
-            <div class="col-md-3 btn text-light btn-outline-success d-flex align-items-center justify-content-between p-4 me-3">
-                <div class="title">
-                    <h3>25+</h3>
-                    <p>Clients</p>
-                </div>
-                <i class='bx bxs-user-circle fs-1'></i>
-            </div>
-
-            <div class="col-md-3 btn text-light btn-outline-success d-flex align-items-center justify-content-between p-4">
+            <div class="col-md-2 d-flex text-light align-items-center justify-content-between p-4 border border-success m-2 rounded-3">
                 <div class="title">
                     <h3>25+</h3>
                     <p>Users</p>
-                </div>
+                </div> 
                 <i class='bx bxs-user-circle fs-1'></i>
             </div>
-            
-            
-        </div>
 
+            <div class="col-md-2 d-flex text-light align-items-center justify-content-between p-4 border border-success m-2 rounded-3">
+                <div class="title">
+                    <h3><?=$total_client?></h3>
+                    <p>Clients</p>
+                </div>
+                <i class='bx bxs-user-detail fs-1'></i>
+            </div>
+
+            <div class="col-md-2 d-flex text-light align-items-center justify-content-between p-4 border border-success m-2 rounded-3">
+                <div class="title">
+                    <h3><?=$total_transactions?></h3>
+                    <p>Transactions</p>
+                </div>
+                <i class='bx bxs-bank fs-1'></i>
+            </div>
+
+            <div class="col-md-2 d-flex text-light align-items-center justify-content-between p-4 border border-success m-2 rounded-3">
+                <div class="title">
+                    <h3><?=$todays_client?></h3>
+                    <p>Today's Client</p>
+                </div>
+                <i class='bx bxs-user-detail fs-1'></i>
+            </div>
+
+            <div class="col-md-2 d-flex text-light align-items-center justify-content-between p-4 border border-success m-2 rounded-3">
+                <div class="title">
+                    <h3><?=$current_week?></h3>
+                    <p>Current Week Client</p>
+                </div>
+                <i class='bx bxs-user-detail fs-1'></i>
+            </div>
+
+            <div class="col-md-2 d-flex text-light align-items-center justify-content-between p-4 border border-success m-2 rounded-3">
+                <div class="title">
+                    <h3><?=$current_month?></h3>
+                    <p>Current Month Client</p>
+                </div>
+                <i class='bx bxs-user-detail fs-1'></i>
+            </div>
+            <div class="col-md-2 d-flex text-light align-items-center justify-content-between p-4 border border-success m-2 rounded-3">
+                <div class="title">
+                    <h3><?=$current_year?></h3>
+                    <p>Current Year Client</p>
+                </div>
+                <i class='bx bxs-user-detail fs-1'></i>
+            </div>
+        </div>
 
     </div>
 
