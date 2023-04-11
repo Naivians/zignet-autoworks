@@ -347,7 +347,6 @@ if (isset($_POST['all_data'])) {
         if ($_GET["generate"] == "login_history") {
             $sql = "SELECT * FROM `login_history` ORDER BY `login` ASC ";
             $res = $conn->query($sql);
-
         ?>
             <div class="wrapper">
                 <a href="report.php" class="btn btn-dark text-decoration-none mt-4">back</a>
@@ -396,7 +395,7 @@ if (isset($_POST['all_data'])) {
                     </table>
                 </div>
             </div>
-        <?php
+    <?php
 
         }
     }
@@ -406,32 +405,27 @@ if (isset($_POST['all_data'])) {
     <script src="html2pdf/html2pdf.bundle.min.js"></script>
 
     <script>
-        function generate_patient_info() {
-            var report = document.getElementById("generate-table");
+        var report = document.getElementById("generate-table");
 
-            var opt = {
-                margin: .5,
-                filename: "patients info.pdf",
-                image: {
-                    type: 'jpeg',
-                    quality: 0.98
-                },
-                html2canvas: {
-                    scale: 2
-                },
-                jsPDF: {
-                    unit: 'in',
-                    format: 'Letter',
-                    orientation: 'Portrait',
-                    compressPDF: true
-                },
-            };
+        var opt = {
+            margin: .5,
+            filename: "patients info.pdf",
+            image: {
+                type: 'jpeg',
+                quality: 0.98
+            },
+            html2canvas: {
+                scale: 2
+            },
+            jsPDF: {
+                unit: 'in',
+                format: 'Letter',
+                orientation: 'Portrait',
+                compressPDF: true
+            },
+        };
 
-            html2pdf().set(opt).from(report).save();
-        }
-
-        // run patient info
-        generate_patient_info();
+        html2pdf().set(opt).from(report).save();
     </script>
 </body>
 

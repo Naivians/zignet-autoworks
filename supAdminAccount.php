@@ -367,12 +367,12 @@ if (!isset($_SESSION['role'])) {
         }
 
         function askDelete(id) {
-            // var data = {
-            //     id: id,
-            //     delete_client_btn: "delete",
-            //     action:1,
-            //     table:"admins"
-            // };
+            var data = {
+                id: id,
+                delete_client_btn: "delete",
+                action:1,
+                table:"admins"
+            };
 
             Swal.fire({
                 title: "Are you sure?",

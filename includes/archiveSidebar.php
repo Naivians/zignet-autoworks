@@ -15,6 +15,18 @@
                      <i class='bx bxs-user-circle me-2'></i>
                      Deleted Admin</a>
              </li>
+            
+             <li>
+                 <a href="deleted_user.php" class="small-font">
+                 <i class='bx bx-user me-2'></i>
+                     Deleted User</a>
+             </li>
+
+             <li>
+                 <a href="deleted_request.php" class="small-font">
+                 <i class='bx bx-folder-open me-2'></i>
+                     Deleted Request</a>
+             </li>
 
              <!-- accounts -->
              <li>

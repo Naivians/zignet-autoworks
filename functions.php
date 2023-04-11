@@ -11,14 +11,6 @@ function todays_client()
     return $conn->query($sql);
 }
 
-
-// /*check_schedule
-// $queryWeek = "SELECT count(*) as `week` from `patient_visits` where YEARWEEK(`visit_date`) = YEARWEEK('$date');";
-// $queryYear = "SELECT count(*) as `year` from `patient_visits` where YEAR(`visit_date`) = YEAR('$date');";
-// $queryMonth = "SELECT count(*) as `month` from `patient_visits` where YEAR(`visit_date`) = $year and MONTH(`visit_date`) = $month;";
-// $sql = "SELECT count(*) as `month` FROM `tbl_patient` WHERE YEAR(`patient_preffered_day_treatment`) = '$year' AND  MONTH('patient_preffered_day_treatment') = $month;";
-// select * from users where MONTH(order_date) = MONTH(now()) and YEAR(order_date) = YEAR(now());
-// */
 function current_week_client()
 {
     global $conn, $year, $month, $date;
@@ -40,10 +32,29 @@ function current_year_client()
     return $conn->query($sql);
 }
 
-
-
-
 // RETRIEVE
+
+function inactive_users()
+{
+    global $conn;
+    $sql = "SELECT active FROM `user` WHERE `active` = 0";
+    return $conn->query($sql);
+}
+
+function active_users()
+{
+    global $conn;
+    $sql = "SELECT active FROM `user` WHERE `active` = 1";
+    return $conn->query($sql);
+}
+
+function is_username_exist($username)
+{
+    global $conn;
+    $sql = "SELECT `username` FROM user WHERE `username` = '$username'";
+    return $conn->query($sql);
+}
+
 function getData($table)
 {
     global $conn;
@@ -72,6 +83,17 @@ function getBY_clientID($table, $client_id)
     $stmt->execute();
     return $stmt->get_result();
 }
+
+function getBY_userID($table, $user_id)
+{
+    global $conn;
+    $sql = "SELECT * FROM `$table` WHERE `user_id` = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $user_id);
+    $stmt->execute();
+    return $stmt->get_result();
+}
+
 
 
 
@@ -109,10 +131,10 @@ function checkForUsername($username)
     return $rows;
 }
 
-function validateCredential($username)
+function validateCredential($table, $username)
 {
     global $conn;
-    $sql = "SELECT * FROM `admins` WHERE `username` = ?";
+    $sql = "SELECT * FROM `$table` WHERE `username` = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $username);
     $stmt->execute();
@@ -126,17 +148,31 @@ function sortBy($table, $column)
     return $conn->query($sql);
 }
 
-function liveSearch($table, $searhcItem)
+function search_request($table, $searchItem)
 {
     global $conn;
-    $sql = "SELECT * FROM `$table` WHERE `adminName` LIKE '%{$searhcItem}%' ";
+    $sql = "SELECT * FROM `$table` WHERE `user_id` LIKE '%{$searchItem}%' OR `request_id` LIKE '%{$searchItem}%' OR `display_name` LIKE '%{$searchItem}%' OR `cs_number` LIKE '%{$searchItem}%' OR `model` LIKE '%{$searchItem}%' OR `company` LIKE '%{$searchItem}%' OR `schedule` LIKE '%{$searchItem}%'";
     return $conn->query($sql);
 }
 
-function seacrh_client($table, $searhcItem)
+function liveSearch($table, $searchItem)
 {
     global $conn;
-    $sql = "SELECT * FROM `$table` WHERE `customerName` LIKE '%{$searhcItem}%' ";
+    $sql = "SELECT * FROM `$table` WHERE `adminName` LIKE '%{$searchItem}%' ";
+    return $conn->query($sql);
+}
+
+function user_search($table, $searchItem)
+{
+    global $conn;
+    $sql = "SELECT * FROM `$table` WHERE `user_id` LIKE '%{$searchItem}%' OR `display_name` LIKE '%{$searchItem}%'";
+    return $conn->query($sql);
+}
+
+function seacrh_client($table, $searchItem)
+{
+    global $conn;
+    $sql = "SELECT * FROM `$table` WHERE `customerName` LIKE '%{$searchItem}%' ";
     return $conn->query($sql);
 }
 
@@ -157,6 +193,34 @@ function retrievedAdmin($adminName, $username, $password, $role, $dateAdded, $da
 
 
 // INSERT
+
+function insert_form($user_id, $request_id, $display_name, $company, $model, $cs_number, $schedule, $front_windshield, $rear_windshield, $front_windows, $rear_windows)
+{
+    global $conn, $today;
+
+    $role = "user";
+
+    $sql = "INSERT INTO `request_form` (`user_id`,`request_id` , `display_name`, `company`, `model`, `cs_number`, `schedule`, `front_windshield`, `rear_windshield`, `front_side_windows`, `rear_side_windows`, `date_added`) VALUES(?,?,?,?,?, ?, ?, ?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ssssssssssss", $user_id, $request_id, $display_name, $company, $model, $cs_number, $schedule, $front_windshield, $rear_windshield, $front_windows, $rear_windows, $today);
+    // return true of false
+    return $stmt->execute();
+}
+
+function insert_user($user_id, $display_name, $username, $password,  $contact)
+{
+    global $conn, $today;
+
+    $role = "user";
+
+    $sql = "INSERT INTO `user` (`user_id`, `display_name`, `role`, `username`, `password`, `contact`, `date_added`) VALUES(?,?,?,?,?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("sssssss", $user_id, $display_name, $role, $username, $password, $contact, $today);
+    // return true of false
+    $stmt->execute();
+    return $stmt->insert_id;
+}
+
 function addAdmin($adminName, $username, $password, $role)
 {
     global $conn, $today;
@@ -208,6 +272,31 @@ function get_deleted_client($client_id)
     return $conn->query($sql);
 }
 
+function get_deleted_user($id)
+{
+    global $conn;
+
+    $sql =  "
+    INSERT INTO deleted_user 
+    SELECT * FROM user WHERE user.id = '$id';
+    ";
+
+    return $conn->query($sql);
+}
+
+function get_deleted_request($id)
+{
+    global $conn;
+
+    $sql =  "
+    INSERT INTO deleted_request_form
+    SELECT * FROM request_form WHERE request_form.id = '$id';
+    ";
+    return $conn->query($sql);
+}
+
+
+
 function get_deleted_transactions($client_id)
 {
     global $conn;
@@ -248,20 +337,19 @@ function retrieved_client($client_id, $img_path, $customerName, $csNumber, $mode
     return $stmt->execute();
 }
 
+function retrieved_user($user_id, $request_id, $customerName, $csNumber, $model, $company, $dateAdded, $dateModified)
+{
+    global $conn, $today;
+    $sql = "INSERT INTO `customer` (`client_id`, `img_path`, `customerName`, `csNumber`, `model`, `company`, `dateAdded`, `dateModified`, `retrievedDate`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("sssssssss", $client_id, $img_path, $customerName, $csNumber, $model, $company, $dateAdded, $dateModified, $today);
+
+    return $stmt->execute();
+}
+
 function retrieved_transactions($client_id, $reciept, $customerName, $csNumber, $paymentStatus, $dateAdded, $date_paid)
 
 {
-    /**
-     * 	
-    client_id	
-    reciept	
-    customerName	
-    csNumber	
-    paymentStatus	
-    dateAdded	
-    date_paid	
-    dateRetrieved
-     */
 
     global $conn, $today;
     $sql = "INSERT INTO `transactions_history` (`client_id`, `reciept`, `customerName`, `csNumber`,`paymentStatus`, `dateAdded`, `date_paid`,`dateRetrieved`) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
@@ -306,11 +394,44 @@ function update_transact_img($img_path, $img_id)
     return $stmt->execute();
 }
 
+
+// USERS ACTIVATIONS
+function activate($user_id)
+{
+    global $conn;
+    $sql = "UPDATE `user` SET active = 1  WHERE `user_id` = '$user_id'";
+    return $conn->query($sql);
+}
+
+function deactivate($user_id)
+{
+    global $conn;
+    $sql = "UPDATE `user` SET active = 0 WHERE `user_id` = '$user_id'";
+    return $conn->query($sql);
+}
+
+function activate_all()
+{
+    global $conn;
+    $sql = "UPDATE `user` SET active = 1 WHERE `active` = 0";
+    return $conn->query($sql);
+}
+
+function deactivate_all()
+{
+    global $conn;
+    $sql = "UPDATE `user` SET active = 0 WHERE `active` = 1";
+    return $conn->query($sql);
+}
+
+
+
+
 // END OF UPDATE
 function logout($adminID)
 {
     global $conn, $login_date;
-    
+
     $sql = "UPDATE `login_history` SET `logout`=? WHERE `loginID`=? LIMIT 1";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("si", $login_date, $adminID);
@@ -336,6 +457,27 @@ function deleteData($table, $id)
         $stmt->bind_param('i', $id);
         return $stmt->execute();
     }
+
+    if ($table == "deleted_user") {
+        $sql = "DELETE FROM `$table` WHERE `id` = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param('i', $id);
+        return $stmt->execute();
+    }
+}
+
+function delete_user($id)
+{
+    global $conn;
+    $sql = "DELETE FROM `user` WHERE `id` = '$id'";
+    return $conn->query($sql);
+}
+
+function delete_request($id)
+{
+    global $conn;
+    $sql = "DELETE FROM `request_form` WHERE `id` = '$id'";
+    return $conn->query($sql);
 }
 
 // delete from multiple tables
@@ -368,3 +510,14 @@ function update_client_and_transactions($client_id, $model, $company, $customer_
 
     return $conn->query($sql);
 }
+
+// users
+function update_user($user_id, $update_display_name, $update_username, $update_password, $update_contact)
+{
+    global $conn, $today;
+
+    $sql = "UPDATE `user` SET `display_name` = '$update_display_name', `username` = '$update_username', `password` = '$update_password',`contact`='$update_contact', `date_modified` = '$today' WHERE `user_id` = '$user_id'";
+
+    return $conn->query($sql);
+}
+

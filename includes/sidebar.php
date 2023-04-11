@@ -1,4 +1,3 @@
- 
  <!-- sidebar -->
  <aside class="sidebar" id="sidebar">
      <!-- logo -->
@@ -6,7 +5,7 @@
          <img src="img/ZIGNET.png" alt="zignet logo">
          <p class="text-light fs-5 mt-2">Zignet Autoworks</p>
      </div>
-    
+
      <div class="navs">
          <ul>
              <!-- dashboard -->
@@ -35,11 +34,25 @@
                      <i class='bx bxs-bank me-2'></i>
                      Transactions</a>
              </li>
+            
+             <!-- transaction history -->
+             <li>
+                 <a href="users.php" class="small-font">
+                 <i class='bx bx-user me-2'></i>
+                     Users</a>
+             </li>
+
+             <!-- transaction history -->
+             <li>
+                 <a href="request.php" class="small-font">
+                     <i class='bx bx-folder-open me-2'></i>
+                     Request form</a>
+             </li>
 
              <li>
                  <a href="report.php" class="small-font">
-                 <i class='bx bxs-report me-2'></i>
-                    Report</a>
+                     <i class='bx bxs-report me-2'></i>
+                     Report</a>
              </li>
          </ul>
      </div>

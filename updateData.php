@@ -4,7 +4,7 @@ include "includes/config.php";
 include "functions.php";
 
 if (isset($_POST['editBtn'])) {
-    
+
     $adminName = $conn->escape_string($_POST['editName']);
     $role = $conn->escape_string($_POST['editRole']);
     $username = $conn->escape_string($_POST['editUsername']);
@@ -92,20 +92,87 @@ if (isset($_POST['editBtn'])) {
 
 // Client
 
-if(isset($_POST['update_client_btn'])){
+if (isset($_POST['update_client_btn'])) {
     $client_id = $conn->escape_string($_POST['client_id']);
     $edit_customer_name = $conn->escape_string($_POST['edit_customer_name']);
     $edit_company = $conn->escape_string($_POST['edit_company']);
     $edit_model = $conn->escape_string($_POST['edit_model']);
     $edit_cs_number = $conn->escape_string($_POST['edit_cs_number']);
 
-    if($client_id == "" || $edit_customer_name == "" || $edit_company == "" || $edit_model == "" || $edit_cs_number == ""){
+    if ($client_id == "" || $edit_customer_name == "" || $edit_company == "" || $edit_model == "" || $edit_cs_number == "") {
         echo "All fields are mandatory";
-    }else{
+    } else {
         // update customer and some of transaction history
         update_client_and_transactions($client_id, $edit_model, $edit_company, $edit_customer_name, $edit_cs_number);
-        
+
         echo "success";
     }
+}
 
+
+
+if (isset($_POST['update_user_btn'])) {
+
+    $user_id = $conn->escape_string($_POST['user_id']);
+    $update_display_name = $conn->escape_string($_POST['update_display_name']);
+    $update_username = $conn->escape_string($_POST['update_username']);
+    $update_password = $conn->escape_string($_POST['update_password']);
+    $update_contact = $conn->escape_string($_POST['update_contact']);
+
+    $res = update_user($user_id, $update_display_name, $update_username, $update_password, $update_contact);
+
+    if (!$res) {
+        echo "Failed to update account";
+    } else {
+        echo "success";
+    }
+}
+
+
+// USERS
+
+// activate users
+if(isset($_POST['activate_btn'])){
+    $user_id = $conn->escape_string($_POST['user_id']);
+    $res = activate($user_id);
+
+    if(!$res){
+        echo "Failed to Deactivate";
+    }else{
+        echo "success";
+    }
+}
+
+// deactivate_btn
+if(isset($_POST['deactivate_btn'])){
+    $user_id = $conn->escape_string($_POST['user_id']);
+    $res = deactivate($user_id);
+
+    if(!$res){
+        echo "Failed to Deactivate";
+    }else{
+        echo "success";
+    }
+}
+
+// activate all 
+if(isset($_POST['activate_all'])){
+    $res = activate_all();
+
+    if(!$res){
+        echo "Failed to activate all accounts";
+    }else{
+        echo "success";
+    }
+}
+
+// deactivate all
+if(isset($_POST['deactivate_all'])){
+    $res = deactivate_all();
+
+    if(!$res){
+        echo "Failed to activate all accounts";
+    }else{
+        echo "success";
+    }
 }

@@ -2,6 +2,9 @@
   --darkBlue-: #000b18;
   --pink-: #ff70df;
   --primary-: #ffffff;
+  --success-:#5cb85c;
+  --danger-: #d9534f;
+
 }
 
 * {
@@ -289,4 +292,19 @@ ul {
 
 .message {
   padding: 20px;
+}
+
+
+/* USERS */
+
+.badge-success{
+  background-color: var(--success-);
+}
+
+.badge-danger{
+  background-color: var(--danger-);
+}
+
+.badge-danger, .badge-success{
+  padding: 5px;
 }

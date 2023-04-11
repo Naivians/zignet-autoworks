@@ -1,7 +1,11 @@
 <?php
-
+session_start();
 include "includes/config.php";
 include "functions.php";
+include "includes/date.php";
+
+$res = getData("request_form");
+$total_users = $res->num_rows;
 
 if (isset($_POST['action'])) {
     $adminName = $conn->escape_string($_POST['adminName']);
@@ -95,6 +99,8 @@ if (isset($_POST['retrievedAction'])) {
             echo json_encode($response);
         }
     }
+
+    
 }
 
 
@@ -107,7 +113,7 @@ if (isset($_POST['retrieved_deleted_client_and_transactions'])) {
 
         $res = $res->fetch_assoc();
 
-        
+
 
         $client = retrieved_client($res['client_id'], $res['img_path'], $res['customerName'], $res['csNumber'], $res['model'], $res['company'], $res['dateAdded'], $res['dateModified']);
 
@@ -123,14 +129,13 @@ if (isset($_POST['retrieved_deleted_client_and_transactions'])) {
                     echo "Failed to retrieved deleted transactions_history";
                 } else {
                     $res = permanently_deleted_client_and_transactions($client_id);
-                    if(!$res){
+                    if (!$res) {
                         echo "Failed to retrieved deleted transactions_history";
-                    }else{
+                    } else {
                         echo "success";
                     }
-                   
                 }
-            }else{
+            } else {
                 echo "Account does not exist in the database";
             }
         }
@@ -138,3 +143,38 @@ if (isset($_POST['retrieved_deleted_client_and_transactions'])) {
         echo "Account does not exist in the database";
     }
 }
+
+ if(isset($_POST['request_btn'])){
+    $display_name = $conn->escape_string($_SESSION['display_name']);
+    $user_id = $conn->escape_string($_SESSION['user_id']);
+    $company = $conn->escape_string($_POST['company']);
+    $model = $conn->escape_string($_POST['model']);
+    $cs_number = $conn->escape_string($_POST['cs_number']);
+    $schedule = $conn->escape_string($_POST['sched']);
+    $front_windshield = $conn->escape_string($_POST['front_windshield']);
+    $rear_windshield = $conn->escape_string($_POST['rear_windshield']);
+    $front_windows = $conn->escape_string($_POST['front_windows']);
+    $rear_windows = $conn->escape_string($_POST['rear_windows']);
+
+    // $request_id = $user_id = $year . "" . $month . "" . $day."". $total_users +1 ;
+    $request_id = uniqid();
+    
+    $res = insert_form($user_id, $request_id, $display_name, $company, $model, $cs_number, $schedule, $front_windshield, $rear_windshield, $front_windows, $rear_windows);
+    
+    if(!$res){
+        echo "Failed to send form request.";
+    }else{
+        echo "success";
+    }
+
+ }
+
+
+ if(isset($_POST['retrievedBtn'])){
+    $id = $conn->escape_string($_POST['id']);
+    
+    // retrieved
+    
+    // permanent delete
+    deleteData("deleted_user", $id);
+ }

@@ -13,8 +13,8 @@ if (isset($_SESSION['role'])) {
 
 <head>
     <?php include "includes/header.php"; ?>
-    <title>Home | Login to your Account</title>
-
+    <title>Home | Sign up</title>
+    
     <!-- custom css -->
     <link rel="stylesheet" href="css/login.css?v=<?= time() ?>">
 
@@ -64,28 +64,37 @@ if (isset($_SESSION['role'])) {
             <a href="index.php" class="text-decoration-none text-light home_btn">Home</a>
         </div>
         <!-- HERO DESIGN -->
-        <section class="hero mt-5">
+        <section class="hero">
             <div class="hero-left">
                 <div class="hero-title">
-                    <h1>Welcome to <span id="title">Zignet Autoworks</span> please login to your account</h1>
+                    <h1>Welcome to <span id="title">Zignet Autoworks</span> create your account here</h1>
                 </div>
 
                 <div class="form">
                     <form>
+                        <!-- display name -->
+                        <div class="">
+                            <input type="text" name="display_name" id="display_name" placeholder="Enter Full Name" autocomplete="off">
+                        </div>
+
+                        <div class="">
+                            <input type="text" name="contact" id="contact" placeholder="Enter Contact Number" autocomplete="off">
+                        </div>
+
                         <!-- username -->
-                        <div class="mb3">
+                        <div class="">
                             <input type="text" name="username" id="username" placeholder="Enter Username" autocomplete="off">
                         </div>
                         <!-- password -->
-                        <div class="mb3">
+                        <div class="mb-3">
                             <input type="password" name="password" id="password" placeholder="Enter Password" autocomplete="off">
                         </div>
 
-                        <button type="button" onclick="login()">Login now!</button>
+                        <button type="button" onclick="sign_up()">Register Now!</button>
                     </form>
                 </div>
 
-                <p class="text-light mt-4">Don't have account? <a href="sign_up.php" class="">Register Here!</a></p>
+                <p class="text-light mt-4">Already have account? <a href="login.php" class="">Login Here!</a></p>
             </div>
 
             <div class="hero-car">
@@ -132,59 +141,65 @@ if (isset($_SESSION['role'])) {
         });
 
 
-        function login() {
+        function sign_up() {
+
             let username = $("#username").val();
             let password = $("#password").val();
+            let display_name = $("#display_name").val();
+            let contact = $("#contact").val();
+            // contact
 
             let data = {
                 username: username,
+                contact: contact,
                 password: password,
-                loginBtn: 1
+                display_name: display_name,
+                register_btn: 1
             }
 
-            if (username != "" || password != "") {
+            if (username == "" || password == "" || display_name == "" || contact == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: "All fields are mandatory",
+                });
+
+                reset();
+
+            } else {    
                 $.ajax({
                     url: "validate.php",
                     method: "POST",
                     data: data,
 
                     success: (res) => {
-
-                        if (res == "user") {
-                            window.location.href = "user_view.php";
-                        } else if (res == "admin") {
-                            // window.location.reload();
-                            window.location.href = "supAdminDashboard.php";
+                        if (res == "Registered") {
+                            // window.location.href = "supAdminDashboard.php";
+                            Swal.fire(
+                                'Successfully Created Account!',
+                                'Please wait for the admin to activate your account',
+                                'success'
+                            )
+                            reset();
                         } else {
-                            if (res == "wrong password") {
-                                $("#password").css("border", "1px solid red");
-                                $("#username").css("border", "none");
-                            } else if (res == "You're account is not yet activated by the admin.") {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Oops...',
-                                    text: "Please wait for some time, You're account is not yet activated by the admin.",
-                                    footer: '<a href="contact_us.php">Contact them here!</a>'
-                                });
-                                reset();
-                            } else {
-                                $("#password").css("border", "1px solid red");
-                                $("#username").css("border", "1px solid red");
-                                reset();
-                            }
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: res,
+                            });
+                            $("#username").val('');
                         }
-
-
                     }
-                });
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: "All fields are mandatory",
                 });
             }
 
+        }
+
+        function reset() {
+            $("#username").val('');
+            $("#password").val('');
+            $("#display_name").val('');
+            $("#contact").val('');
         }
     </script>
 </body>

@@ -18,7 +18,7 @@
                         <a href="contact_us.php">Contact Us</a>
                     </li>
                     <li>
-                        <a href="login.php" id="active">Get Appointment</a>
+                        <a href="login.php" id="active">Login</a>
                     </li>
                 </ul>
             </nav>

@@ -12,8 +12,6 @@
   font-family: "Poppins", sans-serif;
 }
 
-
-
 /* LOGIN PAGE DESIGNS */
 .wrapper {
   width: 90%;
@@ -77,7 +75,6 @@
   height: auto;
 }
 
-
 /* .hero .hero-left{
   flex: 2;
 }
@@ -86,7 +83,6 @@
 .hero .hero-car{
   flex: 1;
 } */
-
 
 .hero .hero-left .form input[type="text"],
 .hero .hero-left .form input[type="password"],
@@ -243,17 +239,12 @@ button:active
   object-fit: cover;
 }
 
-.border-error{
+.border-error {
   border: 2px solid #ff0000;
 }
 
-/* END OF HERO PAGE */
-
-/* ABOUT US */
-/* END OF ABOUT US */
-
-/* SERVICES */
-/* END OF SERVICES */
-
-/* CONTACT US */
-/* END CONTACT US */
+/* REGISTER */
+.register {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  border-radius: 10px;
+}

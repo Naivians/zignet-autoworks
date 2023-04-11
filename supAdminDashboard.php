@@ -19,32 +19,40 @@ $current_year = 0;
 
 
 $res = todays_client();
-while($row = $res->fetch_assoc()){
+while ($row = $res->fetch_assoc()) {
     $todays_client += 1;
 }
 
 // current_week_client()
 
 $res = current_week_client();
-while($row = $res->fetch_assoc()){
+while ($row = $res->fetch_assoc()) {
     $current_week += 1;
 }
 
 
 // current_month_client()
 $res = current_month_client();
-while($row = $res->fetch_assoc()){
+while ($row = $res->fetch_assoc()) {
     $current_month += 1;
 }
 
 // current_year_client
 $res = current_year_client();
-while($row = $res->fetch_assoc()){
+while ($row = $res->fetch_assoc()) {
     $current_year += 1;
 }
 
+
+$inactive = inactive_users();
+$active = active_users();
 $total_client = getData("customer");
 $total_transactions = getData("transactions_history");
+
+
+
+$inactive = $inactive->num_rows;
+$active = $active->num_rows;
 $total_client = $total_client->num_rows;
 $total_transactions = $total_transactions->num_rows;
 
@@ -76,15 +84,23 @@ $total_transactions = $total_transactions->num_rows;
         <div class="row">
             <div class="col-md-2 d-flex text-light align-items-center justify-content-between p-4 border border-success m-2 rounded-3">
                 <div class="title">
-                    <h3>25+</h3>
-                    <p>Users</p>
-                </div> 
-                <i class='bx bxs-user-circle fs-1'></i>
+                    <h3><?=$active?></h3>
+                    <p>Actived Users</p>
+                </div>
+                <i class='bx bx-user fs-1'></i>
             </div>
 
             <div class="col-md-2 d-flex text-light align-items-center justify-content-between p-4 border border-success m-2 rounded-3">
                 <div class="title">
-                    <h3><?=$total_client?></h3>
+                    <h3><?=$inactive?></h3>
+                    <p>Deactive Users</p>
+                </div>
+                <i class='bx bx-user fs-1'></i>
+            </div>
+
+            <div class="col-md-2 d-flex text-light align-items-center justify-content-between p-4 border border-success m-2 rounded-3">
+                <div class="title">
+                    <h3><?= $total_client ?></h3>
                     <p>Clients</p>
                 </div>
                 <i class='bx bxs-user-detail fs-1'></i>
@@ -92,7 +108,7 @@ $total_transactions = $total_transactions->num_rows;
 
             <div class="col-md-2 d-flex text-light align-items-center justify-content-between p-4 border border-success m-2 rounded-3">
                 <div class="title">
-                    <h3><?=$total_transactions?></h3>
+                    <h3><?= $total_transactions ?></h3>
                     <p>Transactions</p>
                 </div>
                 <i class='bx bxs-bank fs-1'></i>
@@ -100,7 +116,7 @@ $total_transactions = $total_transactions->num_rows;
 
             <div class="col-md-2 d-flex text-light align-items-center justify-content-between p-4 border border-success m-2 rounded-3">
                 <div class="title">
-                    <h3><?=$todays_client?></h3>
+                    <h3><?= $todays_client ?></h3>
                     <p>Today's Client</p>
                 </div>
                 <i class='bx bxs-user-detail fs-1'></i>
@@ -108,7 +124,7 @@ $total_transactions = $total_transactions->num_rows;
 
             <div class="col-md-2 d-flex text-light align-items-center justify-content-between p-4 border border-success m-2 rounded-3">
                 <div class="title">
-                    <h3><?=$current_week?></h3>
+                    <h3><?= $current_week ?></h3>
                     <p>Current Week Client</p>
                 </div>
                 <i class='bx bxs-user-detail fs-1'></i>
@@ -116,20 +132,19 @@ $total_transactions = $total_transactions->num_rows;
 
             <div class="col-md-2 d-flex text-light align-items-center justify-content-between p-4 border border-success m-2 rounded-3">
                 <div class="title">
-                    <h3><?=$current_month?></h3>
+                    <h3><?= $current_month ?></h3>
                     <p>Current Month Client</p>
                 </div>
                 <i class='bx bxs-user-detail fs-1'></i>
             </div>
             <div class="col-md-2 d-flex text-light align-items-center justify-content-between p-4 border border-success m-2 rounded-3">
                 <div class="title">
-                    <h3><?=$current_year?></h3>
+                    <h3><?= $current_year ?></h3>
                     <p>Current Year Client</p>
                 </div>
                 <i class='bx bxs-user-detail fs-1'></i>
             </div>
         </div>
-
     </div>
 
     <!-- import sidebar -->

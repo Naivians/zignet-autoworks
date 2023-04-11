@@ -3,10 +3,20 @@ include "includes/config.php";
 include "functions.php";
 
 if (isset($_POST['action'])) {
-
+    
     $id = $conn->escape_string($_POST['id']);
     $table = $conn->escape_string($_POST['table']);
     $btn = $conn->escape_string($_POST['delete_client_btn']);
+
+    if($btn == "delete_user_forever"){
+        
+        
+        if(!deleteData($table, $id)){
+            echo "Failed to delete user";
+        }else{
+            echo "success";
+        }
+    }
 
     // this button is from retieved page so this is delete permanently
     if ($btn == "deletedBTN") {
@@ -57,11 +67,11 @@ if (isset($_POST['action'])) {
     }
 
     if ($btn == "delete_client_btn") {
-        
+
         // insert to archives
         get_deleted_client($id);
         get_deleted_transactions($id);
-        
+
         $res = delete_client_and_transactions($id);
 
         if (!$res) {
@@ -83,16 +93,30 @@ if (isset($_POST['action'])) {
 // 
 
 // deleted_client_and_transactions
-if(isset($_POST['deleted_client_and_transactions'])){
+if (isset($_POST['deleted_client_and_transactions'])) {
     $client_id = $conn->escape_string($_POST['client_id']);
-    
+
     // echo $client_id;
     $res = permanently_deleted_client_and_transactions($client_id);
-    
-    if(!$res){
+
+    if (!$res) {
         echo "Failed to deleted client related data";
-    }else{
+    } else {
         echo "success";
     }
+}
 
+
+if(isset($_POST['delete_user_btn'])){
+    $id = $conn->escape_string($_POST['id']);
+    get_deleted_user($id);
+
+    $user = delete_user($id);
+    $request = delete_request($id);
+    
+    if($user == TRUE && $request == TRUE){
+        echo "success";
+    }else{
+        echo "Failed to delete";
+    }
 }
