@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <link rel="stylesheet" href="css/landing.css?<?= time();?>">
+    <link rel="stylesheet" href="css/landing.css?<?= time(); ?>">
     <?php include "includes/header.php"; ?>
     <title>Zignet | About us</title>
 </head>
@@ -21,9 +21,6 @@
                         <div class="card-body">
                             <h5 class="card-title">PAINT PROTECTION FILM</h5>
                             <p class="card-text">Film protected from scratches and debris of car’s paint.</p>
-                            <a href="contact_us.php" class="btn btn-primary">
-                                <i class='bx bxs-phone-call'></i>
-                                Contact Us!</a>
                         </div>
                     </div>
                 </div>
@@ -34,9 +31,6 @@
                         <div class="card-body">
                             <h5 class="card-title">GLASS REPAIR</h5>
                             <p class="card-text">Affordable and quick repair of cracks and scratches of car and home/business glass.</p>
-                            <a href="contact_us.php" class="btn btn-primary">
-                                <i class='bx bxs-phone-call'></i>
-                                Contact Us!</a>
                         </div>
                     </div>
                 </div>
@@ -48,9 +42,6 @@
                         <div class="card-body">
                             <h5 class="card-title">CAR DETAILING</h5>
                             <p class="card-text">Complete showroom quality restoration and protection of car’s interior and exterior finish.</p>
-                            <a href="contact_us.php" class="btn btn-primary">
-                                <i class='bx bxs-phone-call'></i>
-                                Contact Us!</a>
                         </div>
                     </div>
                 </div>
@@ -61,9 +52,6 @@
                         <div class="card-body">
                             <h5 class="card-title">PAINTLESS DENT REPAIR</h5>
                             <p class="card-text">Affordable and quick restoration of your car’s dents and dings without costly repainting.</p>
-                            <a href="contact_us.php" class="btn btn-primary">
-                                <i class='bx bxs-phone-call'></i>
-                                Contact Us!</a>
                         </div>
                     </div>
                 </div>
@@ -74,14 +62,11 @@
                         <div class="card-body">
                             <h5 class="card-title">GLASS TINTING</h5>
                             <p class="card-text">Car and Home/Business installation of non-fading film that protects interior from heat and visibility.</p>
-                            <a href="contact_us.php" class="btn btn-primary">
-                                <i class='bx bxs-phone-call'></i>
-                                Contact Us!</a>
                         </div>
                     </div>
                 </div>
 
-                
+
 
                 <div class="col-md-3">
                     <div class="card" style="width: 18rem;">
@@ -89,9 +74,6 @@
                         <div class="card-body">
                             <h5 class="card-title">BODY PAINT TOUCH-UP</h5>
                             <p class="card-text">Affordable and quick touch-up of your car’s scratches without having to repaint the whole panel.</p>
-                            <a href="contact_us.php" class="btn btn-primary">
-                                <i class='bx bxs-phone-call'></i>
-                                Contact Us!</a>
                         </div>
                     </div>
                 </div>
@@ -102,9 +84,6 @@
                         <div class="card-body">
                             <h5 class="card-title">SECURITY FILM</h5>
                             <p class="card-text">Car and Home/Business film with bullet and smash resistant features. Car film is installed one piece cut to give you that factory tint look.</p>
-                            <a href="contact_us.php" class="btn btn-primary">
-                                <i class='bx bxs-phone-call'></i>
-                                Contact Us!</a>
                         </div>
                     </div>
                 </div>

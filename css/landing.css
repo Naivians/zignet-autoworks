@@ -98,7 +98,7 @@
 .content {
   width: 100%;
   position: absolute;
-  top: -10%;
+  top: 0%;
   left: 50%;
   transform: translate(-50%, 50%);
   display: flex;
@@ -112,7 +112,7 @@
   color: var(--pink-);
 } */
 .content h1 {
-  font-size: 5.5rem;
+  font-size: 6rem;
   font-weight: 700;
 }
 
@@ -172,8 +172,15 @@ padding: 20px;
   height: auto;
 }
 
-.card-body{
-  height: 250px !important;
+
+.card img{
+  transition: .3s ease-in-out !important;
+}
+
+.card img:hover{
+  transform:scale(1.8);
+  z-index: 88;
+  cursor: pointer;
 }
 
 .col-md-3{
@@ -183,10 +190,14 @@ padding: 20px;
 
 /* CONTACT US */
 
-
 .map img{
   width: 100%;
-  height: auto;
+  height: 400px;
+  transition: .3s ease-in-out;
+}
+
+.map img:hover{
+  transform: scale(1.2);
 }
 
 .contact-container{

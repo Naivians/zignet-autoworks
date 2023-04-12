@@ -1,12 +1,8 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['role'])) {
+if (!isset($_SESSION['user_role'])) {
     header("Location:login.php");
-} else {
-    if ($_SESSION['role'] != "super admin") {
-        header("Location:logout.php?access=1");
-    }
 }
 ?>
 
@@ -153,7 +149,7 @@ if (!isset($_SESSION['role'])) {
         }
 
         function retrieved(retrievedID) {
-            alert(retrievedID)
+            // alert(retrievedID)
             // go to insert and retrieved this account by the id 
             var data = {
                 id: retrievedID,
@@ -183,24 +179,19 @@ if (!isset($_SESSION['role'])) {
                                     title: 'Oops...',
                                     text: res,
                                 });
-                            }else{
-                                alert(res)
+                            } else {
+                                Swal.fire({
+                                    position: 'top-center',
+                                    icon: 'success',
+                                    title: 'Successfully Retrieved User',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                })
+
+                                setInterval(() => {
+                                    window.location.reload()
+                                }, 1500);
                             }
-
-                            // var response = JSON.parse(res);
-
-                            // if (response.status == 200) {
-                            //     if (result.isConfirmed) {
-                            //         Swal.fire("Retrieved!", response.message, "success");
-                            //     }
-                            //     displayAccounts();
-                            // } else {
-                            //     Swal.fire({
-                            //         icon: 'error',
-                            //         title: 'Oops...',
-                            //         text: response.messsage,
-                            //     });
-                            // }
                         }
                     });
                 }

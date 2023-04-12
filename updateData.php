@@ -1,7 +1,32 @@
 <?php
-
+session_start();
 include "includes/config.php";
 include "functions.php";
+
+if(isset($_POST['update_request_btn'])){
+    
+    $id = $conn->escape_string($_POST['id']);
+    $company = $conn->escape_string($_POST['company']);
+    $model = $conn->escape_string($_POST['model']);
+    $cs_number = $conn->escape_string($_POST['cs_number']);
+    $schedule = $conn->escape_string($_POST['schedule']);
+    $front_windshield = $conn->escape_string($_POST['front_windshield']);
+    $rear_windshield = $conn->escape_string($_POST['rear_windshield']);
+    $front_side_windows = $conn->escape_string($_POST['front_side_windows']);
+    $rear_side_windows = $conn->escape_string($_POST['rear_side_windows']);
+
+
+    $sql = "UPDATE `request_form` SET `company` = '$company', `model` = '$model', `cs_number` = '$cs_number', `schedule` = '$schedule', `front_windshield` = '$front_windshield', `front_windshield` = '$rear_windshield', `front_side_windows` = '$front_side_windows', `rear_side_windows` = '$rear_side_windows' WHERE `id`='$id'";
+
+    $res = $conn->query($sql);
+
+    if(!$res){
+        echo "Failed to update request";
+    }else{
+        echo "success";
+    }
+}
+
 
 if (isset($_POST['editBtn'])) {
 
@@ -124,6 +149,7 @@ if (isset($_POST['update_user_btn'])) {
     if (!$res) {
         echo "Failed to update account";
     } else {
+        $_SESSION['display_name'] = $update_display_name;
         echo "success";
     }
 }
@@ -132,47 +158,47 @@ if (isset($_POST['update_user_btn'])) {
 // USERS
 
 // activate users
-if(isset($_POST['activate_btn'])){
+if (isset($_POST['activate_btn'])) {
     $user_id = $conn->escape_string($_POST['user_id']);
     $res = activate($user_id);
 
-    if(!$res){
+    if (!$res) {
         echo "Failed to Deactivate";
-    }else{
+    } else {
         echo "success";
     }
 }
 
 // deactivate_btn
-if(isset($_POST['deactivate_btn'])){
+if (isset($_POST['deactivate_btn'])) {
     $user_id = $conn->escape_string($_POST['user_id']);
     $res = deactivate($user_id);
 
-    if(!$res){
+    if (!$res) {
         echo "Failed to Deactivate";
-    }else{
+    } else {
         echo "success";
     }
 }
 
 // activate all 
-if(isset($_POST['activate_all'])){
+if (isset($_POST['activate_all'])) {
     $res = activate_all();
 
-    if(!$res){
+    if (!$res) {
         echo "Failed to activate all accounts";
-    }else{
+    } else {
         echo "success";
     }
 }
 
 // deactivate all
-if(isset($_POST['deactivate_all'])){
+if (isset($_POST['deactivate_all'])) {
     $res = deactivate_all();
 
-    if(!$res){
+    if (!$res) {
         echo "Failed to activate all accounts";
-    }else{
+    } else {
         echo "success";
     }
 }

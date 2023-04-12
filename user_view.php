@@ -1,13 +1,9 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['role'])) {
-    header("Location:login.php");
-} else {
-    if ($_SESSION['role'] != "user") {
-        header("Location:logout.php?access=1");
-    }
-}
+// if (!isset($_SESSION['user_role'])) {
+//     header("Location:login.php");
+// } 
 
 ?>
 
@@ -15,11 +11,9 @@ if (!isset($_SESSION['role'])) {
 <html lang="en">
 
 <head>
-
     <?php include "includes/header.php"; ?>
     <title>User | Dashboard</title>
     <link rel="stylesheet" href="css/user.css?<?= time(); ?>">
-
 </head>
 
 <body>
@@ -118,7 +112,7 @@ if (!isset($_SESSION['role'])) {
                 rear_windows: $("#rear_windows").val(),
                 request_btn: 1
             }
-            
+
             $.ajax({
                 url: "insertData.php",
                 method: "POST",
@@ -135,7 +129,15 @@ if (!isset($_SESSION['role'])) {
                             timer: 1500
                         })
 
-                        window.reset();
+                        $("#company").val('')
+                        $("#model").val('')
+                        $("#cs_number").val('')
+                        $("#sched").val('')
+                        $("#front_windshield").val('')
+                        $("#rear_windshield").val('')
+                        $("#front_windows").val('')
+                        $("#rear_windows").val('')
+                        
                     } else {
                         Swal.fire({
                             icon: 'error',

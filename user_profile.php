@@ -1,13 +1,9 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['role'])) {
-    header("Location:login.php");
-} else {
-    if ($_SESSION['role'] != "user") {
-        header("Location:logout.php?access=1");
-    }
-}
+// if (!isset($_SESSION['user_role'])) {
+//     header("Location:login.php");
+// } 
 
 include "functions.php";
 
@@ -84,7 +80,7 @@ $res = validateCredential("user", $_SESSION['username']);
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="" class="form-label text-secondary">Date Modifide</label>
+                                    <label for="" class="form-label text-secondary">Date Modified</label>
                                     <input type="text" name="update_password" id="update_password" class="form-control" value="<?= $row['date_modified'] ?>" disabled>
                                 </div>
                             </div>
@@ -147,7 +143,7 @@ $res = validateCredential("user", $_SESSION['username']);
                 $("#update_password").css("border", "1px solid red");
             } else if (update_contact == "") {
                 $("#update_contact").css("border", "1px solid red");
-            }else if (update_username == "") {
+            } else if (update_username == "") {
                 $("#update_username").css("border", "1px solid red");
             } else {
 
@@ -172,7 +168,17 @@ $res = validateCredential("user", $_SESSION['username']);
                                 text: res,
                             })
                         } else {
-                            window.location.reload();
+                            Swal.fire({
+                                position: 'top-center',
+                                icon: 'success',
+                                title: 'Successfully Update',
+                                showConfirmButton: false,
+                                timer: 1000
+                            })
+
+                            setInterval(() => {
+                                window.location.reload();
+                            }, 1000);
                         }
                     }
                 });

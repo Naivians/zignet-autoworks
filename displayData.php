@@ -51,11 +51,6 @@ if (isset($_POST['get_user'])) {
                                 <img src="icons/view.svg" alt="view image" class="text-success">
                             </button>
                             
-                            <!-- edit -->   
-                            <button class="btn" onclick="viewEditAccount(' . $row['id'] . ')">
-                                <img src="icons/edit.svg" alt="view image" class="text-primary">
-                            </button>
-
                             <!-- delete -->
                             <button class="btn" onclick="askDelete(' . $row['id'] . ')">
                                 <img src="icons/delete.svg" alt="view image" class="text-danger">
@@ -1223,7 +1218,7 @@ if (isset($_POST['view_user_btn'])) {
 
     $res = getBY_userID("user", $user_id);
     $response = array();
-
+    
     while ($row = $res->fetch_assoc()) {
         $response = $row;
     }

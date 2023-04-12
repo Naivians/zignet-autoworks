@@ -1,12 +1,8 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['role'])) {
+if (!isset($_SESSION['admin_role'])) {
     header("Location:login.php");
-} else {
-    if ($_SESSION['role'] != "super admin") {
-        header("Location:logout.php?access=1");
-    }
 }
 
 include "includes/config.php";
@@ -81,43 +77,45 @@ $total_transactions = $total_transactions->num_rows;
             <h5>Dashboard</h5>
         </div>
 
-        <div class="row">
-            <div class="col-md-2 d-flex text-light align-items-center justify-content-between p-4 border border-success m-2 rounded-3">
+        <div class="row d-flex  align-items-center justify-content-around">
+
+            <a href="users.php" class="text-decoration-none col-md-2 d-flex text-light align-items-center justify-content-between p-4 border border-success m-2 rounded-3">
                 <div class="title">
-                    <h3><?=$active?></h3>
+                    <h3><?= $active ?></h3>
                     <p>Actived Users</p>
                 </div>
                 <i class='bx bx-user fs-1'></i>
-            </div>
+            </a>
 
-            <div class="col-md-2 d-flex text-light align-items-center justify-content-between p-4 border border-success m-2 rounded-3">
+            <a href="users.php" class="text-decoration-none col-md-2 d-flex text-light align-items-center justify-content-between p-4 border border-success m-2 rounded-3">
                 <div class="title">
-                    <h3><?=$inactive?></h3>
-                    <p>Deactive Users</p>
+                    <h3><?= $inactive ?></h3>
+                    <p>Actived Users</p>
                 </div>
                 <i class='bx bx-user fs-1'></i>
-            </div>
+            </a>
 
-            <div class="col-md-2 d-flex text-light align-items-center justify-content-between p-4 border border-success m-2 rounded-3">
+            <a href="supAdminClient.php" class="text-decoration-none col-md-2 d-flex text-light align-items-center justify-content-between p-4 border border-success m-2 rounded-3">
                 <div class="title">
                     <h3><?= $total_client ?></h3>
                     <p>Clients</p>
                 </div>
                 <i class='bx bxs-user-detail fs-1'></i>
-            </div>
+            </a>
 
-            <div class="col-md-2 d-flex text-light align-items-center justify-content-between p-4 border border-success m-2 rounded-3">
+            <a href="supAdminTransact.php" class="text-decoration-none col-md-2 d-flex text-light align-items-center justify-content-between p-4 border border-success m-2 rounded-3">
                 <div class="title">
                     <h3><?= $total_transactions ?></h3>
                     <p>Transactions</p>
                 </div>
                 <i class='bx bxs-bank fs-1'></i>
-            </div>
-
+            </a>
+        </div>
+        <div class="row align-items-center justify-content-around mt-5">
             <div class="col-md-2 d-flex text-light align-items-center justify-content-between p-4 border border-success m-2 rounded-3">
                 <div class="title">
                     <h3><?= $todays_client ?></h3>
-                    <p>Today's Client</p>
+                    <p>Today's</p>
                 </div>
                 <i class='bx bxs-user-detail fs-1'></i>
             </div>
@@ -125,7 +123,7 @@ $total_transactions = $total_transactions->num_rows;
             <div class="col-md-2 d-flex text-light align-items-center justify-content-between p-4 border border-success m-2 rounded-3">
                 <div class="title">
                     <h3><?= $current_week ?></h3>
-                    <p>Current Week Client</p>
+                    <p>Current Week</p>
                 </div>
                 <i class='bx bxs-user-detail fs-1'></i>
             </div>
@@ -133,14 +131,14 @@ $total_transactions = $total_transactions->num_rows;
             <div class="col-md-2 d-flex text-light align-items-center justify-content-between p-4 border border-success m-2 rounded-3">
                 <div class="title">
                     <h3><?= $current_month ?></h3>
-                    <p>Current Month Client</p>
+                    <p>Current Month</p>
                 </div>
                 <i class='bx bxs-user-detail fs-1'></i>
             </div>
             <div class="col-md-2 d-flex text-light align-items-center justify-content-between p-4 border border-success m-2 rounded-3">
                 <div class="title">
                     <h3><?= $current_year ?></h3>
-                    <p>Current Year Client</p>
+                    <p>Current Year</p>
                 </div>
                 <i class='bx bxs-user-detail fs-1'></i>
             </div>

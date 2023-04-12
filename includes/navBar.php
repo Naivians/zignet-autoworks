@@ -11,12 +11,11 @@
             <i class='bx bx-cog me-2 dropdown-toggle' data-bs-toggle="dropdown" aria-expanded="false"></i>
             <ul class="dropdown-menu">
                 <li><a class="dropdown-item small-font" href="deletedAdminAccount.php?">Archive</a></li>
-                <li><a class="dropdown-item small-font" href="logout.php">Logout</a></li>
+                <li><a class="dropdown-item small-font" href="logout.php?admin=1">Logout</a></li>
             </ul>
         </div>
     </div>
 </div>
-
 
 <!-- <div class="notif-container">
     <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center w-100">

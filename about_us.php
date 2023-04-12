@@ -20,11 +20,8 @@
                 <div class="about-content col-md-6 ">
                     <h2 class="dark-blue mb-3">ZIGNET AUTOWORKS</h2>
                     <p class="text-secondary">
-                        ZIGNET is a premier private car care and dealer services centre aiming to provide the best and latest quality car care services in the country. Recently established in June 6, 2008 it is already servicing top quality conscious private and institutional clients such as BMW (RSA Motors Corp.), Lexus Manila Inc., Aston Martin, PGA Cars, Autostrada Inc. (Ferrari, Jaguar, Land Rover Maserati) and others for their factory Window tint installation and showroom detailing for their new and pre-owned vehicles.
+                        ZIGNET is a premier private car care and dealer services centre aiming to provide the best and latest quality car care services in the country. Recently established in June 6, 2008 it is already servicing top quality conscious private and institutional clients such as BMW (RSA Motors Corp.), Lexus Manila Inc., Aston Martin, PGA Cars, Autostrada Inc. (Ferrari, Jaguar, Land Rover Maserati) and others for their factory Window tint installation and showroom detailing for their new and pre-owned vehicles. The company’s aim is to protect and maintain vehicle’s sale value and experience the feel of a new car owner. A range of specialized services allows for one stop express shop for most car care needs. Additional services include home and business window tint and security film installation borne from the more complex installation techniques required for the vehicles.
                     </p>
-                    <a href="login.php" class="btn_login d-flex align-items-center justify-content-center btn_about">Book Now
-                        <i class='bx bx-right-arrow-alt fs-3'></i>
-                    </a>
                 </div>
             </div>
         </div>

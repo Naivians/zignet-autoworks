@@ -1,13 +1,9 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['role'])) {
+if (!isset($_SESSION['admin_role'])) {
     header("Location:login.php");
-} else {
-    if ($_SESSION['role'] != "super admin") {
-        header("Location:logout.php?access=1");
-    }
-}
+} 
 ?>
 
 <!DOCTYPE html>

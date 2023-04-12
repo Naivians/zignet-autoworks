@@ -1,13 +1,9 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['role'])) {
+if (!isset($_SESSION['admin_role'])) {
     header("Location:login.php");
-} else {
-    if ($_SESSION['role'] != "super admin") {
-        header("Location:logout.php?access=1");
-    }
-}
+} 
 ?>
 
 <!DOCTYPE html>
@@ -40,7 +36,7 @@ if (!isset($_SESSION['role'])) {
                             <label for="" class="form-label text-secondary small-font">User ID</label>
                             <input type="text" name="user_id" id="user_id" class="form-control text-dark" disabled>
                         </div>
-
+                        <input type="hidden" name="" id="update_request_id">
                         <div class="col-md-6">
                             <label for="" class="form-label text-secondary small-font">Request ID</label>
                             <input type="text" name="request_id" id="request_id" class="form-control text-dark" disabled>
@@ -53,43 +49,43 @@ if (!isset($_SESSION['role'])) {
 
                         <div class="col-md-6">
                             <label for="" class="form-label text-secondary small-font">Company</label>
-                            <input type="text" name="company" id="company" class="form-control text-dark" disabled>
+                            <input type="text" name="company" id="company" class="form-control text-dark">
                         </div>
 
                         <div class="col-md-6">
                             <label for="" class="form-label text-secondary small-font">Model</label>
-                            <input type="text" name="model" id="model" class="form-control text-dark" disabled>
+                            <input type="text" name="model" id="model" class="form-control text-dark">
                         </div>
 
                         <div class="col-md-6">
                             <label for="" class="form-label text-secondary small-font">CS Number</label>
-                            <input type="text" name="cs_number" id="cs_number" class="form-control text-dark" disabled>
+                            <input type="text" name="cs_number" id="cs_number" class="form-control text-dark">
                         </div>
 
                         <div class="col-md-6">
                             <label for="" class="form-label text-secondary small-font">Schedule</label>
-                            <input type="text" name="schedule" id="schedule" class="form-control text-dark" disabled>
+                            <input type="date" name="schedule" id="schedule" class="form-control text-dark">
                         </div>
 
                         <div class="col-md-6">
                             <label for="" class="form-label text-secondary small-font">Front Windshield</label>
-                            <input type="text" name="front_windshield" id="front_windshield" class="form-control text-dark" disabled>
+                            <input type="text" name="front_windshield" id="front_windshield" class="form-control text-dark">
                         </div>
 
                         <div class="col-md-6">
                             <label for="" class="form-label text-secondary small-font">Rear Windshield</label>
-                            <input type="text" name="rear_windshield" id="rear_windshield" class="form-control text-dark" disabled>
+                            <input type="text" name="rear_windshield" id="rear_windshield" class="form-control text-dark">
                         </div>
 
                         <div class="col-md-6">
                             <label for="" class="form-label text-secondary small-font">Front Side Windows</label>
-                            <input type="text" name="front_side_windows" id="front_side_windows" class="form-control text-dark" disabled>
+                            <input type="text" name="front_side_windows" id="front_side_windows" class="form-control text-dark">
                         </div>
 
 
                         <div class="col-md-6">
                             <label for="" class="form-label text-secondary small-font">Rear Side Windows</label>
-                            <input type="text" name="rear_side_windows" id="rear_side_windows" class="form-control text-dark" disabled>
+                            <input type="text" name="rear_side_windows" id="rear_side_windows" class="form-control text-dark">
                         </div>
 
                         <div class="col-md-6">
@@ -106,73 +102,20 @@ if (!isset($_SESSION['role'])) {
                             <label for="" class="form-label text-secondary small-font">Date Retrieved</label>
                             <input type="text" name="date_retrieved" id="date_retrieved" class="form-control text-dark" disabled>
                         </div>
-
                     </div>
-                    <p class="mt-3 text-danger text-center">Click anywhere to close</p>
+                    <div class="mb-3 mt-3">
+                        <button type="button" class="btn btn-success" onclick="update_request()">Update</button>
+                    </div>
+                    <!-- <p class="mt-3 text-danger text-center">Click anywhere to close</p> -->
                 </div>
             </div>
         </div>
     </div>
 
 
-    <!-- Add new admin Modal -->
-    <div class="modal fade" id="adminModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog ">
-            <div class="modal-content modal-color modal-client">
-                <div class="car">
-                    <img src="img/car3.png" alt="cars">
-                </div>
-
-                <div class="shape">
-                    <img src="img/Rectangle.png" alt="rectangle shape">
-                </div>
-                <h5 class="text-center text-light mt-2">Add New Admin</h5>
-                <form method="post">
-                    <div class="modal-body ">
-                        <!-- form here -->
-                        <div class="mb-3">
-                            <label for="" class="form-label gray small-font">Admin Name</label>
-                            <input type="text" name="adminName" id="adminName" placeholder="John" class="form-control text-dark" autocomplete="off">
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="" class="form-label gray small-font">Username</label>
-                            <input type="text" name="username" id="username" placeholder="JohnDoe@00" class="form-control text-dark" autocomplete="off">
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="" class="form-label text-secondary small-font">Password</label>
-                            <input type="password" name="password" id="password" placeholder="***********" class="form-control text-dark" autocomplete="off">
-                            <div class="d-flex align-items-center">
-                                <span class="mt-1 text-secondary small-font me-2">Show Password</span>
-                                <input type="checkbox" onclick="showPass('password')">
-                            </div>
-                        </div>
-
-
-                        <div class="mb-3">
-                            <label for="" class="form-label text-secondary small-font">Role</label>
-                            <select class="form-select" aria-label="Default select example" id="role">
-                                <option selected disabled value="">Select Role</option>
-                                <option value="super admin">Super Admin</option>
-                                <option value="admin">Admin</option>
-                            </select>
-                        </div>
-
-                        <div class="mt-4 mb-2">
-
-                            <button type="button" class="btns fullwidth mb-2 small-font" onclick="submitData()">Save</button>
-
-                            <button type="button" class="btns fullwidth dark small-font" data-bs-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
 
     <!-- Edit Modal -->
-    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!-- <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog ">
             <div class="modal-content modal-color modal-client">
                 <div class="car">
@@ -185,7 +128,7 @@ if (!isset($_SESSION['role'])) {
                 <h5 class="text-center text-light mt-2">Edit Account</h5>
                 <form>
                     <div class="modal-body">
-                        <!-- form here -->
+                        form here
                         <div class="">
                             <label for="" class="form-label gray small-font">Admin Name</label>
                             <input type="text" name="fnameawda" id="editName" placeholder="John" class="form-control text-dark">
@@ -227,7 +170,7 @@ if (!isset($_SESSION['role'])) {
 
             </div>
         </div>
-    </div>
+    </div> -->
 
     <!-- main content -->
     <div class="wrapper" id="wrapper">
@@ -400,95 +343,153 @@ if (!isset($_SESSION['role'])) {
         //     });
         // }
 
-        // function askDelete(id) {
-        //     // var data = {
-        //     //     id: id,
-        //     //     delete_client_btn: "delete",
-        //     //     action:1,
-        //     //     table:"admins"
-        //     // };
+        function askDelete(id) {
+            alert(id)
 
-        //     Swal.fire({
-        //         title: "Are you sure?",
-        //         text: "You won't be able to revert this!",
-        //         icon: "warning",
-        //         showCancelButton: true,
-        //         confirmButtonColor: "#3085d6",
-        //         cancelButtonColor: "#d33",
-        //         confirmButtonText: "Yes, delete it!",
-        //     }).then((result) => {
+            var data = {
+                id: id,
+                delete_client_btn: "request",
+                action:1,
+                table:"admins"
+            };
 
-
-        //         if (result.isConfirmed) {
-
-        //             $.ajax({
-        //                 url: "deleteData.php",
-        //                 method: "post",
-        //                 data: data,
-        //                 success: (res) => {
-        //                     var response = JSON.parse(res);
-        //                     if (response.status == 200) {
-        //                         if (result.isConfirmed) {
-        //                             Swal.fire("Deleted!", response.message, "success");
-        //                         }
-        //                         displayAccounts();
-        //                     } else {
-        //                         Swal.fire({
-        //                             icon: 'error',
-        //                             title: 'Oops...',
-        //                             text: response.messsage,
-        //                         });
-        //                     }
-        //                 }
-        //             });
-        //         }
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!",
+            }).then((result) => {
 
 
-        //     });
-        // }
+                if (result.isConfirmed) {
 
-        // function viewEditAccount(id) {
+                    $.ajax({
+                        url: "deleteData.php",
+                        method: "post",
+                        data: data,
+                        success: (res) => {
+                            var response = JSON.parse(res);
+                            if (response.status == 200) {
+                                if (result.isConfirmed) {
+                                    Swal.fire("Deleted!", response.message, "success");
+                                }
+                                displayAccounts();
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: response.messsage,
+                                });
+                            }
+                        }
+                    });
+                }
 
-            
-        //     // $("#updateID").val(id);
 
-        //     // editName
-        //     // editRole
-        //     // editUsername
-        //     // editPassword
+            });
+        }
 
-        //     // var data = {
-        //     //     id: id,
-        //     //     viewEditBtn: 1
-        //     // }
+        function viewEditAccount(id) {
 
-        //     $.ajax({
-        //         url: "displayData.php",
-        //         method: "post",
-        //         data: data,
-        //         success: (res, status) => {
-        //             var response = JSON.parse(res);
-        //             if (status == "success") {
-        //                 $("#editName").val(response.adminName);
-        //                 $("#editUsername").val(response.username);
-        //                 $("#editPassword").val(response.password);
-        //                 $("#editRole").val(response.role);
-        //                 // editRole
-        //                 $("#editModal").modal('show');
-        //             } else {
-        //                 Swal.fire({
-        //                     icon: 'error',
-        //                     title: 'Oops...',
-        //                     text: 'Failed to retirevd',
-        //                 });
-        //             }
 
-        //         }
-        //     });
-        // }
+            var data = {
+                id: id,
+                viewEditBtn: 1
+            }
+
+            $.ajax({
+                url: "displayData.php",
+                method: "post",
+                data: data,
+                success: (res, status) => {
+                    var response = JSON.parse(res);
+                    if (status == "success") {
+                        $("#editName").val(response.adminName);
+                        $("#editUsername").val(response.username);
+                        $("#editPassword").val(response.password);
+                        $("#editRole").val(response.role);
+                        // editRole
+                        $("#editModal").modal('show');
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Failed to retirevd',
+                        });
+                    }
+
+                }
+            });
+        }
+
+        function update_request() {
+            var id = $("#update_request_id").val()
+            var company = $("#company").val();
+            var model = $("#model").val();
+            var cs_number = $("#cs_number").val();
+            var schedule = $("#schedule").val();
+            var front_windshield = $("#front_windshield").val();
+            var rear_windshield = $("#rear_windshield").val();
+            var front_side_windows = $("#front_side_windows").val();
+            var rear_side_windows = $("#rear_side_windows").val();
+
+            if (company == "" || model == "" || cs_number == "" || schedule == "" || front_windshield == "" || rear_windshield == "" || front_side_windows == "" || rear_side_windows == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'All fields is mandatory',
+                });
+            } else {
+
+                var data = {
+                    id: $("#update_request_id").val(),
+                    company: $("#company").val(),
+                    model: $("#model").val(),
+                    cs_number: $("#cs_number").val(),
+                    schedule: $("#schedule").val(),
+                    front_windshield: $("#front_windshield").val(),
+                    rear_windshield: $("#rear_windshield").val(),
+                    front_side_windows: $("#front_side_windows").val(),
+                    rear_side_windows: $("#rear_side_windows").val(),
+                    update_request_btn:1
+                }
+
+                $.ajax({
+                    url: "updateData.php",
+                    method: "POST",
+                    data: data,
+                    success: (res) => {
+                        if (res != "success") {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: res,
+                            });
+                        } else {
+
+                            Swal.fire({
+                                position: 'top-center',
+                                icon: 'success',
+                                title: "Successfully update request",
+                                showConfirmButton: false,
+                                timer: 1000
+                            });
+                            setInterval(() => {
+                                window.location.reload();
+                            }, 1000);
+                        }
+                    }
+                });
+
+
+            }
+        }
 
         function viewAdminAccount(id) {
-            $("#viewModal").modal('show');
+            $("#update_request_id").val(id);
             var data = {
                 id: id,
                 view_request_btn: 1
@@ -546,8 +547,6 @@ if (!isset($_SESSION['role'])) {
                 }
             });
         }
-
-
 
         // function showPass(id) {
         //     var x = document.getElementById(id);

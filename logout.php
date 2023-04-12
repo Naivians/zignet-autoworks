@@ -2,16 +2,24 @@
 include "functions.php";
 session_start();
 
-$LoginID = $_SESSION['currently_loginID'];
+if (isset($_GET['user'])) {
+    $sessions = array("user_role", "username", "display_name", "user_id");
 
-// logout($LoginID);
+    foreach ($sessions as $session) {
+        unset($_SESSION[$session]);
+    }
+    header("location:index.php");
+}
 
-session_unset();
-session_destroy();
-header("location:login.php");
+if (isset($_GET['admin'])) {
+    $LoginID = $_SESSION['currently_loginID'];
+    logout($LoginID);
 
-if (isset($_GET['access'])) {
-    header("location:login.php?unautorized_access=You are not allowed to enter to this page");
-} 
+    $sessions = array("admin_role", "admin_id", "adminName", "currently_loginID", "login");
 
-
+    foreach ($sessions as $session) {
+        unset($_SESSION[$session]);
+    }
+    
+    header("location:login.php");
+}

@@ -1,13 +1,3 @@
-<?php
-session_start();
-if (isset($_SESSION['role'])) {
-    header("location:supAdminAccount.php");
-}
-
-
-
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -81,11 +71,11 @@ if (isset($_SESSION['role'])) {
                             <input type="password" name="password" id="password" placeholder="Enter Password" autocomplete="off">
                         </div>
 
-                        <button type="button" onclick="login()">Login now!</button>
+                        <button type="button" onclick="login()">Sign-in now!</button>
                     </form>
                 </div>
 
-                <p class="text-light mt-4">Don't have account? <a href="sign_up.php" class="">Register Here!</a></p>
+                <p class="text-light mt-4">Don't have account? <a href="sign_up.php" class="">Sign-up Here!</a></p>
             </div>
 
             <div class="hero-car">
@@ -157,6 +147,13 @@ if (isset($_SESSION['role'])) {
                             window.location.href = "supAdminDashboard.php";
                         } else {
                             if (res == "wrong password") {
+
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: res,
+                                });
+
                                 $("#password").css("border", "1px solid red");
                                 $("#username").css("border", "none");
                             } else if (res == "You're account is not yet activated by the admin.") {
@@ -168,8 +165,16 @@ if (isset($_SESSION['role'])) {
                                 });
                                 reset();
                             } else {
+
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: res,
+                                });
+
                                 $("#password").css("border", "1px solid red");
                                 $("#username").css("border", "1px solid red");
+                                
                                 reset();
                             }
                         }

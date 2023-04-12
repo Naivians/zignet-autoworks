@@ -99,8 +99,6 @@ if (isset($_POST['retrievedAction'])) {
             echo json_encode($response);
         }
     }
-
-    
 }
 
 
@@ -144,7 +142,7 @@ if (isset($_POST['retrieved_deleted_client_and_transactions'])) {
     }
 }
 
- if(isset($_POST['request_btn'])){
+if (isset($_POST['request_btn'])) {
     $display_name = $conn->escape_string($_SESSION['display_name']);
     $user_id = $conn->escape_string($_SESSION['user_id']);
     $company = $conn->escape_string($_POST['company']);
@@ -158,23 +156,48 @@ if (isset($_POST['retrieved_deleted_client_and_transactions'])) {
 
     // $request_id = $user_id = $year . "" . $month . "" . $day."". $total_users +1 ;
     $request_id = uniqid();
-    
+
     $res = insert_form($user_id, $request_id, $display_name, $company, $model, $cs_number, $schedule, $front_windshield, $rear_windshield, $front_windows, $rear_windows);
-    
-    if(!$res){
+
+    if (!$res) {
         echo "Failed to send form request.";
-    }else{
+    } else {
         echo "success";
     }
+}
 
- }
 
-
- if(isset($_POST['retrievedBtn'])){
+if (isset($_POST['retrievedBtn'])) {
     $id = $conn->escape_string($_POST['id']);
-    
-    // retrieved
-    
-    // permanent delete
-    deleteData("deleted_user", $id);
- }
+    $res = getById("deleted_user", $id);
+
+    if ($res->num_rows > 0) {
+        $res = $res->fetch_assoc();
+
+        $user_id = $res['user_id'];
+        $display_name = $res['display_name'];
+        $username = $res['username'];
+        $password = $res['password'];
+        $contact = $res['contact'];
+        $date_added = $res['date_added'];
+        $role = $res['role'];
+        $date_modified = $res['date_modified'];
+        $active = $res['active'];
+
+        $res = retrieved_user($user_id, $display_name,$role , $username, $password, $contact, $date_added, $date_modified, $active);
+
+        if (!$res) {
+            echo "Failed to retrieved data";
+        } else {
+            // permanent delete
+            $res = deleteData("deleted_user", $id);
+            if (!$res) {
+                echo "Failed to delete data";
+            } else {
+                echo "success";
+            }
+        }
+    } else {
+        echo "Failed to retrieved";
+    }
+}

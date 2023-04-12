@@ -21,9 +21,6 @@
                     <div class="content">
                         <h1 class="primary text-center">Zignet<span class="title"> Autoworks</span></h1>
                         <p class="primary text-center mt-2 mb-5">ZIGNET is a premier private car care and dealer services centre aiming to <br> provide the best and latest quality car care services in the country</p>
-                        <a href="login.php" class="btn_login d-flex align-items-center justify-content-center">Book now! 
-                        <i class='bx bx-right-arrow-alt fs-3'></i>
-                        </a>
                     </div>
                 </div>
                 <div class="swiper-wrapper">

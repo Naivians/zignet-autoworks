@@ -13,12 +13,19 @@
             <ul>
 
                 <li class="d-flex align-items-center mt-2r">
+                    <a href="index.php" class="">
+                        <i class='bx bx-home'></i>
+                        Home
+                    </a>
+                </li>
+
+                <li class="d-flex align-items-center mt-2r">
                     <a href="user_view.php" class="">
                         <i class='bx bx-folder-open'></i>
                         Request form
                     </a>
                 </li>
-                
+
                 <li class="d-flex align-items-center mt-2r">
                     <a href="user_profile.php" class="">
                         <i class='bx bx-user'></i>
@@ -27,7 +34,7 @@
                 </li>
 
                 <li class="d-flex align-items-center mt-2">
-                    <a href="logout.php">
+                    <a href="logout.php?user=user">
                         <i class='bx bx-log-out '></i>
                         Logout
                     </a>

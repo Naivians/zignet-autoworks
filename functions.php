@@ -337,12 +337,11 @@ function retrieved_client($client_id, $img_path, $customerName, $csNumber, $mode
     return $stmt->execute();
 }
 
-function retrieved_user($user_id, $request_id, $customerName, $csNumber, $model, $company, $dateAdded, $dateModified)
-{
+function retrieved_user($user_id, $display_name,$role , $username, $password, $contact, $date_added, $date_modified, $active){
     global $conn, $today;
-    $sql = "INSERT INTO `customer` (`client_id`, `img_path`, `customerName`, `csNumber`, `model`, `company`, `dateAdded`, `dateModified`, `retrievedDate`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO `user` (`user_id`, `display_name`,`role`, `username`, `password`, `contact`, `date_added`, `date_modified`, `date_retrieved`, `active`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sssssssss", $client_id, $img_path, $customerName, $csNumber, $model, $company, $dateAdded, $dateModified, $today);
+    $stmt->bind_param("ssssssssss", $user_id, $display_name,$role,$username, $password, $contact, $date_added, $date_modified,$today, $active);
 
     return $stmt->execute();
 }
@@ -423,9 +422,6 @@ function deactivate_all()
     $sql = "UPDATE `user` SET active = 0 WHERE `active` = 1";
     return $conn->query($sql);
 }
-
-
-
 
 // END OF UPDATE
 function logout($adminID)

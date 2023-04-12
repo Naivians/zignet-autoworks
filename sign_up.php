@@ -1,20 +1,10 @@
-<?php
-session_start();
-if (isset($_SESSION['role'])) {
-    header("location:supAdminAccount.php");
-}
-
-
-
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <?php include "includes/header.php"; ?>
     <title>Home | Sign up</title>
-    
+
     <!-- custom css -->
     <link rel="stylesheet" href="css/login.css?v=<?= time() ?>">
 
@@ -90,11 +80,11 @@ if (isset($_SESSION['role'])) {
                             <input type="password" name="password" id="password" placeholder="Enter Password" autocomplete="off">
                         </div>
 
-                        <button type="button" onclick="sign_up()">Register Now!</button>
+                        <button type="button" onclick="sign_up()">Create Account</button>
                     </form>
                 </div>
 
-                <p class="text-light mt-4">Already have account? <a href="login.php" class="">Login Here!</a></p>
+                <p class="text-light mt-4">Already have account? <a href="login.php" class="">Sign-in Here!</a></p>
             </div>
 
             <div class="hero-car">
@@ -149,6 +139,8 @@ if (isset($_SESSION['role'])) {
             let contact = $("#contact").val();
             // contact
 
+
+
             let data = {
                 username: username,
                 contact: contact,
@@ -166,7 +158,16 @@ if (isset($_SESSION['role'])) {
 
                 reset();
 
-            } else {    
+            } else if (username.length < 9) {
+                alert("username must be atleast 8 characters long")
+                $("#username").val('');
+            } else if (username.length < 9) {
+                alert("password must be atleast 8 characters long")
+                $("#password").val('');
+            } else if (contact.length >= 11) {
+                alert("Invalid Contact Number") 
+                $("#contact").val('');
+            } else {
                 $.ajax({
                     url: "validate.php",
                     method: "POST",

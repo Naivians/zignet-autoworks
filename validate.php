@@ -12,7 +12,6 @@ $admin_role = '';
 
 if (isset($_POST['loginBtn'])) {
 
-
     // check for admin username
 
     $username = $conn->escape_string($_POST['username']);
@@ -40,7 +39,7 @@ if (isset($_POST['loginBtn'])) {
                 if ($res['active'] != 1) {
                     echo "You're account is not yet activated by the admin.";
                 } else {
-                    $_SESSION['role'] = $res['role'];
+                    $_SESSION['user_role'] = "set";
                     $_SESSION['username'] = $res['username'];
                     $_SESSION['display_name'] = $res['display_name'];
                     $_SESSION['user_id'] = $res['user_id'];
@@ -56,9 +55,10 @@ if (isset($_POST['loginBtn'])) {
         $hash = $res['password'];
 
         if (password_verify($password, $hash)) {
+            
             $_SESSION['login'] = true;
-            $_SESSION['role'] = $res['role'];
-            $_SESSION['id'] = $res['id'];
+            $_SESSION['admin_role'] = $res['role'];
+            $_SESSION['admin_id'] = $res['id'];
             $_SESSION['adminName'] = $res['adminName'];
 
             // save login history

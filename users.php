@@ -2,16 +2,20 @@
 
 session_start();
 
-if (!isset($_SESSION['role'])) {
-    header("Location:login.php");
-} else {
-    if ($_SESSION['role'] != "super admin") {
-        header("Location:logout.php?access=1");
+include "includes/config.php";
+include "functions.php";
+
+
+
+if (isset($_POST['search'])) {
+    $searchItem = $conn->escape_string($_POST['search_item']);
+    if ($searchItem != "") {
+        $sql = "SELECT * FROM `user` WHERE `user_id` LIKE '%{$searchItem}%' OR `display_name` LIKE '%{$searchItem}%' OR `contact` LIKE '%{$searchItem}%' OR `username` LIKE '%{$searchItem}%'";
+        $res = $conn->query($sql);
+    } else {
+        $msg = "Search input is empty";
     }
 }
-
-include "includes/config.php";
-include "functions.php"
 
 ?>
 
@@ -87,7 +91,7 @@ include "functions.php"
                 <div class="modal-body">
                     <!-- form here -->
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <label for="" class="form-label text-secondary small-font">User ID</label>
                             <input type="text" name="user_id" id="user_id" class="form-control text-dark" disabled>
                         </div>
@@ -98,13 +102,8 @@ include "functions.php"
                         </div>
 
                         <div class="col-md-6">
-                            <label for="" class="form-label text-secondary small-font">Username</label>
-                            <input type="text" name="username" id="username" class="form-control text-dark" disabled>
-                        </div>
-
-                        <div class="col-md-6">
                             <label for="" class="form-label text-secondary small-font">Password</label>
-                            <input type="text" name="password" id="password" class="form-control text-dark" disabled>
+                            <input type="password" name="password" id="password" class="form-control text-dark" disabled>
                         </div>
 
                         <div class="col-md-6">
@@ -138,12 +137,46 @@ include "functions.php"
             <h5>Users Account</h5>
         </div>
 
+        <?php
+        if (isset($msg)) : ?>
+            <div class="msg-container" id="msg-container">
+                <div class="message">
+                    <h3 class="text-danger">Error!</h3>
+                    <h5><?= $msg ?></h5>
+                    <a href="users.php" class="btn btn-danger mt-4">Close</a>
+                </div>
+            </div>
+
+        <?php endif;
+        ?>
+
         <!-- live search -->
         <div class="filter d-flex align-items-center mt-3 mb-3">
 
-            <!-- <div class="live-search">
-                <input type="search" name="search" id="search" placeholder="Search by name">
-            </div> -->
+            <div class="live-search">
+                <form method="post">
+                    <input type="search" name="search_item" id="search" placeholder="Search Anything" require>
+
+                    <?php
+                    if (isset($res)) {
+                        if ($res->num_rows > 0) {
+                    ?>
+                            <a href="users.php" class="btn btn-success" name="search">back</a>
+                        <?php
+                        } else {
+                        ?>
+                            <a href="users.php" class="btn btn-success" name="search">back</a>
+                        <?php
+                        }
+                    } else {
+                        ?>
+                        <button class="btn btn-success" name="search">search</button>
+                    <?php
+                    }
+                    ?>
+
+                </form>
+            </div>
 
             <!-- Example single danger button -->
             <!-- <div class="btn-group">
@@ -169,68 +202,143 @@ include "functions.php"
         </div>
 
         <div class="displayAccount mt-4" id="client_table">
-            <table class="adminAcc-table">
-                <thead>
-                    <tr>
-                        <th>User ID</th>
-                        <th>Display Name</th>
-                        <th>Username</th>
-                        <th>Password</th>
-                        <th>Contact</th>
-                        <th>Date Added</th>
-                        <th>Date Modified</th>
-                        <th>Date Retrieved</th>
-                        <th>status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    $res = getData("user");
-                    while ($row = $res->fetch_assoc()) {
-                    ?>
-                        <tr>
-                            <td><?= $row['user_id'] ?></td>
-                            <td><?= $row['display_name'] ?></td>
-                            <td><?= $row['username'] ?></td>
-                            <td><?= md5($row['password']) ?></td>
-                            <td><?= $row['contact'] ?></td>
-                            <td><?= $row['date_added'] ?></td>
-                            <td><?= $row['date_modified'] ?></td>
-                            <td><?= $row['date_retrieved'] ?></td>
+            <?php
+            if (isset($res)) {
+                if ($res->num_rows > 0) {
+            ?>
+                    <table class="adminAcc-table">
+                        <thead>
+                            <tr>
+                                <th>User ID</th>
+                                <th>Display Name</th>
+                                <th>Username</th>
+                                <th>Password</th>
+                                <th>Contact</th>
+                                <th>Date Added</th>
+                                <th>Date Modified</th>
+                                <th>Date Retrieved</th>
+                                <th>status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
                             <?php
-                            if ($row['active'] != 1) {
+                            while ($row = $res->fetch_assoc()) {
                             ?>
-                                <td><button class="btn btn-danger badge" onclick="status('activate', '<?= $row['user_id'] ?>')">Deactivated</button></td>
-                            <?php
-                            } else {
-                            ?>
-                                <td><button class="btn btn-success badge" onclick="status('deactivate', '<?= $row['user_id'] ?>')">Activated</button></td>
+                                <tr>
+                                    <td><?= $row['user_id'] ?></td>
+                                    <td><?= $row['display_name'] ?></td>
+                                    <td><?= $row['username'] ?></td>
+                                    <td><?= md5($row['password']) ?></td>
+                                    <td><?= $row['contact'] ?></td>
+                                    <td><?= $row['date_added'] ?></td>
+                                    <td><?= $row['date_modified'] ?></td>
+                                    <td><?= $row['date_retrieved'] ?></td>
+                                    <?php
+                                    if ($row['active'] != 1) {
+                                    ?>
+                                        <td><button class="btn btn-danger badge" onclick="status('activate', '<?= $row['user_id'] ?>')">Deactivated</button></td>
+                                    <?php
+                                    } else {
+                                    ?>
+                                        <td><button class="btn btn-success badge" onclick="status('deactivate', '<?= $row['user_id'] ?>')">Activated</button></td>
+                                    <?php
+                                    }
+                                    ?>
+
+
+                                    <td>
+                                        <!-- three btns for view, edit, and delete -->
+
+                                        <!-- view -->
+                                        <button class="btn" onclick="viewAdminAccount('<?= $row['user_id'] ?> ')">
+                                            <img src="icons/view.svg" alt="view image" class="text-success">
+                                        </button>
+
+                                        <!-- delete -->
+                                        <button class="btn" onclick="askDelete(' <?= $row['id'] ?> ')">
+                                            <img src="icons/delete.svg" alt="view image" class="text-danger">
+                                        </button>
+
+                                    </td>
+                                </tr>
                             <?php
                             }
                             ?>
-
-
-                            <td>
-                                <!-- three btns for view, edit, and delete -->
-
-                                <!-- view -->
-                                <button class="btn" onclick="viewAdminAccount('<?= $row['user_id'] ?> ')">
-                                    <img src="icons/view.svg" alt="view image" class="text-success">
-                                </button>
-
-                                <!-- delete -->
-                                <button class="btn" onclick="askDelete(' <?= $row['id'] ?>  ')">
-                                    <img src="icons/delete.svg" alt="view image" class="text-danger">
-                                </button>
-
-                            </td>
+                        </tbody>
+                    </table>
+                <?php
+                } else {
+                    echo "<h3 class='text-danger'> No Record found</h3>";
+                }
+            } else {
+                ?>
+                <table class="adminAcc-table">
+                    <thead>
+                        <tr>
+                            <th>User ID</th>
+                            <th>Display Name</th>
+                            <th>Username</th>
+                            <th>Password</th>
+                            <th>Contact</th>
+                            <th>Date Added</th>
+                            <th>Date Modified</th>
+                            <th>Date Retrieved</th>
+                            <th>status</th>
+                            <th>Actions</th>
                         </tr>
-                    <?php
-                    }
-                    ?>
-                </tbody>
-                <!-- display clients data using ajax and jquery -->
+                    </thead>
+                    <tbody>
+                        <?php
+                        $res = getData("user");
+                        while ($row = $res->fetch_assoc()) {
+                        ?>
+                            <tr>
+                                <td><?= $row['user_id'] ?></td>
+                                <td><?= $row['display_name'] ?></td>
+                                <td><?= $row['username'] ?></td>
+                                <td><?= md5($row['password']) ?></td>
+                                <td><?= $row['contact'] ?></td>
+                                <td><?= $row['date_added'] ?></td>
+                                <td><?= $row['date_modified'] ?></td>
+                                <td><?= $row['date_retrieved'] ?></td>
+                                <?php
+                                if ($row['active'] != 1) {
+                                ?>
+                                    <td><button class="btn btn-danger badge" onclick="status('activate', '<?= $row['user_id'] ?>')">Deactivated</button></td>
+                                <?php
+                                } else {
+                                ?>
+                                    <td><button class="btn btn-success badge" onclick="status('deactivate', '<?= $row['user_id'] ?>')">Activated</button></td>
+                                <?php
+                                }
+                                ?>
+
+
+                                <td>
+                                    <!-- three btns for view, edit, and delete -->
+
+                                    <!-- view -->
+                                    <button class="btn" onclick="viewAdminAccount('<?= $row['user_id'] ?> ')">
+                                        <img src="icons/view.svg" alt="view image" class="text-success">
+                                    </button>
+
+                                    <!-- delete -->
+                                    <button class="btn" onclick="askDelete(' <?= $row['id'] ?> ')">
+                                        <img src="icons/delete.svg" alt="view image" class="text-danger">
+                                    </button>
+
+                                </td>
+                            </tr>
+                        <?php
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            <?php
+            }
+            ?>
+            <!-- display clients data using ajax and jquery -->
         </div>
     </div>
     <!-- import sidebar -->
@@ -249,32 +357,19 @@ include "functions.php"
                 cursorborder: "none",
             });
 
-            // live search
-            $("#search").keyup(function() {
-                var search = $(this).val();
 
-                if (search != "") {
-                    var data = {
-                        search: search,
-                        action: 1,
-                        btn: "user_search",
-                        table: "user"
-                    }
-                    $.ajax({
-                        url: "displayData.php",
-                        method: "POST",
-                        data: data,
-                        success: (res, status) => {
-                            // console.log(res);
-                            $("#client_table").html(res);
-                        }
-                    });
-                } else {
-                    displayAccounts();
-                }
 
-            });
         });
+
+
+        function showPass(id) {
+            var x = document.getElementById(id);
+            if (x.type === "password") {
+                x.type = "text";
+            } else {
+                x.type = "password";
+            }
+        }
 
         function activate() {
             var activations = $("#activations").val();
@@ -361,7 +456,7 @@ include "functions.php"
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
+                    confirmButtonText: 'Yes!'
                 }).then((result) => {
                     if (result.isConfirmed) {
                         var data = {
@@ -396,7 +491,7 @@ include "functions.php"
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
+                    confirmButtonText: 'Yes!'
                 }).then((result) => {
                     if (result.isConfirmed) {
                         var data = {
@@ -617,7 +712,6 @@ include "functions.php"
 
                         $("#user_id").val(response.user_id);
                         $("#display_name").val(response.display_name);
-                        $("#username").val(response.username);
                         $("#password").val(response.password);
                         $("#contact").val(response.contact);
                         $("#date_added").val(response.date_added);

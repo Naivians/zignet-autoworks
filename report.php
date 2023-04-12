@@ -1,13 +1,9 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['role'])) {
+if (!isset($_SESSION['admin_role'])) {
     header("Location:login.php");
-} else {
-    if ($_SESSION['role'] != "super admin") {
-        header("Location:logout.php?access=1");
-    }
-}
+} 
 
 include "includes/config.php";
 
@@ -111,7 +107,7 @@ $res = $conn->query($sql);
                                 <select name="tables" id="" class="form-select">
                                     <option value="customer">Client</option>
                                     <option value="transactions_history">Transaction History</option>
-                                    <option value="Users">Users</option>
+                                    <option value="user">User</option>
                                 </select>
                             </div>
 
@@ -151,10 +147,10 @@ $res = $conn->query($sql);
                                 <select name="tables" id="" class="form-select">
                                     <option value="customer">Client</option>
                                     <option value="transactions_history">Transaction History</option>
-                                    <option value="Users">Users</option>
+                                    <option value="user">Users</option>
                                 </select>
                             </div>
-
+                            
                             <div class="mb-3">
                                 <button type="submit" name="all_data" class="btn btn-success">Generate</button>
                             </div>
@@ -177,26 +173,6 @@ $res = $conn->query($sql);
         </div>
 
         <div class="row">
-            <!-- Generate users -->
-            <!-- <div class="col-md-3 me-3 report">
-
-                <div class="title">
-                    <i class="bx bxs-download text-light fs-1"></i>
-                    <h5 class="mt-2 mb-2 text-center">Generate Users by:</h5>
-                </div>
-
-                <div class="dash-link mt-3">
-                    <div class="mb-1">
-                        <button class="btn btn-outline-success text-light" onclick="">Dates</button>
-                    </div>
-                    <div class="mb-1">
-                        <button class="btn btn-outline-success text-light">CS Number</button>
-                    </div>
-                    <div class="mb-1">
-                        <a href="#" class="btn btn-outline-success text-light text-decoration-none ">All Clients</a>
-                    </div>
-                </div>
-            </div> -->
 
             <!-- Generate Client -->
             <div class="col-md-3 me-3 report">
@@ -218,27 +194,7 @@ $res = $conn->query($sql);
                 </div>
             </div>
 
-            <!-- Generate Transactions -->
-            <!-- <div class="col-md-3 me-3 report">
-                <div class="title">
-                    <i class="bx bxs-download text-light fs-1"></i>
-                    <h5 class="mt-2 mb-2 text-center">Generate Transactions by:</h5>
-                </div>
-
-
-                <div class="dash-link mt-3">
-                    <div class="mb-1">
-                        <button class="btn btn-outline-success text-light" onclick="">Dates</button>
-                    </div>
-                    <div class="mb-1">
-                        <button class="btn btn-outline-success text-light">CS Number</button>
-                    </div>
-                    <div class="mb-1">
-                        <a href="#" class="btn btn-outline-success text-light text-decoration-none ">All Transactions</a>
-                    </div>
-                </div>
-            </div> -->
-
+            
             <!-- Generate Archives -->
             <div class="col-md-3 me-3 report">
                 <div class="title">
