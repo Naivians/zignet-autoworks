@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['user_role'])) {
+if (!isset($_SESSION['admin_role'])) {
     header("Location:login.php");
 }
 ?>
@@ -23,10 +23,10 @@ if (!isset($_SESSION['user_role'])) {
     <!-- main content -->
     <div class="wrapper" id="wrapper">
         <!-- import TopNavbar -->
-        <?php include "includes/navBar.php"; ?>
+        <a href="archives_dashboard.php" class=" mt-3 btn btn-success text-decoration-none">Back</a>
 
         <div class="adminTable d-flex justify-content-between align-items-center mt-4">
-            <h5>Deleted User Account</h5>
+            <h5>Archive User Account</h5>
             <!-- live search -->
             <div class="filter d-flex align-items-center mt-3 mb-3">
                 <div class="live-search">
@@ -42,7 +42,6 @@ if (!isset($_SESSION['user_role'])) {
     </div>
 
     <!-- import sidebar -->
-    <?php include "includes/archiveSidebar.php"; ?>
     <?php include "includes/script.php"; ?>
     <script src="includes/app.js"></script>
 

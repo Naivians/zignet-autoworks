@@ -107,7 +107,7 @@ if (!isset($_SESSION['admin_role'])) {
             // live search
             $("#search").keyup(function() {
                 var search = $(this).val();
-
+                // alert(search)
                 if (search != "") {
                     var data = {
                         search: search,

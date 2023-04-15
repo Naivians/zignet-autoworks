@@ -153,7 +153,7 @@ include "includes/config.php";
             </div>
 
             <!-- Example single danger button -->
-            <div class="btn-group">
+            <!-- <div class="btn-group">
                 <select name="" id="columnName" class="filterBtn form-select" onchange="filterBy()">
                     <option disabled selected>Filter by</option>
                     <option value="customerName">Customer's Name</option>
@@ -164,8 +164,17 @@ include "includes/config.php";
                     <option value="retrievedDate">Retrieved Date</option>
                     <option value="company">Company</option>
                 </select>
+            </div> -->
+
+            <div class="btn-group mx-2">
+                <select name="" id="select_action" class="filterBtn form-select" onchange="selected()">
+                    <option disabled selected>With Select: </option>
+                    <option value="archive">move to archive</option>
+                </select>
             </div>
         </div>
+
+
 
         <div class="displayAccount mt-4" id="client_table">
             <!-- display clients data using ajax and jquery -->
@@ -180,6 +189,7 @@ include "includes/config.php";
         $(document).ready(() => {
             displayAccounts();
 
+            
             // nice scroll js
             $("#client_table").niceScroll({
                 cursorwidth: "8px",
@@ -205,6 +215,7 @@ include "includes/config.php";
                         method: "POST",
                         data: data,
                         success: (res, status) => {
+                            // alert(res);
                             $("#client_table").html(res);
                         }
                     });
@@ -214,6 +225,7 @@ include "includes/config.php";
 
             });
         });
+
 
         function updateAccount() {
 
@@ -227,7 +239,7 @@ include "includes/config.php";
 
 
             var data = {
-                client_id: $("#updateID").val(), 
+                client_id: $("#updateID").val(),
                 edit_customer_name: $("#edit_customer_name").val(),
                 edit_company: $("#edit_company").val(),
                 edit_model: $("#edit_model").val(),
@@ -302,12 +314,12 @@ include "includes/config.php";
 
             Swal.fire({
                 title: "Are you sure?",
-                text: "You won't be able to revert this!",
+                text: "you're about to move to this account to archive",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
                 cancelButtonColor: "#d33",
-                confirmButtonText: "Yes, delete it!",
+                confirmButtonText: "Yes",
             }).then((result) => {
 
                 if (result.isConfirmed) {
@@ -318,13 +330,13 @@ include "includes/config.php";
                         data: data,
                         success: (res) => {
 
-                            console.log(res);
+                            // console.log(res);
 
                             var response = JSON.parse(res);
 
                             if (response.status == 200) {
                                 if (result.isConfirmed) {
-                                    Swal.fire("Deleted!", response.message, "success");
+                                    Swal.fire("Success!", response.message, "success");
                                 }
                                 displayAccounts();
                             } else {
@@ -337,8 +349,6 @@ include "includes/config.php";
                         }
                     });
                 }
-
-
             });
         }
 
@@ -377,7 +387,7 @@ include "includes/config.php";
         }
 
         function viewAdminAccount(id) {
-            
+
             // $("#viewModal").modal('show');
 
             var data = {

@@ -31,7 +31,6 @@
                 ?>
                     <div class="mt-3">
                         <a href="user_view.php" class="text-decoration-none text-light d-flex align-items-center justify-content-center "><?= $_SESSION['display_name'] ?> <i class='bx bxs-chevron-right fs-4 text-light'></i></a>
-                        
                     </div>
                 <?php
                 }

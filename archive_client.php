@@ -3,7 +3,7 @@ session_start();
 
 if (!isset($_SESSION['admin_role'])) {
     header("Location:login.php");
-} 
+}
 ?>
 
 <!DOCTYPE html>
@@ -15,7 +15,7 @@ if (!isset($_SESSION['admin_role'])) {
     // include "includes/sweetalert.php";
     ?>
     <link rel="stylesheet" href="css/dashboard.css?v=<?= time(); ?>">
-    <title>Admin | Archive</title>
+    <title>Admin | Archive </title>
 </head>
 
 <body>
@@ -23,10 +23,10 @@ if (!isset($_SESSION['admin_role'])) {
     <!-- main content -->
     <div class="wrapper" id="wrapper">
         <!-- import TopNavbar -->
-        <?php include "includes/navBar.php"; ?>
 
+        <a href="archives_dashboard.php" class=" mt-3 btn btn-success text-decoration-none">Back</a>
         <div class="adminTable d-flex justify-content-between align-items-center mt-4">
-            <h5>Deleted Admin Account</h5>
+            <h5>Archive Client Account</h5>
             <!-- live search -->
             <div class="filter d-flex align-items-center mt-3 mb-3">
                 <div class="live-search">
@@ -43,7 +43,7 @@ if (!isset($_SESSION['admin_role'])) {
     </div>
 
     <!-- import sidebar -->
-    <?php include "includes/archiveSidebar.php"; ?>
+
     <?php include "includes/script.php"; ?>
     <script src="includes/app.js"></script>
 
@@ -60,8 +60,8 @@ if (!isset($_SESSION['admin_role'])) {
                     var data = {
                         search: search,
                         action: 1,
-                        btn: "deletedSearch",
-                        table: "deleted_admin_account"
+                        btn: "search_deleted_client",
+                        table: "deleted_client_account"
                     }
 
                     $.ajax({
@@ -81,13 +81,11 @@ if (!isset($_SESSION['admin_role'])) {
 
 
 
-        function askDelete(id) {
+        function askDelete(client_id) {
 
             var data = {
-                id: id,
-                delete_client_btn: "deletedBTN",
-                action: 1,
-                table: "deleted_admin_account"
+                client_id: client_id,
+                deleted_client_and_transactions: "deleted_client_and_transactions",
             };
 
 
@@ -109,18 +107,17 @@ if (!isset($_SESSION['admin_role'])) {
                         method: "POST",
                         data: data,
                         success: (res) => {
-                            var response = JSON.parse(res);
 
-                            if (response.status == 200) {
+                            if (res == "success") {
                                 if (result.isConfirmed) {
-                                    Swal.fire("Deleted!", response.message, "success");
+                                    Swal.fire("Deleted!", "Successfully deleted client and their transactions permanently", "success");
                                 }
                                 displayAccounts();
                             } else {
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Oops...',
-                                    text: response.messsage,
+                                    text: res,
                                 });
                             }
                         }
@@ -135,7 +132,7 @@ if (!isset($_SESSION['admin_role'])) {
                 url: "displayData.php",
                 method: "post",
                 data: {
-                    deletedAdmin: 1
+                    deleted_client: 1
                 },
                 success: (res) => {
                     $("#adminTable").html(res);
@@ -144,12 +141,11 @@ if (!isset($_SESSION['admin_role'])) {
         }
 
         function retrieved(retrievedID) {
+
             // go to insert and retrieved this account by the id 
             var data = {
                 retrievedID: retrievedID,
-                retrievedBtn: "retrievedAdmin",
-                retrievedAction: 1,
-                table: "deleted_admin_account"
+                retrieved_deleted_client_and_transactions: "retrieved_deleted_client_and_transactions",
             };
 
             Swal.fire({
@@ -169,22 +165,21 @@ if (!isset($_SESSION['admin_role'])) {
                         data: data,
                         success: (res) => {
 
-                            var response = JSON.parse(res);
-
-                            if (response.status == 200) {
-                                if (result.isConfirmed) {
-                                    Swal.fire("Retrieved!", response.message, "success");
-                                }
-                                displayAccounts();
-                            } else {
+                            if (res != "success") {
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Oops...',
-                                    text: response.messsage,
+                                    text: res,
                                 });
+                            } else {
+                                if (result.isConfirmed) {
+                                    Swal.fire("Retrieved!", "Successfully retrieved client and their transactions", "success");
+                                }
+                                displayAccounts();
                             }
                         }
                     });
+
                 }
 
             });

@@ -233,6 +233,7 @@ if (!isset($_SESSION['admin_role'])) {
     <?php include "includes/sidebar.php"; ?>
     <?php include "includes/script.php"; ?>
     <script src="includes/app.js"></script>
+    <script src="main.js"></script>
 
 
     <script>

@@ -12,7 +12,7 @@ if (isset($_POST['action'])) {
         
         
         if(!deleteData($table, $id)){
-            echo "Failed to delete user";
+            echo "Failed to move user to archive";
         }else{
             echo "success";
         }
@@ -21,17 +21,17 @@ if (isset($_POST['action'])) {
     // this button is from retieved page so this is delete permanently
     if ($btn == "deletedBTN") {
         $res = deleteData($table, $id);
-
+        
         if (!$res) {
             $feedback = [
                 "status" => 422,
-                "message" => "Failed to delete data"
+                "message" => "Failed to move data to archive"
             ];
             echo json_encode($feedback);
         } else {
             $feedback = [
                 "status" => 200,
-                "message" => "Seccessfully deleted accounts"
+                "message" => "Successfully move to archive"
             ];
             echo json_encode($feedback);
         }
@@ -54,13 +54,13 @@ if (isset($_POST['action'])) {
         if (!$res) {
             $feedback = [
                 "status" => 422,
-                "message" => "Failed to delete data"
+                "message" => "Failed to move archive"
             ];
             echo json_encode($feedback);
         } else {
             $feedback = [
                 "status" => 200,
-                "message" => "Seccessfully deleted accounts"
+                "message" => "Successfully move account to archive"
             ];
             echo json_encode($feedback);
         }
@@ -77,13 +77,13 @@ if (isset($_POST['action'])) {
         if (!$res) {
             $feedback = [
                 "status" => 422,
-                "message" => "Failed to delete data"
+                "message" => "Failed to move to archive"
             ];
             echo json_encode($feedback);
         } else {
             $feedback = [
                 "status" => 200,
-                "message" => "Seccessfully deleted accounts"
+                "message" => "Successfully move account to archive"
             ];
             echo json_encode($feedback);
         }
@@ -100,7 +100,7 @@ if (isset($_POST['deleted_client_and_transactions'])) {
     $res = permanently_deleted_client_and_transactions($client_id);
 
     if (!$res) {
-        echo "Failed to deleted client related data";
+        echo "Failed to move client related data to archive";
     } else {
         echo "success";
     }
@@ -117,6 +117,6 @@ if(isset($_POST['delete_user_btn'])){
     if($user == TRUE && $request == TRUE){
         echo "success";
     }else{
-        echo "Failed to delete";
+        echo "Failed to move to archive";
     }
 }

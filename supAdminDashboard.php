@@ -82,7 +82,7 @@ $total_transactions = $total_transactions->num_rows;
             <a href="users.php" class="text-decoration-none col-md-2 d-flex text-light align-items-center justify-content-between p-4 border border-success m-2 rounded-3">
                 <div class="title">
                     <h3><?= $active ?></h3>
-                    <p>Actived Users</p>
+                    <p>Activated Users</p>
                 </div>
                 <i class='bx bx-user fs-1'></i>
             </a>
@@ -90,7 +90,7 @@ $total_transactions = $total_transactions->num_rows;
             <a href="users.php" class="text-decoration-none col-md-2 d-flex text-light align-items-center justify-content-between p-4 border border-success m-2 rounded-3">
                 <div class="title">
                     <h3><?= $inactive ?></h3>
-                    <p>Actived Users</p>
+                    <p>Deactivated Users</p>
                 </div>
                 <i class='bx bx-user fs-1'></i>
             </a>
@@ -115,7 +115,7 @@ $total_transactions = $total_transactions->num_rows;
             <div class="col-md-2 d-flex text-light align-items-center justify-content-between p-4 border border-success m-2 rounded-3">
                 <div class="title">
                     <h3><?= $todays_client ?></h3>
-                    <p>Today's</p>
+                    <p>Today's Client</p>
                 </div>
                 <i class='bx bxs-user-detail fs-1'></i>
             </div>
@@ -123,7 +123,7 @@ $total_transactions = $total_transactions->num_rows;
             <div class="col-md-2 d-flex text-light align-items-center justify-content-between p-4 border border-success m-2 rounded-3">
                 <div class="title">
                     <h3><?= $current_week ?></h3>
-                    <p>Current Week</p>
+                    <p>Weekly Client</p>
                 </div>
                 <i class='bx bxs-user-detail fs-1'></i>
             </div>
@@ -131,14 +131,14 @@ $total_transactions = $total_transactions->num_rows;
             <div class="col-md-2 d-flex text-light align-items-center justify-content-between p-4 border border-success m-2 rounded-3">
                 <div class="title">
                     <h3><?= $current_month ?></h3>
-                    <p>Current Month</p>
+                    <p>Monthly Client</p>
                 </div>
                 <i class='bx bxs-user-detail fs-1'></i>
             </div>
             <div class="col-md-2 d-flex text-light align-items-center justify-content-between p-4 border border-success m-2 rounded-3">
                 <div class="title">
                     <h3><?= $current_year ?></h3>
-                    <p>Current Year</p>
+                    <p>Yearly Client</p>
                 </div>
                 <i class='bx bxs-user-detail fs-1'></i>
             </div>
@@ -149,8 +149,8 @@ $total_transactions = $total_transactions->num_rows;
     <?php include "includes/sidebar.php"; ?>
     <?php include "includes/script.php"; ?>
     <script src="includes/app.js"></script>
-
-
+    <script src="main.js"></script>
+    
 </body>
 
 

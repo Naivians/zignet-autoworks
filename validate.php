@@ -88,6 +88,25 @@ if (isset($_POST['register_btn'])) {
     if ($display_name == NULL || $username == NULL || $password == NULL || $contact == NULL) {
         echo "All fields is mandatory";
     } else {
+        
+        /*
+            send sms -> code (randomizer)
+            model -> OTP 
+            if(db user id == SESSION[OTP]){ // user id
+                inset
+                activate
+            }else{
+                send error mesg
+                deactivate
+            }
+            
+            
+            if(!verify){
+                send error msg
+            }else{
+                insert
+            }
+        */
 
         // check if username exist
         $users = validateCredential("user", $username);
@@ -104,6 +123,7 @@ if (isset($_POST['register_btn'])) {
             $lastInsertId = insert_user($user_id, $display_name, $username, $password,  $contact);
             $_SESSION['new_id'] = $lastInsertId;
             $_SESSION['user_id'] = $user_id;
+
             echo "Registered";
         }
     }

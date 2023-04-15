@@ -78,7 +78,6 @@ if (isset($_POST['deleted_user'])) {
     <th>Contact</th>
     <th>Date Added</th>
     <th>Date Modified</th>
-    <th>Date Retrieved</th>
     <th>status</th>
     <th>Actions</th>
 </tr>
@@ -93,7 +92,6 @@ if (isset($_POST['deleted_user'])) {
                         <td>' . $row['contact'] . '</td>
                         <td>' . $row['date_added'] . '</td>
                         <td>' . $row['date_modified'] . '</td>
-                        <td>' . $row['date_retrieved'] . '</td>
                         <td>' . $row['active'] . '</td>
                         <td>
                             <!-- three btns for view, edit, and delete -->
@@ -131,7 +129,6 @@ if (isset($_POST['getBtn'])) {
             <th>Password</th>
             <th>Date Added</th>
             <th>Date Modified</th>
-            <th>Date Retrieved</th>
             <th>Actions</th>
         </tr>
     </thead>';
@@ -144,7 +141,6 @@ if (isset($_POST['getBtn'])) {
                         <td>' . $row['password'] . '</td>
                         <td>' . $row['dateAdded'] . '</td>
                         <td>' . $row['dateModified'] . '</td>
-                        <td>' . $row['retrievedDate'] . '</td>
                         <td>
                             <!-- three btns for view, edit, and delete -->
 
@@ -213,7 +209,6 @@ if (isset($_POST['filterBtn'])) {
             <th>Password</th>
             <th>Date Added</th>
             <th>Date Modified</th>
-            <th>Date Retrieved</th>
             <th>Actions</th>
         </tr>
     </thead>';
@@ -226,7 +221,6 @@ if (isset($_POST['filterBtn'])) {
                         <td>' . $row['password'] . '</td>
                         <td>' . $row['dateAdded'] . '</td>
                         <td>' . $row['dateModified'] . '</td>
-                        <td>' . $row['retrievedDate'] . '</td>
                         <td>
                             <!-- three btns for view, edit, and delete -->
 
@@ -271,7 +265,6 @@ if (isset($_POST['filter_transact'])) {
             <th>Payment Status</th>
             <th>Date Added</th>
             <th>Date Paid</th>
-            <th>Date Retrieved</th>
             <th>Actions</th>
         </tr>
     </thead>';
@@ -285,7 +278,6 @@ if (isset($_POST['filter_transact'])) {
                         <td>' . $row['paymentStatus'] . '</td>
                         <td>' . $row['dateAdded'] . '</td>
                         <td>' . $row['date_paid'] . '</td>
-                        <td>' . $row['dateRetrieved'] . '</td>
                         <td>    
         
                             <!-- three btns for view, edit, and delete -->
@@ -312,6 +304,7 @@ if (isset($_POST['action'])) {
     $table = $conn->escape_string($_POST['table']);
     $searchItem = $conn->escape_string($_POST['search']);
     $searchBtn = $conn->escape_string($_POST['btn']);
+
 
     if ($searchBtn == "request_search") {
         $res = search_request($table, $searchItem);
@@ -369,10 +362,14 @@ if (isset($_POST['action'])) {
 
     // request_search
     if ($searchBtn == "transact_search") {
-        $res = seacrh_client($table, $searchItem);
+
+        // $res = seacrh_client($table, $searchItem);
+        $sql = "SELECT * FROM `$table` WHERE `customerName` LIKE '%{$searchItem}%' ";
+        $res =  $conn->query($sql);
+
 
         if ($res->num_rows > 0) {
-            $table = '<table class="adminAcc-table">
+            $table = ' <table class="adminAcc-table">
             <thead>
                 <tr>
                     <th>Reciept</th>
@@ -382,7 +379,6 @@ if (isset($_POST['action'])) {
                     <th>Payment Status</th>
                     <th>Date Added</th>
                     <th>Date Paid</th>
-                    <th>Date Retrieved</th>
                     <th>Actions</th>
                 </tr>
             </thead>';
@@ -396,9 +392,7 @@ if (isset($_POST['action'])) {
                         <td>' . $row['paymentStatus'] . '</td>
                         <td>' . $row['dateAdded'] . '</td>
                         <td>' . $row['date_paid'] . '</td>
-                        <td>' . $row['dateRetrieved'] . '</td>
                         <td>    
-        
                             <!-- three btns for view, edit, and delete -->
                             <button class="btn" onclick="upload_reciept(' . $row['client_id'] . ')">
                                 <i class="bx bxs-download text-success"></i>
@@ -408,10 +402,7 @@ if (isset($_POST['action'])) {
                                 <img src="icons/view.svg" alt="view image" class="text-success">
                             </button> 
 
-                            <button class="btn" onclick="updateAccount(' . $row['client_id'] . ')">
-                                <img src="icons/edit.svg" alt="view image" class="text-success">
-                            </button> 
-                            
+                 
                             
                         </td>
                     </tr>';
@@ -422,6 +413,8 @@ if (isset($_POST['action'])) {
         } else {
             echo "<h6 class='text-danger'>No data found</h6>";
         }
+
+        exit;
     }
     // USERS
 
@@ -507,7 +500,6 @@ if (isset($_POST['action'])) {
                     <th>Password</th>
                     <th>Date Added</th>
                     <th>Date Modified</th>
-                    <th>Date Retrieved</th>
                     <th>Actions</th>
                 </tr>
             </thead>';
@@ -520,7 +512,6 @@ if (isset($_POST['action'])) {
                                 <td>' . $row['password'] . '</td>
                                 <td>' . $row['dateAdded'] . '</td>
                                 <td>' . $row['dateModified'] . '</td>
-                                <td>' . $row['retrievedDate'] . '</td>
                                 <td>
                                     <!-- three btns for view, edit, and delete -->
         
@@ -553,7 +544,10 @@ if (isset($_POST['action'])) {
     // search_client
 
     if ($searchBtn == "client_search") {
+
+
         $res = seacrh_client($table, $searchItem);
+
 
         if ($res->num_rows > 0) {
             $table = '<table class="adminAcc-table">
@@ -566,7 +560,6 @@ if (isset($_POST['action'])) {
                         <th>Company</th>
                         <th>Date Added</th>
                         <th>Date Modified</th>
-                        <th>Date Retrieved</th>
                         <th>Actions</th>
                     </tr>
                 </thead>';
@@ -580,7 +573,6 @@ if (isset($_POST['action'])) {
                         <td>' . $row['company'] . '</td>
                         <td>' . $row['dateAdded'] . '</td>
                         <td>' . $row['dateModified'] . '</td>
-                        <td>' . $row['retrievedDate'] . '</td>
                         <td>
                             <!-- three btns for view, edit, and delete -->
 
@@ -607,6 +599,7 @@ if (isset($_POST['action'])) {
             echo $table;
         } else {
             echo "<h6 class='text-danger'>No data found</h6>";
+            exit;
         }
     }
 
@@ -678,7 +671,6 @@ if (isset($_POST['action'])) {
                         <th>Company</th>
                         <th>Date Added</th>
                         <th>Date Modified</th>
-                        <th>Date Retrieved</th>
                         <th>Actions</th>
                     </tr>
                 </thead>';
@@ -692,7 +684,6 @@ if (isset($_POST['action'])) {
                         <td>' . $row['company'] . '</td>
                         <td>' . $row['dateAdded'] . '</td>
                         <td>' . $row['dateModified'] . '</td>
-                        <td>' . $row['retrievedDate'] . '</td>
                         <td>
                             <!-- three btns for view, edit, and delete -->
 
@@ -730,7 +721,6 @@ if (isset($_POST['action'])) {
                     <th>Payment Status</th>
                     <th>Date Added</th>
                     <th>Date Paid</th>
-                    <th>Date Retrieved</th>
                     <th>Actions</th>
                 </tr>
             </thead>';
@@ -744,7 +734,6 @@ if (isset($_POST['action'])) {
                         <td>' . $row['paymentStatus'] . '</td>
                         <td>' . $row['dateAdded'] . '</td>
                         <td>' . $row['date_paid'] . '</td>
-                        <td>' . $row['dateRetrieved'] . '</td>
                         <td>    
         
                             <!-- three btns for view, edit, and delete -->
@@ -789,7 +778,6 @@ if (isset($_POST['action'])) {
                     <th>Payment Status</th>
                     <th>Date Added</th>
                     <th>Date Paid</th>
-                    <th>Date Retrieved</th>
                     <th>Actions</th>
                 </tr>
             </thead>';
@@ -803,7 +791,6 @@ if (isset($_POST['action'])) {
                         <td>' . $row['paymentStatus'] . '</td>
                         <td>' . $row['dateAdded'] . '</td>
                         <td>' . $row['date_paid'] . '</td>
-                        <td>' . $row['dateRetrieved'] . '</td>
                         <td>
                             <button class="btn" onclick="viewAdminAccount(' . $row['client_id'] . ')">
                                 <img src="icons/view.svg" alt="view image" class="text-success">
@@ -968,11 +955,10 @@ if (isset($_POST['display_client'])) {
             <th>Company</th>
             <th>Date Added</th>
             <th>Date Modified</th>
-            <th>Date Retrieved</th>
             <th>Actions</th>
         </tr>
     </thead>';
-
+    
     while ($row = $res->fetch_assoc()) {
         $table .= ' <tr>
                         <td> <a href="edit_form.php?id=' . $row['client_id'] . '"><img src="uploads/' . $row['img_path'] . '" alt="document form" class="img"></a> </td>
@@ -982,7 +968,6 @@ if (isset($_POST['display_client'])) {
                         <td>' . $row['company'] . '</td>
                         <td>' . $row['dateAdded'] . '</td>
                         <td>' . $row['dateModified'] . '</td>
-                        <td>' . $row['retrievedDate'] . '</td>
                         <td>
                             <!-- three btns for view, edit, and delete -->
 
@@ -998,7 +983,7 @@ if (isset($_POST['display_client'])) {
 
                             <!-- delete -->
                             <button class="btn" onclick="askDelete(' . $row['client_id'] . ')">
-                                <img src="icons/delete.svg" alt="view image" class="text-danger">
+                            <i class="bx bxs-archive-in text-light"></i>
                             </button>
 
                         </td>
@@ -1025,7 +1010,6 @@ if (isset($_POST['display_transaction'])) {
             <th>Payment Status</th>
             <th>Date Added</th>
             <th>Date Paid</th>
-            <th>Date Retrieved</th>
             <th>Actions</th>
         </tr>
     </thead>';
@@ -1039,7 +1023,6 @@ if (isset($_POST['display_transaction'])) {
                         <td>' . $row['paymentStatus'] . '</td>
                         <td>' . $row['dateAdded'] . '</td>
                         <td>' . $row['date_paid'] . '</td>
-                        <td>' . $row['dateRetrieved'] . '</td>
                         <td>
 
                             <!-- three btns for view, edit, and delete -->
@@ -1077,7 +1060,6 @@ if (isset($_POST['deleted_transactions'])) {
             <th>Payment Status</th>
             <th>Date Added</th>
             <th>Date Paid</th>
-            <th>Date Retrieved</th>
             <th>Actions</th>
         </tr>
     </thead>';
@@ -1092,7 +1074,6 @@ if (isset($_POST['deleted_transactions'])) {
                         <td>' . $row['paymentStatus'] . '</td>
                         <td>' . $row['dateAdded'] . '</td>
                         <td>' . $row['date_paid'] . '</td>
-                        <td>' . $row['dateRetrieved'] . '</td>
                         <td>
 
                             <!-- three btns for view, edit, and delete -->
@@ -1137,7 +1118,6 @@ if (isset($_POST['filter_client'])) {
                         <th>Company</th>
                         <th>Date Added</th>
                         <th>Date Modified</th>
-                        <th>Date Retrieved</th>
                         <th>Actions</th>
                     </tr>
                 </thead>';
@@ -1151,7 +1131,6 @@ if (isset($_POST['filter_client'])) {
                         <td>' . $row['company'] . '</td>
                         <td>' . $row['dateAdded'] . '</td>
                         <td>' . $row['dateModified'] . '</td>
-                        <td>' . $row['retrievedDate'] . '</td>
                         <td>
                             <!-- three btns for view, edit, and delete -->
 
@@ -1218,7 +1197,7 @@ if (isset($_POST['view_user_btn'])) {
 
     $res = getBY_userID("user", $user_id);
     $response = array();
-    
+
     while ($row = $res->fetch_assoc()) {
         $response = $row;
     }

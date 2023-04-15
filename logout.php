@@ -13,7 +13,7 @@ if (isset($_GET['user'])) {
 
 if (isset($_GET['admin'])) {
     $LoginID = $_SESSION['currently_loginID'];
-    logout($LoginID);
+    // logout($LoginID);
 
     $sessions = array("admin_role", "admin_id", "adminName", "currently_loginID", "login");
 

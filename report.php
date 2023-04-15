@@ -3,7 +3,7 @@ session_start();
 
 if (!isset($_SESSION['admin_role'])) {
     header("Location:login.php");
-} 
+}
 
 include "includes/config.php";
 
@@ -107,7 +107,9 @@ $res = $conn->query($sql);
                                 <select name="tables" id="" class="form-select">
                                     <option value="customer">Client</option>
                                     <option value="transactions_history">Transaction History</option>
-                                    <option value="user">User</option>
+                                    <option value="user">Users</option>
+                                    <option value="request_form">Request Form</option>
+                                    <option value="login_history">Login History</option>
                                 </select>
                             </div>
 
@@ -131,7 +133,7 @@ $res = $conn->query($sql);
             </div>
         </div>
     </div>
-    
+
     <!-- all data -->
     <div class="modal fade" id="all_data" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog ">
@@ -148,9 +150,11 @@ $res = $conn->query($sql);
                                     <option value="customer">Client</option>
                                     <option value="transactions_history">Transaction History</option>
                                     <option value="user">Users</option>
+                                    <option value="request_form">Request Form</option>
+                                    <option value="login_history">Login History</option>
                                 </select>
                             </div>
-                            
+
                             <div class="mb-3">
                                 <button type="submit" name="all_data" class="btn btn-success">Generate</button>
                             </div>
@@ -169,7 +173,7 @@ $res = $conn->query($sql);
         <?php include "includes/navBar.php"; ?>
 
         <div class="adminTable d-flex justify-content-between align-items-center mt-4 mb-4">
-            <h5>Generate Report</h5>
+            <h5>Generate Reports</h5>
         </div>
 
         <div class="row">
@@ -178,7 +182,7 @@ $res = $conn->query($sql);
             <div class="col-md-3 me-3 report">
                 <div class="title">
                     <i class="bx bxs-download text-light fs-1"></i>
-                    <h5 class="mt-2 mb-2 text-center">Generate client and transactions by:</h5>
+                    <h5 class="mt-2 mb-2 text-center">Generate by:</h5>
                 </div>
 
                 <div class="dash-link mt-3">
@@ -194,9 +198,9 @@ $res = $conn->query($sql);
                 </div>
             </div>
 
-            
+
             <!-- Generate Archives -->
-            <div class="col-md-3 me-3 report">
+            <!-- <div class="col-md-3 me-3 report">
                 <div class="title">
                     <i class="bx bxs-download text-light fs-1"></i>
                     <h5 class="mt-2 mb-2 text-center">Generate Archives by:</h5>
@@ -217,7 +221,7 @@ $res = $conn->query($sql);
                     </div>
 
                 </div>
-            </div>
+            </div> -->
         </div>
 
 

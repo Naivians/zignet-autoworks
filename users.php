@@ -216,7 +216,6 @@ if (isset($_POST['search'])) {
                                 <th>Contact</th>
                                 <th>Date Added</th>
                                 <th>Date Modified</th>
-                                <th>Date Retrieved</th>
                                 <th>status</th>
                                 <th>Actions</th>
                             </tr>
@@ -233,7 +232,6 @@ if (isset($_POST['search'])) {
                                     <td><?= $row['contact'] ?></td>
                                     <td><?= $row['date_added'] ?></td>
                                     <td><?= $row['date_modified'] ?></td>
-                                    <td><?= $row['date_retrieved'] ?></td>
                                     <?php
                                     if ($row['active'] != 1) {
                                     ?>
@@ -257,7 +255,7 @@ if (isset($_POST['search'])) {
 
                                         <!-- delete -->
                                         <button class="btn" onclick="askDelete(' <?= $row['id'] ?> ')">
-                                            <img src="icons/delete.svg" alt="view image" class="text-danger">
+                                        <i class='bx bxs-archive-in text-light'></i>
                                         </button>
 
                                     </td>
@@ -283,7 +281,6 @@ if (isset($_POST['search'])) {
                             <th>Contact</th>
                             <th>Date Added</th>
                             <th>Date Modified</th>
-                            <th>Date Retrieved</th>
                             <th>status</th>
                             <th>Actions</th>
                         </tr>
@@ -301,7 +298,6 @@ if (isset($_POST['search'])) {
                                 <td><?= $row['contact'] ?></td>
                                 <td><?= $row['date_added'] ?></td>
                                 <td><?= $row['date_modified'] ?></td>
-                                <td><?= $row['date_retrieved'] ?></td>
                                 <?php
                                 if ($row['active'] != 1) {
                                 ?>
@@ -325,7 +321,7 @@ if (isset($_POST['search'])) {
 
                                     <!-- delete -->
                                     <button class="btn" onclick="askDelete(' <?= $row['id'] ?> ')">
-                                        <img src="icons/delete.svg" alt="view image" class="text-danger">
+                                    <i class='bx bxs-archive-in text-light'></i>
                                     </button>
 
                                 </td>
@@ -618,12 +614,12 @@ if (isset($_POST['search'])) {
 
             Swal.fire({
                 title: "Are you sure?",
-                text: "You won't be able to revert this!",
+                text: "You're about to move this user to archive",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
                 cancelButtonColor: "#d33",
-                confirmButtonText: "Yes, delete it!",
+                confirmButtonText: "Yes",
             }).then((result) => {
 
                 if (result.isConfirmed) {
@@ -642,7 +638,7 @@ if (isset($_POST['search'])) {
                                 Swal.fire({
                                     position: 'top-center',
                                     icon: 'success',
-                                    title: "Successfully deleted user",
+                                    title: "Successfully move user to archive",
                                     showConfirmButton: false,
                                     timer: 1000
                                 });

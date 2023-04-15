@@ -52,6 +52,11 @@ ul {
 
 .navs {
   width: 100%;
+  overflow-x: hidden;
+}
+
+.navs ul li{
+  border-radius: 5px;
 }
 
 .navs ul li a {
@@ -68,6 +73,7 @@ ul {
 
 .navs ul li:hover {
   background-color: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
 }
 
 /* sidebar and wrapper animation */

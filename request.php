@@ -344,8 +344,7 @@ if (!isset($_SESSION['admin_role'])) {
         // }
 
         function askDelete(id) {
-            alert(id)
-
+            
             var data = {
                 id: id,
                 delete_client_btn: "request",

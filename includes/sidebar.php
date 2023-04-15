@@ -6,7 +6,7 @@
          <p class="text-light fs-5 mt-2">Zignet Autoworks</p>
      </div>
 
-     <div class="navs">
+     <div class="navs" id="navs">
          <ul>
              <!-- dashboard -->
              <li>
@@ -34,11 +34,11 @@
                      <i class='bx bxs-bank me-2'></i>
                      Transactions</a>
              </li>
-            
+
              <!-- transaction history -->
              <li>
                  <a href="users.php" class="small-font">
-                 <i class='bx bx-user me-2'></i>
+                     <i class='bx bx-user me-2'></i>
                      Users</a>
              </li>
 
@@ -54,6 +54,21 @@
                      <i class='bx bxs-report me-2'></i>
                      Report</a>
              </li>
+
+             <li>
+                 <a class="small-font" href="archives_dashboard.php">
+                     <i class='bx bxs-archive-in me-2'></i>
+                     Archives</a>
+             </li>
+
+             <li>
+                 <a class="small-font" href="logout.php?admin=1">
+                     <i class='bx bx-log-out me-2'></i>
+                     Logout</a>
+             </li>  
+
+             <!--  -->
          </ul>
      </div>
+
  </aside>
