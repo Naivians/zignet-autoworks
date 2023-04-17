@@ -1,3 +1,17 @@
+<?php
+session_start();
+
+if (isset($_SESSION['user_role'])) {
+    header("location:user_view.php");
+}
+
+if (isset($_SESSION['admin_role'])) {
+    header("location:user_view.php");
+}
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -71,7 +85,7 @@
                             <input type="password" name="password" id="password" placeholder="Enter Password" autocomplete="off">
                         </div>
 
-                        <button type="button" onclick="login()">Sign-in now!</button>
+                        <button type="button" id="submit">Sign-in now!</button>
                     </form>
                 </div>
 
@@ -119,6 +133,26 @@
             //     nextEl: ".swiper-button-next",
             //     prevEl: ".swiper-button-prev",
             // },
+        });
+
+        let btn = document.getElementById('submit');
+
+        // when the btn is clicked print info in console 
+        btn.addEventListener('click', (ev) => {
+            login();
+        });
+
+        document.addEventListener('keypress', (event) => {
+
+            // event.keyCode or event.which  property will have the code of the pressed key
+            let keyCode = event.keyCode ? event.keyCode : event.which;
+
+            // 13 points the enter key
+            if (keyCode === 13) {
+                // call click function of the buttonn 
+                btn.click();
+            }
+
         });
 
 
@@ -174,7 +208,7 @@
 
                                 $("#password").css("border", "1px solid red");
                                 $("#username").css("border", "1px solid red");
-                                
+
                                 reset();
                             }
                         }

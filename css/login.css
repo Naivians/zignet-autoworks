@@ -86,7 +86,7 @@
 
 .hero .hero-left .form input[type="text"],
 .hero .hero-left .form input[type="password"],
-.hero .hero-left .form input[type="submit"] {
+.hero .hero-left .form input[type="submit"], .hero .hero-left .form input[type="number"] {
   border: none;
   border-radius: 20px;
   outline: none;
@@ -95,7 +95,7 @@
 }
 
 .hero .hero-left .form input[type="text"],
-.hero .hero-left .form input[type="password"] {
+.hero .hero-left .form input[type="password"], .hero .hero-left .form input[type="number"]  {
   width: 100%;
 }
 

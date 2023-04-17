@@ -6,3 +6,9 @@ $("#navs").niceScroll({
   cursorborder: "none",
   horizrailenabled: false,
 });
+
+function toggle() {
+  var responsive_nav = document.getElementById("nav-res-container");  
+
+  responsive_nav.classList.toggle("move");
+}

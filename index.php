@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <link rel="stylesheet" href="css/landing.css?<?=time();?>">
+    <link rel="stylesheet" href="css/landing.css?<?= time(); ?>">
     <?php include "includes/header.php"; ?>
     <title>Zignet | Home</title>
     <style>
@@ -17,8 +17,8 @@
     <main>
         <section id="home" class="home">
             <div class="swiper mySwiper">
-                <div class="overlay">
-                    <div class="content">
+                <div class="overlay p-3">
+                    <div class="content pe-3 px-3">
                         <h1 class="primary text-center">Zignet<span class="title"> Autoworks</span></h1>
                         <p class="primary text-center mt-2 mb-5">ZIGNET is a premier private car care and dealer services centre aiming to <br> provide the best and latest quality car care services in the country</p>
                     </div>
@@ -36,6 +36,7 @@
     <!-- Swiper -->
     <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
     <?php include "includes/script.php" ?>
+    <script src="main.js"></script>
 
     <script>
         // login part
@@ -47,6 +48,10 @@
                 disableOnInteraction: false,
             },
         });
+
+
+
+        
     </script>
 </body>
 

@@ -17,7 +17,6 @@ include "includes/config.php";
     <?php include "includes/header.php"; ?>
     <link rel="stylesheet" href="css/dashboard.css?v=<?= time(); ?>">
     <title>Admin | Client</title>
-
 </head>
 
 <body>
@@ -149,7 +148,8 @@ include "includes/config.php";
         <div class="filter d-flex align-items-center mt-3 mb-3">
 
             <div class="live-search">
-                <input type="search" name="search" id="search" placeholder="Try Something">
+                <input type="text" id="search" placeholder="Search Anything" class="border-0 search">
+                <!-- <button class="btn btn-outline-light me-2" id="reset" onclick="reset()"><i class='bx bx-reset text-danger'></i></button> -->
             </div>
 
             <!-- Example single danger button -->
@@ -166,12 +166,12 @@ include "includes/config.php";
                 </select>
             </div> -->
 
-            <div class="btn-group mx-2">
+            <!-- <div class="btn-group mx-2">
                 <select name="" id="select_action" class="filterBtn form-select" onchange="selected()">
                     <option disabled selected>With Select: </option>
                     <option value="archive">move to archive</option>
                 </select>
-            </div>
+            </div> -->
         </div>
 
 
@@ -189,7 +189,7 @@ include "includes/config.php";
         $(document).ready(() => {
             displayAccounts();
 
-            
+
             // nice scroll js
             $("#client_table").niceScroll({
                 cursorwidth: "8px",

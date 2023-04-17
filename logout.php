@@ -23,3 +23,5 @@ if (isset($_GET['admin'])) {
     
     header("location:login.php");
 }
+
+// session_destroy();

@@ -27,6 +27,13 @@
                 </li>
 
                 <li class="d-flex align-items-center mt-2r">
+                    <a href="requested_form.php" class="">
+                        <i class='bx bx-folder-open'></i>
+                        Submitted form
+                    </a>
+                </li>
+
+                <li class="d-flex align-items-center mt-2r">
                     <a href="user_profile.php" class="">
                         <i class='bx bx-user'></i>
                         Profile

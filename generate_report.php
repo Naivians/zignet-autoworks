@@ -92,7 +92,7 @@ if (isset($_POST['all_data'])) {
 
         table th,
         td {
-            font-size: 10px;
+            font-size: 13px;
         }
     </style>
 </head>
@@ -480,7 +480,7 @@ if (isset($_POST['all_data'])) {
                 filename: "reports.pdf",
                 image: {
                     type: 'jpeg',
-                    quality: 0.98
+                    quality: 1
                 },
                 html2canvas: {
                     scale: 2
@@ -488,7 +488,7 @@ if (isset($_POST['all_data'])) {
                 jsPDF: {
                     unit: 'in',
                     format: 'Letter',
-                    orientation: 'Portrait',
+                    orientation: 'L',
                     compressPDF: true
                 },
             };

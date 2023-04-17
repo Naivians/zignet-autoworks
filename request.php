@@ -3,7 +3,9 @@ session_start();
 
 if (!isset($_SESSION['admin_role'])) {
     header("Location:login.php");
-} 
+}
+
+
 ?>
 
 <!DOCTYPE html>
@@ -20,157 +22,65 @@ if (!isset($_SESSION['admin_role'])) {
 
 <body>
 
-    <!-- view request-->
-    <div class="modal fade " id="viewModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <!-- move -->
+    <!-- update status modal -->
+    <div class="modal fade" id="update_status" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <!-- modal-client -->
             <div class="modal-content">
-
-                <h5 class="text-center text-dark mt-4">Users's Details</h5>
-
-                <div class="modal-body">
-                    <!-- form here -->
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label for="" class="form-label text-secondary small-font">User ID</label>
-                            <input type="text" name="user_id" id="user_id" class="form-control text-dark" disabled>
-                        </div>
-                        <input type="hidden" name="" id="update_request_id">
-                        <div class="col-md-6">
-                            <label for="" class="form-label text-secondary small-font">Request ID</label>
-                            <input type="text" name="request_id" id="request_id" class="form-control text-dark" disabled>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="" class="form-label text-secondary small-font">Display Name</label>
-                            <input type="text" name="display_name" id="display_name" class="form-control text-dark" disabled>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="" class="form-label text-secondary small-font">Company</label>
-                            <input type="text" name="company" id="company" class="form-control text-dark">
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="" class="form-label text-secondary small-font">Model</label>
-                            <input type="text" name="model" id="model" class="form-control text-dark">
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="" class="form-label text-secondary small-font">CS Number</label>
-                            <input type="text" name="cs_number" id="cs_number" class="form-control text-dark">
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="" class="form-label text-secondary small-font">Schedule</label>
-                            <input type="date" name="schedule" id="schedule" class="form-control text-dark">
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="" class="form-label text-secondary small-font">Front Windshield</label>
-                            <input type="text" name="front_windshield" id="front_windshield" class="form-control text-dark">
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="" class="form-label text-secondary small-font">Rear Windshield</label>
-                            <input type="text" name="rear_windshield" id="rear_windshield" class="form-control text-dark">
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="" class="form-label text-secondary small-font">Front Side Windows</label>
-                            <input type="text" name="front_side_windows" id="front_side_windows" class="form-control text-dark">
-                        </div>
-
-
-                        <div class="col-md-6">
-                            <label for="" class="form-label text-secondary small-font">Rear Side Windows</label>
-                            <input type="text" name="rear_side_windows" id="rear_side_windows" class="form-control text-dark">
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="" class="form-label text-secondary small-font">Date Created</label>
-                            <input type="text" name="date_added" id="date_added" class="form-control text-dark" disabled>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="" class="form-label text-secondary small-font">Date Modified</label>
-                            <input type="text" name="date_modified" id="date_modified" class="form-control text-dark" disabled>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="" class="form-label text-secondary small-font">Date Retrieved</label>
-                            <input type="text" name="date_retrieved" id="date_retrieved" class="form-control text-dark" disabled>
-                        </div>
-                    </div>
-                    <div class="mb-3 mt-3">
-                        <button type="button" class="btn btn-success" onclick="update_request()">Update</button>
-                    </div>
-                    <!-- <p class="mt-3 text-danger text-center">Click anywhere to close</p> -->
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Request Status</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body mb-3">
+                    <label for="" class="form-label">Change Status</label>
+                    <select name="" id="status" class="form-select">
+                        <option value="pending">Pending</option>
+                        <option value="approved">Approved</option>
+                        <option value="disapproved">Disapproved</option>
+                    </select>
+                    <input type="hidden" name="" id="status_id">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-warning text-secondary" onclick="update_status()">Updated Status</button>
                 </div>
             </div>
         </div>
     </div>
 
-
-
-    <!-- Edit Modal -->
-    <!-- <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog ">
-            <div class="modal-content modal-color modal-client">
-                <div class="car">
-                    <img src="img/car3.png" alt="cars">
+    <!-- view request-->
+    <div class="modal fade" id="view_request_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Description of Service(s)</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
+                <div class="modal-body">
+                    <div class="row">
 
-                <div class="shape">
-                    <img src="img/Rectangle.png" alt="rectangle shape">
-                </div>
-                <h5 class="text-center text-light mt-2">Edit Account</h5>
-                <form>
-                    <div class="modal-body">
-                        form here
-                        <div class="">
-                            <label for="" class="form-label gray small-font">Admin Name</label>
-                            <input type="text" name="fnameawda" id="editName" placeholder="John" class="form-control text-dark">
+                        <div class="col-md-12 mb-3">
+                            <h6><strong> Address </strong></h6>
+                            <textarea name="" id="address" cols="10" rows="5" class="form-control"></textarea>
                         </div>
 
-                        <input type="hidden" id="updateID">;
-
-                        <div class="mb-3">
-                            <label for="" class="form-label text-light small-font">Role</label>
-                            <select class="form-select" aria-label="Default select example" id="editRole">
-                                <option selected disabled value="">Select Role</option>
-                                <option value="super admin">Super Admin</option>
-                                <option value="admin">Admin</option>
-                            </select>
+                        <div class="col-md-12 mb-3">
+                            <h6><strong> Description of Service </strong></h6>
+                            <textarea name="" id="description" cols="10" rows="5" class="form-control"></textarea>
                         </div>
-
-                        <div class="mb-3">
-                            <label for="" class="form-label gray small-font">Username</label>
-                            <input type="text" name="fnameawda" id="editUsername" placeholder="John" class="form-control text-dark">
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="" class="form-label text-secondary small-font">Password</label>
-                            <input type="password" name="fnameawdaw" id="editPassword" class="form-control text-dark">
-                            <div class="d-flex align-items-center">
-                                <span class="mt-1 text-secondary small-font me-2">Show Password</span>
-                                <input type="checkbox" onclick="showPass('editPassword')">
-                            </div>
-                            <span style="color:#333333;" class="small-font">This password is encrypted with most secure algorithm, so ask the developer once you forgot it.</span>
-                        </div>
-
-                        <div class="mt-4 mb-2">
-                            <button class="btns fullwidth mb-2 small-font" onclick="updateAccount(event)">Update</button>
-                            <button type="button" class="btns fullwidth dark small-font" data-bs-dismiss="modal">Close</button>
+                        <div class="col-md-12 mb-3">
+                            <h6><strong> Reschedule </strong></h6>
+                            <input type="date" name="" id="schedule" class="form-control" value="111111">
                         </div>
                     </div>
-                </form>
-
-
+                </div>
+                <div class="modal-footer mt-3">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
             </div>
         </div>
-    </div> -->
+    </div>
+
 
     <!-- main content -->
     <div class="wrapper" id="wrapper">
@@ -185,21 +95,23 @@ if (!isset($_SESSION['admin_role'])) {
         <div class="filter d-flex align-items-center mt-3 mb-3">
 
             <div class="live-search">
-                <input type="search" id="search" placeholder="Try Something">
+                <input type="text" id="search" placeholder="Search Anything" class="border-0 search">
+                <!-- <button class="btn btn-outline-light me-2" id="reset" onclick="reset()"><i class='bx bx-reset text-danger'></i></button> -->
             </div>
 
             <!-- Example single danger button -->
-            <!-- <div class="btn-group">
-                <select name="" id="columnName" class="filterBtn form-select" onchange="filterBy()">
+            <div class="btn-group">
+                <select name="" id="columnName" class="filterBtn form-select" onchange="sortBY()">
                     <option disabled selected>Sort by</option>
-                    <option value="adminName">Admin Name</option>
-                    <option value="username">Username</option>
-                    <option value="role">Role</option>
-                    <option value="dateAdded">Date Added</option>
-                    <option value="dateModified">Date Modified</option>
-                    <option value="retrievedDate">Date Retrieved</option>
+                    <option value="date_added">Date Created</option>
+                    <option value="user_id">User ID</option>
+                    <option value="request_id">Request ID</option>
+                    <option value="display_name">Display Name</option>
+                    <option value="address">Address</option>
+                    <option value="schedule">Schedule</option>
+                    <option value="request_status">Status</option>
                 </select>
-            </div> -->
+            </div>
 
         </div>
 
@@ -239,122 +151,104 @@ if (!isset($_SESSION['admin_role'])) {
                         }
                     });
                 } else {
+
                     displayAccounts();
                 }
 
             });
+
+
         });
 
 
-        // function updateAccount(e) {
-        //     e.preventDefault();
-        //     // editName
-        //     // editRole
-        //     // editUsername
-        //     // editPassword
+        function open_status_modal(status_id) {
+            $("#status_id").val(status_id);
+            $("#update_status").modal("show");
+        }
 
-        //     var editName = $("#editName").val();
-        //     var editRole = $("#editRole").val();
-        //     var editUsername = $("#editUsername").val();
-        //     var editPassword = $("#editPassword").val();
+        function update_status() {
+            var status_id = $("#status_id").val();
+            var status = $("#status").val();
 
+            // process data
+            var data = {
+                status_id: status_id,
+                status: status,
+                update_status_btn: 1
+            }
 
-        //     var data = {
-        //         updateID: $("#updateID").val(),
-        //         editName: $("#editName").val(),
-        //         editRole: $("#editRole").val(),
-        //         editUsername: $("#editUsername").val(),
-        //         editPassword: $("#editPassword").val(),
-        //         editBtn: 1
-        //     }
+            $.ajax({
+                url: "updateData.php",
+                method: "POST",
+                data: data,
+                success: (res) => {
+                    if (res != "success") {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: res,
+                        })
+                    } else {
+                        $("#update_status").modal("hide");
+                        displayAccounts();
+                    }
+                }
+            });
+        }
 
-        //     // first client side validation
+        function view_description(id) {
+            $("#view_request_modal").modal("show");
+            $.ajax({
+                url: "displayData.php",
+                method: "POST",
+                data: {
+                    display_request: 1,
+                    id: id
+                },
+                success: (res) => {
+                    var response = JSON.parse(res);
 
-        //     if (editName.length == 0 || editUsername.length == 0 || editPassword.length == 0) {
-        //         Swal.fire({
-        //             icon: 'error',
-        //             title: 'Oops...',
-        //             text: 'All fields are mandatory',
-        //         });
-        //     } else {
-        //         // check the size of a string
-        //         if (editName.length < 8 || editUsername.length < 8 || editPassword.length < 8) {
-        //             Swal.fire({
-        //                 icon: 'error',
-        //                 title: 'Oops...',
-        //                 text: 'Name, Username & Password must be atleast 8 characters long',
-        //             });
-        //         } else {
-        //             // process the data
-        //             $.ajax({
-        //                 url: "updateData.php",
-        //                 method: "post",
-        //                 data: data,
-        //                 success: (res) => {
+                    var service = response.description_of_service;
+                    var add = response.address;
 
-        //                     var response = JSON.parse(res);
+                    var doc1 = service.replace(/(<br ?\/?>)*/g, "");
+                    var doc2 = add.replace(/(<br ?\/?>)*/g, "");
 
-        //                     if (response.status == 422) {
-        //                         Swal.fire({
-        //                             icon: 'error',
-        //                             title: 'Oops...',
-        //                             text: response.message,
-        //                             // response.message
-        //                         });
-        //                     } else if (response.status == 500) {
-        //                         Swal.fire({
-        //                             icon: 'error',
-        //                             title: 'Oops...',
-        //                             text: response.message,
-        //                             // response.message
-        //                         });
-        //                     } else {
-        //                         Swal.fire({
-        //                             position: 'top-center',
-        //                             icon: 'success',
-        //                             title: response.message,
-        //                             showConfirmButton: false,
-        //                             timer: 1500
-        //                         });
-        //                         // hide modal
-        //                         $("#editModal").modal('hide');
-        //                         displayAccounts();
-        //                     }
-        //                 }
-        //             });
-        //         }
-        //     }
-        // }
+                    document.getElementById("description").innerHTML = doc1;
+                    document.getElementById("address").innerHTML = doc2;
+                    document.getElementById("schedule").value = response.schedule;
 
-        // function filterBy() {
-        //     let columnName = $("#columnName").val();
+                }
+            });
+        }
 
-        //     $.ajax({
-        //         url: "displayData.php",
-        //         method: "POST",
-        //         data: {
-        //             filterBtn: 1,
-        //             columnName: columnName
-        //         },
-        //         success: (res) => {
-        //             $("#adminTable").html(res);
-        //             $("#search").val('');
-        //         }
-        //     });
-        // }
+        function sortBY() {
+            let columnName = $("#columnName").val();
+
+            $.ajax({
+                url: "displayData.php",
+                method: "POST",
+                data: {
+                    request_sort_btn: 1,
+                    columnName: columnName
+                },
+                success: (res) => {
+                    $("#adminTable").html(res);
+                    $("#search").val('');
+                }
+            });
+        }
 
         function askDelete(id) {
-            
+
             var data = {
                 id: id,
-                delete_client_btn: "request",
-                action:1,
-                table:"admins"
+                archive_request_btn: 1
             };
 
             Swal.fire({
                 title: "Are you sure?",
-                text: "You won't be able to revert this!",
+                text: "You're about to archive this request",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
@@ -370,18 +264,23 @@ if (!isset($_SESSION['admin_role'])) {
                         method: "post",
                         data: data,
                         success: (res) => {
-                            var response = JSON.parse(res);
-                            if (response.status == 200) {
-                                if (result.isConfirmed) {
-                                    Swal.fire("Deleted!", response.message, "success");
-                                }
-                                displayAccounts();
-                            } else {
+
+                            if (res != "success") {
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Oops...',
-                                    text: response.messsage,
+                                    text: res,
                                 });
+                            } else {
+
+                                Swal.fire({
+                                    position: 'top-center',
+                                    icon: 'success',
+                                    title: 'Successfully archive request!',
+                                    showConfirmButton: false,
+                                    timer: 1000
+                                })
+                                displayAccounts();
                             }
                         }
                     });
@@ -453,7 +352,7 @@ if (!isset($_SESSION['admin_role'])) {
                     rear_windshield: $("#rear_windshield").val(),
                     front_side_windows: $("#front_side_windows").val(),
                     rear_side_windows: $("#rear_side_windows").val(),
-                    update_request_btn:1
+                    update_request_btn: 1
                 }
 
                 $.ajax({
@@ -546,70 +445,6 @@ if (!isset($_SESSION['admin_role'])) {
                 }
             });
         }
-
-        // function showPass(id) {
-        //     var x = document.getElementById(id);
-        //     if (x.type === "password") {
-        //         x.type = "text";
-        //     } else {
-        //         x.type = "password";
-        //     }
-        // }
-
-        // function submitData() {
-        //     // e.preventDefault();
-        //     var name = $("#adminName").val();
-        //     var pass = $("#password").val();
-        //     var role = $("#role").val();
-        //     var username = $("#username").val();
-
-        //     var data = {
-        //         adminName: $("#adminName").val(),
-        //         password: $("#password").val(),
-        //         role: $("#role").val(),
-        //         username: $("#username").val(),
-        //         action: 1
-        //     }
-
-        //     // client side validations
-        //     if (name == "" || pass == "" || role == null) {
-        //         Swal.fire({
-        //             icon: 'error',
-        //             title: 'Oops...',
-        //             text: 'all fields are mandatory',
-        //         });
-        //     } else {
-        //         // process data
-        //         $.ajax({
-        //             url: "insertData.php",
-        //             method: "post",
-        //             data: data,
-        //             success: (res) => {
-
-        //                 var response = JSON.parse(res);
-        //                 if (response.status == 200) {
-        //                     Swal.fire({
-        //                         position: 'top-center',
-        //                         icon: 'success',
-        //                         title: response.message,
-        //                         showConfirmButton: false,
-        //                         timer: 1500
-        //                     });
-        //                     reset();
-        //                     $("#adminModal").modal("hide");
-        //                 } else {
-        //                     Swal.fire({
-        //                         icon: 'error',
-        //                         title: 'Oops...',
-        //                         text: response.message,
-        //                     });
-        //                 }
-
-        //                 displayAccounts();
-        //             }
-        //         });
-        //     }
-        // }
     </script>
 
 

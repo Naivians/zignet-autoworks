@@ -120,3 +120,17 @@ if(isset($_POST['delete_user_btn'])){
         echo "Failed to move to archive";
     }
 }
+// REQUEST
+if(isset($_POST['archive_request_btn'])){
+    $id = $conn->escape_string($_POST['id']);
+    $sql = "INSERT INTO `deleted_request_form` SELECT * FROM `request_form` WHERE `id`='$id'";
+    $res = $conn->query($sql);
+
+    delete_request($id);
+    
+    if(!$res){
+        echo "Failed to archive request";
+    }else{
+        echo "success";
+    }
+}

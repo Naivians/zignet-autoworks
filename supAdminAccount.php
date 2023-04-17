@@ -19,7 +19,7 @@ if (!isset($_SESSION['admin_role'])) {
 </head>
 
 <body>
-    
+
     <!-- View Modal -->
     <div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog ">
@@ -205,7 +205,8 @@ if (!isset($_SESSION['admin_role'])) {
         <div class="filter d-flex align-items-center mt-3 mb-3">
 
             <div class="live-search">
-                <input type="search" id="search" placeholder="Try Something">
+                <input type="text" id="search" placeholder="Search Anything" class="border-0 search">
+                <!-- <button class="btn btn-outline-light me-2" id="reset" onclick="reset()"><i class='bx bx-reset text-danger'></i></button> -->
             </div>
 
             <!-- Example single danger button -->
@@ -367,8 +368,8 @@ if (!isset($_SESSION['admin_role'])) {
             var data = {
                 id: id,
                 delete_client_btn: "delete",
-                action:1,
-                table:"admins"
+                action: 1,
+                table: "admins"
             };
 
             Swal.fire({
@@ -449,7 +450,7 @@ if (!isset($_SESSION['admin_role'])) {
         }
 
         function viewAdminAccount(id) {
-            
+
 
             $("#viewModal").modal('show');
             var data = {
@@ -461,12 +462,12 @@ if (!isset($_SESSION['admin_role'])) {
                 method: "post",
                 data: data,
                 success: (res, status) => {
-                    
+
                     var response = JSON.parse(res);
 
                     // // console.log(response);
                     if (status == "success") {
-                    
+
                         $("#viewName").val(response.adminName);
                         $("#viewPassword").val(response.password);
                         $("#viewDateAdded").val(response.dateAdded);

@@ -1,10 +1,47 @@
 <?php
 session_start();
 
-// if (!isset($_SESSION['user_role'])) {
-//     header("Location:login.php");
-// } 
+if (!isset($_SESSION['user_role'])) {
+    header("Location:login.php");
+}
 
+include "includes/config.php";
+include "functions.php";
+
+$description = '';
+
+if (isset($_POST['submit'])) {
+
+    $service_description = $conn->escape_string($_POST['service_description']);
+    $address = $conn->escape_string($_POST['address']);
+    $schedule = $conn->escape_string($_POST['schedule']);
+
+    $description_of_service = str_replace('\r\n', "<br>", $service_description);
+    $address = str_replace('\r\n', "<br>", $address);
+    
+    if (!isset($_POST['services'])) {
+        $_SESSION['msg'] = "Please select type of service";
+    } else {
+
+        if ($schedule != NULL) {
+            $service_array = $_POST['services']; //array of s   trings
+            
+            $split_services = implode(",", $service_array);
+
+            $request_id = uniqid();
+            $res = insert_form($_SESSION['user_id'], $request_id, $_SESSION['display_name'], $address,  $split_services, $description_of_service, 'pending', $schedule);
+
+            if (!$res) {
+                $_SESSION['msg'] = "Failed to send request!";
+            } else {
+                $_SESSION['success'] = "request has been sent";
+                //    redirect to request
+            }
+        } else {
+            $_SESSION['msg'] = "All fields required!";
+        }
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -19,74 +56,87 @@ session_start();
 <body>
     <main class="main">
         <div class="header">
-            <img src="img/ZIGNET.png" alt="">
             <h2 class="text-center mt-2">Request Form</h2>
         </div>
+        <?php
+        if (isset($_SESSION['msg'])) : ?>
+            <div class="alert alert-warning alert-dismissible fade show wrapper" role="alert">
+                <strong>Warning!</strong> <?= $_SESSION['msg'] ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            </div>
+            </div>
+        <?php endif;
 
+
+        if (isset($_SESSION['success'])) : ?>
+            <div class="alert alert-success alert-dismissible fade show wrapper" role="alert">
+                <strong>Warning!</strong> <?= $_SESSION['success'] ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            </div>
+            </div>
+        <?php endif;
+
+        unset($_SESSION['success']);
+        unset($_SESSION['msg']);
+        ?>
         <div class="wrapper mt-3">
             <div class="form">
-                <form>
-                    <h5 class="text-primary mt-3">Car Details</h5>
+                <form method="POST">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-6 col-sm-12">
                             <div class="mb-3">
-                                <label for="" class="form-label text-secondary">Company</label>
-                                <input type="text" name="company" id="company" class="form-control" placeholder="Enter Company Name">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="" class="form-label text-secondary">Model</label>
-                                <input type="text" name="model" id="model" class="form-control" placeholder="Enter Car Model">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="" class="form-label text-secondary">CS Number</label>
-                                <input type="text" name="cs_number" id="cs_number" class="form-control" placeholder="Enter CS Number">
+                                <label for="" class="form-label text-secondary">Select Type of Service</label>
+                                <div class="form-check mb-3 mt-2">
+                                    <input class="form-check-input" type="checkbox" name="services[]" value="Paint Protection Film" id="flexCheckDefault" require>
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                        Paint Protection Film
+                                    </label>
+                                </div>
+
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" name="services[]" value="Glass Tinting" id="flexCheckDefault" require>
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                        Glass Tinting
+                                    </label>
+                                </div>
+
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" name="services[]" value="Security Film" id="flexCheckDefault" require>
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                        Security Film
+                                    </label>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="col-md-6">
+                        <div class="col-md-6 col-sm-6">
+
+                            <div class="mb-3">
+                                <label for="" class="form-label text-secondary">Address</label>
+                                <textarea name="address" id="" cols="30" rows="2" class="form-control"></textarea>
+                            </div>
+
                             <div class="mb-3">
                                 <label for="" class="form-label text-secondary">Schedule</label>
-                                <input type="date" name="sched" id="sched" class="form-control">
+                                <input type="date" name="schedule" id="sched" class="form-control" require>
                             </div>
                         </div>
+
+                        <div class="col-md-12 col-sm-12 mt-3">
+                            <div class="mb-3">
+                                <label for="" class="form-label text-secondary">Description of Service(s) (maximum of 100 Character)</label>
+                                <textarea name="service_description" id="" type="text" cols="30" rows="10" class="form-control" placeholder="Add a description for each service 
+                                ex: Glass Tinting:
+                                - Front Windows
+                                - Door Window" require></textarea>
+                            </div>
+                        </div>
+
                     </div>
-
-
-                    <h5 class="text-primary mt-2">Tint Details</h5>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="" class="form-label text-secondary">Front Windshield</label>
-                                <input type="text" name="front_windshield" id="front_windshield" class="form-control" placeholder="Enter Front Windshield">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="" class="form-label text-secondary">Rear Windshield</label>
-                                <input type="text" name="rear_windshield" id="rear_windshield" class="form-control" placeholder="Enter Rear Windshield">
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="" class="form-label text-secondary">Front Windows</label>
-                                <input type="text" name="front_windows" id="front_windows" class="form-control" placeholder="Enter Front Windows">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="" class="form-label text-secondary">Rear Windows</label>
-                                <input type="text" name="rear_windows" id="rear_windows" class="form-control" placeholder="Enter Rear Windows">
-                            </div>
-                        </div>
-                    </div>
-
                     <div class="mb-3 mt-3">
-                        <button type="button" class="btn btn-outline-success" onclick="submit_request()">Submit</button>
+                        <button type="submit" class="btn btn-outline-success" name="submit">Submit</button>
                     </div>
                 </form>
             </div>
@@ -97,59 +147,6 @@ session_start();
     include "includes/user_sidebar.php";
     include "includes/script.php";
     ?>
-
-    <script>
-        function submit_request() {
-
-            let data = {
-                company: $("#company").val(),
-                model: $("#model").val(),
-                cs_number: $("#cs_number").val(),
-                sched: $("#sched").val(),
-                front_windshield: $("#front_windshield").val(),
-                rear_windshield: $("#rear_windshield").val(),
-                front_windows: $("#front_windows").val(),
-                rear_windows: $("#rear_windows").val(),
-                request_btn: 1
-            }
-
-            $.ajax({
-                url: "insertData.php",
-                method: "POST",
-                data: data,
-
-                success: (res) => {
-
-                    if (res == "success") {
-                        Swal.fire({
-                            position: 'top-center',
-                            icon: 'success',
-                            title: 'Successfully Submit Request',
-                            showConfirmButton: false,
-                            timer: 1500
-                        })
-
-                        $("#company").val('')
-                        $("#model").val('')
-                        $("#cs_number").val('')
-                        $("#sched").val('')
-                        $("#front_windshield").val('')
-                        $("#rear_windshield").val('')
-                        $("#front_windows").val('')
-                        $("#rear_windows").val('')
-                        
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: res,
-                        });
-                    }
-                }
-            });
-
-        }
-    </script>
 </body>
 
 </html>

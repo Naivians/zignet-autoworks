@@ -82,7 +82,7 @@ $total_transactions = $total_transactions->num_rows;
             <a href="users.php" class="text-decoration-none col-md-2 d-flex text-light align-items-center justify-content-between p-4 border border-success m-2 rounded-3">
                 <div class="title">
                     <h3><?= $active ?></h3>
-                    <p>Activated Users</p>
+                    <p>Activated</p>
                 </div>
                 <i class='bx bx-user fs-1'></i>
             </a>
@@ -90,7 +90,7 @@ $total_transactions = $total_transactions->num_rows;
             <a href="users.php" class="text-decoration-none col-md-2 d-flex text-light align-items-center justify-content-between p-4 border border-success m-2 rounded-3">
                 <div class="title">
                     <h3><?= $inactive ?></h3>
-                    <p>Deactivated Users</p>
+                    <p>Deactivated</p>
                 </div>
                 <i class='bx bx-user fs-1'></i>
             </a>

@@ -3,6 +3,28 @@ session_start();
 include "includes/config.php";
 include "functions.php";
 
+
+/*
+status_id: status_id,
+status: status,
+update_status_btn: 1
+*/
+
+if(isset($_POST['update_status_btn'])){
+    $status = $conn->escape_string($_POST['status']);
+    $status_id = $conn->escape_string($_POST['status_id']);
+
+    $sql = "UPDATE `request_form` SET `request_status` = '$status' WHERE `id` = '$status_id'";
+    $res = $conn->query($sql);
+
+    if(!$res){
+        echo "Failed to update request status";
+    }else{
+        echo "success";
+    }
+}
+
+
 if(isset($_POST['update_request_btn'])){
     
     $id = $conn->escape_string($_POST['id']);
@@ -133,8 +155,6 @@ if (isset($_POST['update_client_btn'])) {
         echo "success";
     }
 }
-
-
 
 if (isset($_POST['update_user_btn'])) {
 

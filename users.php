@@ -155,7 +155,9 @@ if (isset($_POST['search'])) {
 
             <div class="live-search">
                 <form method="post">
-                    <input type="search" name="search_item" id="search" placeholder="Search Anything" require>
+                    <!-- <input type="search" name="search_item" id="search" placeholder="Search Anything" require> -->
+
+                    <input type="text" name="search_item" id="search" placeholder="Search Anything" class="border-0 search">
 
                     <?php
                     if (isset($res)) {
@@ -371,7 +373,7 @@ if (isset($_POST['search'])) {
             var activations = $("#activations").val();
 
             if (activations == "activate_all") {
-
+                
                 Swal.fire({
                     title: 'Opppsss...!',
                     text: "Are you sure you want to activate all account?",

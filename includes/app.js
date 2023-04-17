@@ -1,4 +1,6 @@
 
+
+
 function navBar() {
   var menuBar = document.getElementById("wrapper");
   menuBar.classList.toggle("move-to-right");
@@ -15,6 +17,8 @@ function reset() {
     $("#role").val('');
     $("#username").val('');
 }
+
+
 
 
 

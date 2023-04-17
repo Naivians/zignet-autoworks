@@ -67,11 +67,8 @@ function getData($table)
 function getById($table, $id)
 {
     global $conn;
-    $sql = "SELECT * FROM `$table` WHERE `id` = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
-    return $stmt->get_result();
+    $sql = "SELECT * FROM `$table` WHERE `id` = '$id' ORDER BY date_added ASC ";
+    return $conn->query($sql);
 }
 
 function getBY_clientID($table, $client_id)
@@ -151,7 +148,7 @@ function sortBy($table, $column)
 function search_request($table, $searchItem)
 {
     global $conn;
-    $sql = "SELECT * FROM `$table` WHERE `user_id` LIKE '%{$searchItem}%' OR `request_id` LIKE '%{$searchItem}%' OR `display_name` LIKE '%{$searchItem}%' OR `cs_number` LIKE '%{$searchItem}%' OR `model` LIKE '%{$searchItem}%' OR `company` LIKE '%{$searchItem}%' OR `schedule` LIKE '%{$searchItem}%'";
+    $sql = "SELECT * FROM `$table` WHERE `user_id` LIKE '%{$searchItem}%' OR `request_id` LIKE '%{$searchItem}%' OR `display_name` LIKE '%{$searchItem}%' OR `address` LIKE '%{$searchItem}%' OR `service` LIKE '%{$searchItem}%' OR `request_status` LIKE '%{$searchItem}%' OR `schedule` LIKE '%{$searchItem}%'";
     return $conn->query($sql);
 }
 
@@ -194,15 +191,14 @@ function retrievedAdmin($adminName, $username, $password, $role, $dateAdded, $da
 
 // INSERT
 
-function insert_form($user_id, $request_id, $display_name, $company, $model, $cs_number, $schedule, $front_windshield, $rear_windshield, $front_windows, $rear_windows)
+
+function insert_form($user_id, $request_id, $display_name, $address, $service, $description_of_service, $request_status, $schedule)
 {
     global $conn, $today;
-
-    $role = "user";
-
-    $sql = "INSERT INTO `request_form` (`user_id`,`request_id` , `display_name`, `company`, `model`, `cs_number`, `schedule`, `front_windshield`, `rear_windshield`, `front_side_windows`, `rear_side_windows`, `date_added`) VALUES(?,?,?,?,?, ?, ?, ?, ?, ?, ?, ?)";
+    
+    $sql = "INSERT INTO `request_form` (`user_id`,`request_id` , `display_name`, `address`, `service`, `description_of_service`, `request_status`, `schedule`,`date_added`) VALUES(?,?,?,?,?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssssssssssss", $user_id, $request_id, $display_name, $company, $model, $cs_number, $schedule, $front_windshield, $rear_windshield, $front_windows, $rear_windows, $today);
+    $stmt->bind_param("sssssssss", $user_id, $request_id, $display_name, $address, $service, $description_of_service, $request_status,$schedule,$today);
     // return true of false
     return $stmt->execute();
 }

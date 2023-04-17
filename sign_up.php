@@ -68,7 +68,7 @@
                         </div>
 
                         <div class="">
-                            <input type="text" name="contact" id="contact" placeholder="Enter Contact Number" autocomplete="off">
+                            <input type="number" name="contact" id="contact" placeholder="Enter Contact" autocomplete="off" min="1">
                         </div>
 
                         <!-- username -->
@@ -80,7 +80,8 @@
                             <input type="password" name="password" id="password" placeholder="Enter Password" autocomplete="off">
                         </div>
 
-                        <button type="button" onclick="sign_up()">Create Account</button>
+                        <button type="button" id="submit">Create Account</button>
+                        <!-- onclick="sign_up()" -->
                     </form>
                 </div>
 
@@ -130,6 +131,26 @@
             // },
         });
 
+        let btn = document.getElementById('submit');
+
+        // when the btn is clicked print info in console 
+        btn.addEventListener('click', (ev) => {
+            sign_up();
+        });
+
+        document.addEventListener('keypress', (event) => {
+
+            // event.keyCode or event.which  property will have the code of the pressed key
+            let keyCode = event.keyCode ? event.keyCode : event.which;
+
+            // 13 points the enter key
+            if (keyCode === 13) {
+                // call click function of the buttonn 
+                btn.click();
+            }
+
+        });
+        
 
         function sign_up() {
 
@@ -165,7 +186,7 @@
                 alert("password must be atleast 8 characters long")
                 $("#password").val('');
             } else if (contact.length >= 11) {
-                alert("Invalid Contact Number") 
+                alert("Invalid Contact Number")
                 $("#contact").val('');
             } else {
                 $.ajax({

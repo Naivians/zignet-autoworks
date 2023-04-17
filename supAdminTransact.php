@@ -46,23 +46,24 @@ if (!isset($_SESSION['admin_role'])) {
             <h5>Transaction History</h5>
             <?php
             if (isset($_SESSION['success_upload'])) {
-                ?>
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <strong>Success!</strong> <?= $_SESSION['success_upload'] ?>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                <?php
+            ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <strong>Success!</strong> <?= $_SESSION['success_upload'] ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php
                 unset($_SESSION['success_upload']);
             }
-        ?>
+            ?>
         </div>
 
-    
+
         <!-- live search -->
         <div class="filter d-flex align-items-center mt-3 mb-3">
 
             <div class="live-search">
-                <input type="search" name="search" id="search" placeholder="Try Something">
+                <input type="text" id="search" placeholder="Search Anything" class="border-0 search">
+                <!-- <button class="btn btn-outline-light me-2" id="reset" onclick="reset()"><i class='bx bx-reset text-danger'></i></button> -->
             </div>
 
             <!-- Example single danger button -->
@@ -131,7 +132,7 @@ if (!isset($_SESSION['admin_role'])) {
             });
         });
 
-    
+
         function updateAccount(e) {
             e.preventDefault();
             // editName
@@ -229,7 +230,7 @@ if (!isset($_SESSION['admin_role'])) {
                 }
             });
         }
-        
+
         function viewEditAccount(id) {
             $("#updateID").val(id);
 

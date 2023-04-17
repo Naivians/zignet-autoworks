@@ -2,8 +2,166 @@
 include "includes/config.php";
 include "functions.php";
 
-// view request
+// view archive request
+// view_deleted_request
+if (isset($_POST['view_deleted_request'])) {
 
+    $id = $conn->escape_string($_POST['id']);
+
+    $res = getById("deleted_request_form", $id);
+
+    $response = array();
+    while ($row = $res->fetch_assoc()) {
+        $response = $row;
+    }
+
+    echo json_encode($response);
+}
+
+
+// archive request
+if (isset($_POST['archive_request'])) {
+    $res = getData("deleted_request_form");
+
+    $table = '<table class="adminAcc-table">
+    <thead>
+                        <tr>
+                            <th>User ID</th>
+                            <th>Request ID</th>
+                            <th>Display Name</th>
+                            <th>Address</th>
+                            <th>Service</th>
+                            <th>Status</th>
+                            <th>Schedule</th>
+                            <th>Date Requested</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>';
+
+    while ($row = $res->fetch_assoc()) {
+
+        $staus = "";
+
+        if ($row['request_status'] == "pending") {
+            $status = '<button class="text-dark badge bg-warning" onclick="open_status_modal(' . $row["id"] . ')"> ' . $row["request_status"] . ' </button>';
+        } else if ($row['request_status'] == "approved") {
+            $status = '<button class="text-light badge bg-success" onclick="open_status_modal(' . $row["id"] . ')"> ' . $row["request_status"] . ' </button>';
+        } else {
+            $status = '<button class="text-light badge bg-danger " onclick="open_status_modal(' . $row["id"] . ')"> ' . $row["request_status"] . ' </button>';
+        }
+
+        $table .= ' <tr>
+                        <td>' . $row['user_id'] . '</td>
+                        <td>' . $row['request_id'] . '</td>
+                        <td>' . $row['display_name'] . '</td>
+                        <td>' . $row['address'] . '</td>
+                        <td>' . $row['service'] . '</td>
+                        <td>' . $status . '</td>
+                        <td>' . $row['schedule'] . '</td>                        
+                        <td>' . $row['date_added'] . '</td>                        
+                        <td>
+                            <!-- three btns for view, edit, and delete -->
+
+                            <!-- view -->
+                            <button class="btn" onclick="view_description(' . $row['id'] . ')" >
+                                <img src="icons/view.svg" alt="view image" class="text-success">
+                            </button>
+                            
+                            <!-- delete -->
+                            <button class="btn" onclick="askDelete(' . $row['id'] . ')">
+                                <img src="icons/delete.svg" alt="view image" class="text-danger">
+                            </button>
+
+                        </td>
+                    </tr>';
+    }
+    $table .= "</table>";
+
+    echo $table;
+}
+
+// request sort
+if (isset($_POST['request_sort_btn'])) {
+    $column = $conn->escape_string($_POST['columnName']);
+    $res = sortBy("request_form", $column);
+
+    $table = '<table class="adminAcc-table">
+    <thead>
+                        <tr>
+                            <th>User ID</th>
+                            <th>Request ID</th>
+                            <th>Display Name</th>
+                            <th>Address</th>
+                            <th>Service</th>
+                            <th>Status</th>
+                            <th>Schedule</th>
+                            <th>Date Requested</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>';
+
+    while ($row = $res->fetch_assoc()) {
+
+        $staus = "";
+
+        if ($row['request_status'] == "pending") {
+            $status = '<button class="text-dark badge bg-warning" onclick="open_status_modal(' . $row["id"] . ')"> ' . $row["request_status"] . ' </button>';
+        } else if ($row['request_status'] == "approved") {
+            $status = '<button class="text-light badge bg-success" onclick="open_status_modal(' . $row["id"] . ')"> ' . $row["request_status"] . ' </button>';
+        } else {
+            $status = '<button class="text-light badge bg-danger " onclick="open_status_modal(' . $row["id"] . ')"> ' . $row["request_status"] . ' </button>';
+        }
+
+        $table .= ' <tr>
+                        <td>' . $row['user_id'] . '</td>
+                        <td>' . $row['request_id'] . '</td>
+                        <td>' . $row['display_name'] . '</td>
+                        <td>' . $row['address'] . '</td>
+                        <td>' . $row['service'] . '</td>
+                        <td>' . $status . '</td>
+                        <td>' . $row['schedule'] . '</td>                        
+                        <td>' . $row['date_added'] . '</td>                        
+                        <td>
+                            <!-- three btns for view, edit, and delete -->
+
+                            <!-- view -->
+                            <button class="btn" onclick="view_description(' . $row['id'] . ')" >
+                                <img src="icons/view.svg" alt="view image" class="text-success">
+                            </button>
+                            
+                            <!-- delete -->
+                            <button class="btn" onclick="askDelete(' . $row['id'] . ')">
+                            <i class="bx bxs-archive-in text-light"></i>
+                            </button>
+
+                        </td>
+                    </tr>';
+    }
+    $table .= "</table>";
+
+    echo $table;
+}
+
+if (isset($_POST['display_request'])) {
+    $id = $conn->escape_string($_POST['id']);
+
+    $res = getById("request_form", $id);
+
+    $response = array();
+
+    if ($res->num_rows > 0) {
+        while ($row = $res->fetch_assoc()) {
+            $response = $row;
+        }
+        echo json_encode($response);
+        exit;
+    } else {
+        echo "Failed to get data";
+    }
+}
+
+
+// view request
 if (isset($_POST['view_request_btn'])) {
     $id = $conn->escape_string($_POST['id']);
 
@@ -17,43 +175,58 @@ if (isset($_POST['view_request_btn'])) {
     echo json_encode($response);
 }
 
+
+
 // get request form
 if (isset($_POST['get_user'])) {
     $res = getData("request_form");
     $table = '<table class="adminAcc-table">
     <thead>
-        <tr>
-            <th>User ID</th>
-            <th>Request ID</th>
-            <th>Display Name</th>
-            <th>company</th>
-            <th>model</th>
-            <th>cs_number</th>
-            <th>schedule</th>
-            <th>Actions</th>
-        </tr>
-    </thead>';
+                        <tr>
+                            <th>User ID</th>
+                            <th>Request ID</th>
+                            <th>Display Name</th>
+                            <th>Address</th>
+                            <th>Service</th>
+                            <th>Status</th>
+                            <th>Schedule</th>
+                            <th>Date Requested</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>';
 
     while ($row = $res->fetch_assoc()) {
+
+        $staus = "";
+
+        if ($row['request_status'] == "pending") {
+            $status = '<button class="text-dark badge bg-warning" onclick="open_status_modal(' . $row["id"] . ')"> ' . $row["request_status"] . ' </button>';
+        } else if ($row['request_status'] == "approved") {
+            $status = '<button class="text-light badge bg-success" onclick="open_status_modal(' . $row["id"] . ')"> ' . $row["request_status"] . ' </button>';
+        } else {
+            $status = '<button class="text-light badge bg-danger " onclick="open_status_modal(' . $row["id"] . ')"> ' . $row["request_status"] . ' </button>';
+        }
+
         $table .= ' <tr>
                         <td>' . $row['user_id'] . '</td>
                         <td>' . $row['request_id'] . '</td>
                         <td>' . $row['display_name'] . '</td>
-                        <td>' . $row['company'] . '</td>
-                        <td>' . $row['model'] . '</td>
-                        <td>' . $row['cs_number'] . '</td>
-                        <td>' . $row['schedule'] . '</td>
+                        <td>' . $row['address'] . '</td>
+                        <td>' . $row['service'] . '</td>
+                        <td>' . $status . '</td>
+                        <td>' . $row['schedule'] . '</td>                        
+                        <td>' . $row['date_added'] . '</td>                        
                         <td>
                             <!-- three btns for view, edit, and delete -->
 
                             <!-- view -->
-                            <button class="btn" onclick="viewAdminAccount(' . $row['id'] . ')" >
+                            <button class="btn" onclick="view_description(' . $row['id'] . ')" >
                                 <img src="icons/view.svg" alt="view image" class="text-success">
                             </button>
                             
                             <!-- delete -->
                             <button class="btn" onclick="askDelete(' . $row['id'] . ')">
-                                <img src="icons/delete.svg" alt="view image" class="text-danger">
+                            <i class="bx bxs-archive-in text-light"></i>
                             </button>
 
                         </td>
@@ -104,7 +277,7 @@ if (isset($_POST['deleted_user'])) {
                             <button class="btn" onclick="askDelete(' . $row['id'] . ')">
                                 <img src="icons/delete.svg" alt="view image" class="text-danger">
                             </button>
-
+                            
                         </td>
                     </tr>';
     }
@@ -312,45 +485,56 @@ if (isset($_POST['action'])) {
             $table = '<table class="adminAcc-table">
             <thead>
                 <tr>
-                    <th>User ID</th>
-                    <th>Request ID</th>
-                    <th>Display Name</th>
-                    <th>company</th>
-                    <th>model</th>
-                    <th>cs_number</th>
-                    <th>schedule</th>
-                    <th>Actions</th>
+                   <tr>
+                            <th>User ID</th>
+                            <th>Request ID</th>
+                            <th>Display Name</th>
+                            <th>Address</th>
+                            <th>Service</th>
+                            <th>Status</th>
+                            <th>Schedule</th>
+                            <th>Date Requested</th>
+                            <th>Action</th>
+                        </tr>
                 </tr>
             </thead>';
 
             while ($row = $res->fetch_assoc()) {
+
+                $staus = "";
+
+                if ($row['request_status'] == "pending") {
+                    $status = '<button class="text-dark badge bg-warning" onclick="open_status_modal(' . $row["id"] . ')"> ' . $row["request_status"] . ' </button>';
+                } else if ($row['request_status'] == "approved") {
+                    $status = '<button class="text-light badge bg-success" onclick="open_status_modal(' . $row["id"] . ')"> ' . $row["request_status"] . ' </button>';
+                } else {
+                    $status = '<button class="text-light badge bg-danger " onclick="open_status_modal(' . $row["id"] . ')"> ' . $row["request_status"] . ' </button>';
+                }
+
                 $table .= ' <tr>
-                        <td>' . $row['user_id'] . '</td>
-                        <td>' . $row['request_id'] . '</td>
-                        <td>' . $row['display_name'] . '</td>
-                        <td>' . $row['company'] . '</td>
-                        <td>' . $row['model'] . '</td>
-                        <td>' . $row['cs_number'] . '</td>
-                        <td>' . $row['schedule'] . '</td>
-                        <td>
-                            <!-- three btns for view, edit, and delete -->
-
-                            <!-- view -->
-                            <button class="btn" onclick="viewAdminAccount(' . $row['id'] . ')" >
-                                <img src="icons/view.svg" alt="view image" class="text-success">
-                            </button>
-                            
-                            <!-- edit -->   
-                            <button class="btn" onclick="viewEditAccount(' . $row['id'] . ')">
-                                <img src="icons/edit.svg" alt="view image" class="text-primary">
-                            </button>
-
-                            <!-- delete -->
-                            <button class="btn" onclick="askDelete(' . $row['id'] . ')">
-                                <img src="icons/delete.svg" alt="view image" class="text-danger">
-                            </button>
-                        </td>
-                    </tr>';
+                                <td>' . $row['user_id'] . '</td>
+                                <td>' . $row['request_id'] . '</td>
+                                <td>' . $row['display_name'] . '</td>
+                                <td>' . $row['address'] . '</td>
+                                <td>' . $row['service'] . '</td>
+                                <td>' . $status . '</td>
+                                <td>' . $row['schedule'] . '</td>                        
+                                <td>' . $row['date_added'] . '</td>                        
+                                <td>
+                                    <!-- three btns for view, edit, and delete -->
+        
+                                    <!-- view -->
+                                    <button class="btn" onclick="view_description(' . $row['id'] . ')" >
+                                        <img src="icons/view.svg" alt="view image" class="text-success">
+                                    </button>
+                                    
+                                    <!-- delete -->
+                                    <button class="btn" onclick="askDelete(' . $row['id'] . ')">
+                                    <i class="bx bxs-archive-in text-light"></i>
+                                    </button>
+        
+                                </td>
+                            </tr>';
             }
             $table .= "</table>";
 
@@ -958,7 +1142,7 @@ if (isset($_POST['display_client'])) {
             <th>Actions</th>
         </tr>
     </thead>';
-    
+
     while ($row = $res->fetch_assoc()) {
         $table .= ' <tr>
                         <td> <a href="edit_form.php?id=' . $row['client_id'] . '"><img src="uploads/' . $row['img_path'] . '" alt="document form" class="img"></a> </td>
