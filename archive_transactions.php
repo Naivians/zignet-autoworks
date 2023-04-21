@@ -3,7 +3,7 @@ session_start();
 
 if (!isset($_SESSION['admin_role'])) {
     header("Location:login.php");
-} 
+}
 ?>
 
 <!DOCTYPE html>
@@ -46,7 +46,8 @@ if (!isset($_SESSION['admin_role'])) {
             <!-- live search -->
             <div class="filter d-flex align-items-center mt-3 mb-3">
                 <div class="live-search">
-                    <input type="search" id="search" placeholder="Search admin name">
+                    <input type="text" id="search" placeholder="Search Anything" class="border-0 search">
+                    <!-- <button class="btn btn-outline-light me-2" id="reset" onclick="reset()"><i class='bx bx-reset text-danger'></i></button> -->
                 </div>
 
             </div>
@@ -106,7 +107,7 @@ if (!isset($_SESSION['admin_role'])) {
                     if (res == "empty") {
                         alert("Failed to load image")
                     } else {
-                        var img = document.getElementById("forms").src = `uploads/` + `${res}`; 
+                        var img = document.getElementById("forms").src = `uploads/` + `${res}`;
                         $("#viewModal").modal("show");
                     }
                 }

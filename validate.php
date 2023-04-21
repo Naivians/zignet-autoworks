@@ -3,6 +3,7 @@ session_start();
 include "includes/config.php";
 include "functions.php";
 include "includes/date.php";
+include "includes/sms.php";
 
 $res = getData("user");
 $total_users = $res->num_rows;
@@ -32,10 +33,10 @@ if (isset($_POST['loginBtn'])) {
         if (!$res) {
             echo "Wrong Credentials";
         } else {
-            if ($res['password'] != $password) {
+            if ($res['password'] != md5($password)) {
                 echo "wrong password";
             } else {
-                
+
                 if ($res['active'] != 1) {
                     echo "You're account is not yet activated by the admin.";
                 } else {
@@ -43,6 +44,7 @@ if (isset($_POST['loginBtn'])) {
                     $_SESSION['username'] = $res['username'];
                     $_SESSION['display_name'] = $res['display_name'];
                     $_SESSION['user_id'] = $res['user_id'];
+                    $_SESSION['contact'] = $res['contact'];
                     echo "user";
                 }
             }
@@ -55,7 +57,7 @@ if (isset($_POST['loginBtn'])) {
         $hash = $res['password'];
 
         if (password_verify($password, $hash)) {
-            
+
             $_SESSION['login'] = true;
             $_SESSION['admin_role'] = $res['role'];
             $_SESSION['admin_id'] = $res['id'];
@@ -88,27 +90,7 @@ if (isset($_POST['register_btn'])) {
     if ($display_name == NULL || $username == NULL || $password == NULL || $contact == NULL) {
         echo "All fields is mandatory";
     } else {
-        
-        /*
-            send sms -> code (randomizer)
-            model -> OTP 
-            if(db user id == SESSION[OTP]){ // user id
-                inset
-                activate
-            }else{
-                send error mesg
-                deactivate
-            }
-            
-            
-            if(!verify){
-                send error msg
-            }else{
-                insert
-            }
-        */
 
-        // check if username exist
         $users = validateCredential("user", $username);
         $admin = validateCredential("admins", $username);
 
@@ -118,13 +100,22 @@ if (isset($_POST['register_btn'])) {
         if ($users > 0 || $admin > 0) {
             echo "$username" . " Already exist, please choose another username!";
         } else {
-            // $user_id = $year . "" . $month . "" . $day."". $total_users +1 ;
-            $user_id = uniqid();
-            $lastInsertId = insert_user($user_id, $display_name, $username, $password,  $contact);
-            $_SESSION['new_id'] = $lastInsertId;
-            $_SESSION['user_id'] = $user_id;
+            if (strlen($contact) != 11) {
+                echo "Invalid Contact Number";
+            } else {
+                $otp = generateNumericOTP();
+                $user_id = uniqid();
+                $password = md5($password);
+                $lastInsertId = insert_user($user_id, $display_name, $username, $password,  $contact, $otp);
+                $_SESSION['new_id'] = $lastInsertId;
+                $_SESSION['user_id'] = $user_id;
+                // save otp in a session and verify in otp page
+                $_SESSION['otp'] = $otp;
+                $_SESSION['contact'] = $contact;
 
-            echo "Registered";
+                send_otp($contact, $_SESSION['otp']);
+                echo "Registered";
+            }
         }
     }
 }

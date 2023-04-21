@@ -2,8 +2,10 @@
 include "functions.php";
 session_start();
 
+session_destroy();
+
 if (isset($_GET['user'])) {
-    $sessions = array("user_role", "username", "display_name", "user_id");
+    $sessions = array("user_role", "username", "display_name", "user_id", "contact", 'otp');
 
     foreach ($sessions as $session) {
         unset($_SESSION[$session]);

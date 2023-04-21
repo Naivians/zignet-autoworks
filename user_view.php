@@ -18,27 +18,33 @@ if (isset($_POST['submit'])) {
 
     $description_of_service = str_replace('\r\n', "<br>", $service_description);
     $address = str_replace('\r\n', "<br>", $address);
-    
+
     if (!isset($_POST['services'])) {
         $_SESSION['msg'] = "Please select type of service";
     } else {
 
-        if ($schedule != NULL) {
-            $service_array = $_POST['services']; //array of s   trings
-            
+        if (!strlen($service_description) || !strlen($address) || $schedule == NULL) {
+            $_SESSION['msg'] = "All fields required!";
+        } else {
+            $service_array = $_POST['services'];
             $split_services = implode(",", $service_array);
 
             $request_id = uniqid();
-            $res = insert_form($_SESSION['user_id'], $request_id, $_SESSION['display_name'], $address,  $split_services, $description_of_service, 'pending', $schedule);
+            $res = insert_form($_SESSION['user_id'], $request_id, $_SESSION['display_name'], $address,  $split_services, $description_of_service, 'pending', $schedule, $_SESSION['contact']);
 
             if (!$res) {
                 $_SESSION['msg'] = "Failed to send request!";
             } else {
                 $_SESSION['success'] = "request has been sent";
-                //    redirect to request
+                header("location:request_form");
+                exit;
             }
-        } else {
-            $_SESSION['msg'] = "All fields required!";
+        }
+
+        $sessions = array('success', 'msg');
+
+        foreach($sessions as $session){
+            unset($session);
         }
     }
 }
@@ -127,7 +133,7 @@ if (isset($_POST['submit'])) {
                         <div class="col-md-12 col-sm-12 mt-3">
                             <div class="mb-3">
                                 <label for="" class="form-label text-secondary">Description of Service(s) (maximum of 100 Character)</label>
-                                <textarea name="service_description" id="" type="text" cols="30" rows="10" class="form-control" placeholder="Add a description for each service 
+                                <textarea name="service_description" id="service_description" type="text" cols="30" rows="10" class="form-control" placeholder="Add a description for each service 
                                 ex: Glass Tinting:
                                 - Front Windows
                                 - Door Window" require></textarea>
@@ -136,7 +142,7 @@ if (isset($_POST['submit'])) {
 
                     </div>
                     <div class="mb-3 mt-3">
-                        <button type="submit" class="btn btn-outline-success" name="submit">Submit</button>
+                        <button type="submit" id="submit" class="btn btn-outline-success" name="submit">Submit</button>
                     </div>
                 </form>
             </div>
@@ -147,6 +153,7 @@ if (isset($_POST['submit'])) {
     include "includes/user_sidebar.php";
     include "includes/script.php";
     ?>
+
 </body>
 
-</html>
+</html> 

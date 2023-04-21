@@ -3,18 +3,48 @@ session_start();
 include "includes/config.php";
 include "functions.php";
 
+
+
 if (isset($_POST['client'])) {
 
-    $company = $conn->escape_string($_POST['company']);
+    $column = $conn->escape_string($_POST['column']);
+    $column_value = $conn->escape_string($_POST['column_value']);
     $tables = $conn->escape_string($_POST['tables']);
     $from = $conn->escape_string($_POST['from']);
     $to = $conn->escape_string($_POST['to']);
-    $_SESSION["client"] = "client";
 
-    if ($company == "" || $from == "" || $to == "") {
+    if ($column_value == "" || $from == "" || $to == "" || $column == "" || $tables == "") {
         $_SESSION['error_msg'] = "All fields is mandatory";
         header("location:report.php");
         exit;
+    }
+
+    // request_two_dates
+    if ($tables == "user") {
+        if ($column == "request_id") {
+            $_SESSION['error_msg'] = "Request id does not exist in the users table";
+            header("location:report.php");
+            exit;
+        }
+        $_SESSION["client"] = "users_two_dates";
+    } 
+    
+    if ($tables == "request_form") {
+        $_SESSION["client"] = "users_two_dates";
+    } 
+    
+    if ($tables == "customer") {
+
+        if ($column == "paymentStatus") {
+            $_SESSION['error_msg'] = "Payment Status does not exist in the client table";
+            header("location:report.php");
+            exit;
+        }
+        $_SESSION["client"] = "client";
+    } 
+
+    else {
+        $_SESSION["client"] = "transactions";
     }
 }
 
@@ -92,7 +122,7 @@ if (isset($_POST['all_data'])) {
 
         table th,
         td {
-            font-size: 13px;
+            font-size: 11px;
         }
     </style>
 </head>
@@ -105,12 +135,31 @@ if (isset($_POST['all_data'])) {
 
         // between_two_dates by company
         if ($_SESSION["client"] == "client") {
-            $sql = "SELECT * FROM $tables WHERE dateAdded BETWEEN '$from' AND '$to' AND company='$company' ORDER BY dateAdded ASC ";
+            $sql = "SELECT * FROM $tables WHERE dateAdded BETWEEN '$from' AND '$to' AND `$column`='$column_value' ORDER BY dateAdded ASC ";
+            $res = $conn->query($sql);
+        }
+
+        if ($_SESSION["client"] == "transactions") {
+            $sql = "SELECT * FROM $tables WHERE dateAdded BETWEEN '$from' AND '$to' AND `$column`='$column_value' ORDER BY dateAdded ASC ";
+            $res = $conn->query($sql);
+        }
+
+        if ($_SESSION["client"] == "users_two_dates") {
+            $sql = "SELECT * FROM $tables WHERE date_added BETWEEN '$from' AND '$to' AND `$column`='$column_value' ORDER BY date_added ASC ";
+            $res = $conn->query($sql);
+        }
+
+        if ($_SESSION["client"] == "request_two_dates") {
+            $sql = "SELECT * FROM $tables WHERE date_added BETWEEN '$from' AND '$to' AND `$column`='$column_value' ORDER BY date_added ASC ";
+            $res = $conn->query($sql);
+        }
+
+        if ($_SESSION["client"] == "request_two_dates") {
+            $sql = "SELECT * FROM $tables WHERE date_added BETWEEN '$from' AND '$to' AND `$column`='$column_value' ORDER BY date_added ASC ";
             $res = $conn->query($sql);
         }
 
         // between two dates by tables
-
         if ($_SESSION["client"] == "request_forms") {
             $sql = "SELECT * FROM $tables WHERE `date_added` BETWEEN '$from' AND '$to' ORDER BY `date_added` ASC ";
             $res = $conn->query($sql);
@@ -152,9 +201,10 @@ if (isset($_POST['all_data'])) {
         }
 
         // all_data
-
+        // 
         if ($res->num_rows > 0) {
             // check table name
+
             if ($tables == "customer") { ?>
                 <div class="wrapper">
                     <div class="d-flex align-items-center justify-content-between">
@@ -216,8 +266,7 @@ if (isset($_POST['all_data'])) {
             <?php
             }
 
-            if ($tables == "transactions_history") {
-            ?>
+            if ($tables == "transactions_history") { ?>
                 <div class="wrapper">
                     <div class="d-flex align-items-center justify-content-between">
                         <a href="report.php" class="btn btn-dark text-decoration-none mt-4" id="back">back</a>
@@ -276,8 +325,7 @@ if (isset($_POST['all_data'])) {
             <?php
             }
 
-            if ($tables == "user") {
-            ?>
+            if ($tables == "user") { ?>
                 <div class="wrapper">
                     <div class="d-flex align-items-center justify-content-between">
                         <a href="report.php" class="btn btn-dark text-decoration-none mt-4" id="back">back</a>
@@ -347,8 +395,7 @@ if (isset($_POST['all_data'])) {
             <?php
             }
 
-            if ($tables == "request_form") {
-            ?>
+            if ($tables == "request_form") { ?>
                 <div class="wrapper">
                     <div class="d-flex align-items-center justify-content-between">
                         <a href="report.php" class="btn btn-dark text-decoration-none mt-4" id="back">back</a>
@@ -360,11 +407,11 @@ if (isset($_POST['all_data'])) {
                     <div id="generate-table">
 
                         <div class="header d-flex align-items-center justify-content-center">
-                            <img src="img/ZIGNET.png" alt="" style="width: 100px; height: auto;">
+                            <img src="img/ZIGNET.png" alt="" style="width: 80px; height: auto;">
                             <h1 class="text-left mx-3">Zignet <br> Autoworks</h1>
                         </div>
                         <div class="text-center">
-                            <span class="fs-4 ">(Users)</span>
+                            <span class="fs-4 ">(Request Forms)</span>
                         </div>
 
                         <table class="table mt-4">
@@ -372,11 +419,13 @@ if (isset($_POST['all_data'])) {
                                 <tr>
                                     <th>User ID</th>
                                     <th>Request ID</th>
-                                    <th>Display Name</th>
-                                    <th>company</th>
-                                    <th>model</th>
-                                    <th>cs_number</th>
-                                    <th>schedule</th>
+                                    <th>Customer Name</th>
+                                    <th>Address</th>
+                                    <th>Service</th>
+                                    <th>Description of Service</th>
+                                    <th>Status</th>
+                                    <th>Schedule</th>
+                                    <th>Date Created</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -388,10 +437,29 @@ if (isset($_POST['all_data'])) {
                                         <td><?= $row['user_id'] ?></td>
                                         <td><?= $row['request_id'] ?></td>
                                         <td><?= $row['display_name'] ?></td>
-                                        <td><?= $row['company'] ?></td>
-                                        <td><?= $row['model'] ?></td>
-                                        <td><?= $row['cs_number'] ?></td>
+                                        <td><?= $row['address'] ?></td>
+                                        <td><?= $row['service'] ?></td>
+                                        <td>
+                                            <p><?= $row['description_of_service'] ?></p>
+                                        </td>
+                                        <?php
+                                        if ($row['request_status'] == "pending") {
+                                        ?>
+                                            <td><span class="text-warning badge"><?= $row['request_status'] ?></span></td>
+                                        <?php
+                                        } else if ($row['request_status'] == "disapprove") {
+                                        ?>
+                                            <td><span class="text-danger badge"><?= $row['request_status'] ?></span></td>
+                                        <?php
+                                        } else {
+                                        ?>
+                                            <td><span class="text-success badge"><?= $row['request_status'] ?></span></td>
+                                        <?php
+                                        }
+                                        ?>
+
                                         <td><?= $row['schedule'] ?></td>
+                                        <td><?= $row['date_added'] ?></td>
                                     </tr>
                                 <?php
                                 }
@@ -405,8 +473,7 @@ if (isset($_POST['all_data'])) {
             <?php
             }
 
-            if ($tables == "login_history") {
-            ?>
+            if ($tables == "login_history") { ?>
                 <div class="wrapper">
                     <div class="d-flex align-items-center justify-content-between">
                         <a href="report.php" class="btn btn-dark text-decoration-none mt-4" id="back">back</a>
@@ -483,11 +550,11 @@ if (isset($_POST['all_data'])) {
                     quality: 1
                 },
                 html2canvas: {
-                    scale: 2
+                    scale: 1
                 },
                 jsPDF: {
                     unit: 'in',
-                    format: 'Letter',
+                    format: 'Legal',
                     orientation: 'L',
                     compressPDF: true
                 },

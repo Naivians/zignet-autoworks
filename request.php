@@ -38,6 +38,7 @@ if (!isset($_SESSION['admin_role'])) {
                         <option value="disapproved">Disapproved</option>
                     </select>
                     <input type="hidden" name="" id="status_id">
+                    <input type="hidden" name="" id="contact">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -46,6 +47,27 @@ if (!isset($_SESSION['admin_role'])) {
             </div>
         </div>
     </div>
+
+
+    <!-- Disapproval message-->
+    <div class="modal fade" id="reason" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Disapproval Message</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body mb-3">
+                    <textarea name="" id="reasons" cols="30" rows="10" class="form-control">Hello, Your request has been disapproved due to a schedule conflict. Please contact us at <Contact #> for a reschedule. Thank you - Zignet Autowork."</textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-warning text-light d-flex align-items-center justify-content-center" onclick="disapproval()">Send<i class='bx bx-send'></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <!-- view request-->
     <div class="modal fade" id="view_request_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -69,13 +91,14 @@ if (!isset($_SESSION['admin_role'])) {
                         </div>
                         <div class="col-md-12 mb-3">
                             <h6><strong> Reschedule </strong></h6>
-                            <input type="date" name="" id="schedule" class="form-control" value="111111">
+                            <input type="date" name="" id="schedule" class="form-control">
                         </div>
                     </div>
+                    <input type="hidden" name="" id="update_request_id">
                 </div>
                 <div class="modal-footer mt-3">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-primary" onclick="update_requests()">Update</button>
                 </div>
             </div>
         </div>
@@ -160,43 +183,155 @@ if (!isset($_SESSION['admin_role'])) {
 
         });
 
+        function update_requests() {
+            var update_request_id = $("#update_request_id").val()
+            var address = $("#address").val()
+            var description = $("#description").val();
+            var schedule = $("#schedule").val();
 
-        function open_status_modal(status_id) {
+           
+            if (address == "" || description == "" || schedule == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'All fields is mandatory',
+                });
+            } else {
+
+                var data = {
+                    address: $("#address").val(),
+                    description: $("#description").val(),
+                    schedule: $("#schedule").val(),
+                    id: $("#update_request_id").val(),
+                    update_request_btn: 1
+                }
+
+                $.ajax({
+                    url: "updateData.php",
+                    method: "POST",
+                    data: data,
+                    success: (res) => {
+                        if (res != "success") {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: res,
+                            });
+                        } else {
+                            Swal.fire({
+                                position: 'top-center',
+                                icon: 'success',
+                                title: "Successfully update request",
+                                showConfirmButton: false,
+                                timer: 1000
+                            });
+                            $("#view_request_modal").modal("hide");
+                            displayAccounts();
+                        }
+                    }
+                });
+
+
+            }
+        }
+
+
+
+        function open_status_modal(status_id, contact) {
             $("#status_id").val(status_id);
+            $("#contact").val(contact);
             $("#update_status").modal("show");
+        }
+
+        function disapproval() {
+            var status_id = $("#status_id").val();
+            var status = $("#status").val();
+            var message = $("#reasons").val();
+            var contact = $("#contact").val();
+
+
+            if (message != '') {
+
+                var data = {
+                    status_id: status_id,
+                    status: status,
+                    message: message,
+                    contact: contact,
+                    disapproved_btn: 1
+                }
+
+                $.ajax({
+                    url: "updateData.php",
+                    method: "POST",
+                    data: data,
+                    success: (res) => {
+                        if (res != "success") {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: res,
+                            })
+                        } else {
+                            Swal.fire({
+                                position: 'top-center',
+                                icon: 'success',
+                                title: 'Message sent!',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+                            $("#reason").modal("hide");
+                            displayAccounts();
+                        }
+                    }
+                });
+
+            } else {
+                alert("Message box is empty")
+            }
         }
 
         function update_status() {
             var status_id = $("#status_id").val();
             var status = $("#status").val();
+            var contact = $("#contact").val();
 
-            // process data
-            var data = {
-                status_id: status_id,
-                status: status,
-                update_status_btn: 1
+
+            if (status == "disapproved") {
+                $("#update_status").modal("hide");
+                $("#reason").modal("show");
+            } else {
+                // process data
+                var data = {
+                    status_id: status_id,
+                    status: status,
+                    contact: contact,
+                    update_status_btn: 1
+                }
+
+                $.ajax({
+                    url: "updateData.php",
+                    method: "POST",
+                    data: data,
+                    success: (res) => {
+                        if (res != "success") {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: res,
+                            })
+                        } else {
+                            $("#update_status").modal("hide");
+                            displayAccounts();
+                        }
+                    }
+                });
             }
 
-            $.ajax({
-                url: "updateData.php",
-                method: "POST",
-                data: data,
-                success: (res) => {
-                    if (res != "success") {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: res,
-                        })
-                    } else {
-                        $("#update_status").modal("hide");
-                        displayAccounts();
-                    }
-                }
-            });
+
         }
 
         function view_description(id) {
+            $("#update_request_id").val(id)
             $("#view_request_modal").modal("show");
             $.ajax({
                 url: "displayData.php",
@@ -290,148 +425,8 @@ if (!isset($_SESSION['admin_role'])) {
             });
         }
 
-        function viewEditAccount(id) {
 
 
-            var data = {
-                id: id,
-                viewEditBtn: 1
-            }
-
-            $.ajax({
-                url: "displayData.php",
-                method: "post",
-                data: data,
-                success: (res, status) => {
-                    var response = JSON.parse(res);
-                    if (status == "success") {
-                        $("#editName").val(response.adminName);
-                        $("#editUsername").val(response.username);
-                        $("#editPassword").val(response.password);
-                        $("#editRole").val(response.role);
-                        // editRole
-                        $("#editModal").modal('show');
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: 'Failed to retirevd',
-                        });
-                    }
-
-                }
-            });
-        }
-
-        function update_request() {
-            var id = $("#update_request_id").val()
-            var company = $("#company").val();
-            var model = $("#model").val();
-            var cs_number = $("#cs_number").val();
-            var schedule = $("#schedule").val();
-            var front_windshield = $("#front_windshield").val();
-            var rear_windshield = $("#rear_windshield").val();
-            var front_side_windows = $("#front_side_windows").val();
-            var rear_side_windows = $("#rear_side_windows").val();
-
-            if (company == "" || model == "" || cs_number == "" || schedule == "" || front_windshield == "" || rear_windshield == "" || front_side_windows == "" || rear_side_windows == "") {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'All fields is mandatory',
-                });
-            } else {
-
-                var data = {
-                    id: $("#update_request_id").val(),
-                    company: $("#company").val(),
-                    model: $("#model").val(),
-                    cs_number: $("#cs_number").val(),
-                    schedule: $("#schedule").val(),
-                    front_windshield: $("#front_windshield").val(),
-                    rear_windshield: $("#rear_windshield").val(),
-                    front_side_windows: $("#front_side_windows").val(),
-                    rear_side_windows: $("#rear_side_windows").val(),
-                    update_request_btn: 1
-                }
-
-                $.ajax({
-                    url: "updateData.php",
-                    method: "POST",
-                    data: data,
-                    success: (res) => {
-                        if (res != "success") {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Oops...',
-                                text: res,
-                            });
-                        } else {
-
-                            Swal.fire({
-                                position: 'top-center',
-                                icon: 'success',
-                                title: "Successfully update request",
-                                showConfirmButton: false,
-                                timer: 1000
-                            });
-                            setInterval(() => {
-                                window.location.reload();
-                            }, 1000);
-                        }
-                    }
-                });
-
-
-            }
-        }
-
-        function viewAdminAccount(id) {
-            $("#update_request_id").val(id);
-            var data = {
-                id: id,
-                view_request_btn: 1
-            }
-            $.ajax({
-                url: "displayData.php",
-                method: "post",
-                data: data,
-                success: (res, status) => {
-
-                    var response = JSON.parse(res);
-
-                    // console.log(response);
-
-                    // // console.log(response);
-                    if (status == "success") {
-
-                        $("#user_id").val(response.user_id);
-                        $("#request_id").val(response.request_id);
-                        $("#display_name").val(response.display_name);
-                        $("#company").val(response.company);
-                        $("#model").val(response.model);
-                        $("#cs_number").val(response.cs_number);
-                        $("#schedule").val(response.schedule);
-                        $("#front_windshield").val(response.front_windshield);
-                        $("#rear_windshield").val(response.rear_windshield);
-                        $("#front_side_windows").val(response.front_side_windows);
-                        $("#rear_side_windows").val(response.rear_side_windows);
-                        $("#date_added").val(response.date_added);
-                        $("#date_modefied").val(response.date_modefied);
-                        $("#date_retrieved").val(response.date_retrieved);
-
-                        $("#viewModal").modal('show');
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: 'Failed to retirevd',
-                        });
-                    }
-
-                }
-            });
-        }
 
         function displayAccounts() {
             $.ajax({

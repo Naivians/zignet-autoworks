@@ -1,6 +1,182 @@
 <?php
+session_start();
 include "includes/config.php";
 include "functions.php";
+include "includes/sms.php";
+
+// forgot password
+/**
+ * reset_pass_btn: 1,
+ * username: username,
+ */
+
+if (isset($_POST['check_reset_username'])) {
+    $username = $conn->escape_string($_POST['username']);
+
+    if (is_username_exist($username)->num_rows > 0) {
+
+        $_SESSION['reset_password'] = $username;
+
+        $reset_otp = generateNumericOTP();
+
+        $sql = "SELECT `contact` FROM `user` WHERE `username` = '$username' ";
+        $res = $conn->query($sql);
+
+        if ($res->num_rows > 0) {
+
+            $contact = $res->fetch_assoc();
+
+            reset_password_otp($contact['contact'],  $reset_otp);
+            $_SESSION['reset_otp'] = $reset_otp;
+
+            echo "success";
+        } else {
+            echo "failed";
+        }
+
+
+    } else {
+        $_SESSION['attempts'] += 1;
+
+        if ($_SESSION['attempts'] > 2) {
+            $_SESSION['attempts'] = 0;
+            echo "attempts";
+        } else {
+            echo "failed";
+        }
+    }
+}
+
+// search archive request
+if (isset($_POST['search_archive_request'])) {
+
+    $search = $conn->escape_string($_POST['search']);
+
+    $res = search_request("deleted_request_form", $search);
+
+    if ($res->num_rows > 0) {
+        $table = '<table class="adminAcc-table">
+    <thead>
+                        <tr>
+                            <th>User ID</th>
+                            <th>Request ID</th>
+                            <th>Display Name</th>
+                            <th>Address</th>
+                            <th>Service</th>
+                            <th>Status</th>
+                            <th>Schedule</th>
+                            <th>Date Requested</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>';
+
+        while ($row = $res->fetch_assoc()) {
+
+            $staus = "";
+
+            if ($row['request_status'] == "pending") {
+                $status = "<span class='badge text-info'>Pending</span>";
+            } else if ($row['request_status'] == "approved") {
+                $status = "<span class='badge text-success'>Approved</span>";
+            } else {
+                $status = "<span class='badge text-danger'>Disapproved</span>";
+            }
+
+            $table .= ' <tr>
+                        <td>' . $row['user_id'] . '</td>
+                        <td>' . $row['request_id'] . '</td>
+                        <td>' . $row['display_name'] . '</td>
+                        <td>' . $row['address'] . '</td>
+                        <td>' . $row['service'] . '</td>
+                        <td>' . $status . '</td>
+                        <td>' . $row['schedule'] . '</td>                        
+                        <td>' . $row['date_added'] . '</td>                        
+                        <td>
+                            <!-- three btns for view, edit, and delete -->
+
+                            <!-- view -->
+                            <button class="btn" onclick="view_description(' . $row['id'] . ')" >
+                                <img src="icons/view.svg" alt="view image" class="text-success">
+                            </button>
+                            
+                            <!-- delete -->
+                            <button class="btn" onclick="askDelete(' . $row['id'] . ')">
+                                <img src="icons/delete.svg" alt="view image" class="text-danger">
+                            </button>
+
+                        </td>
+                    </tr>';
+        }
+        $table .= "</table>";
+
+        echo $table;
+    } else {
+        echo "<h6 class = 'text-danger'>No record found!</h6>";
+    }
+}
+
+// archive_user
+if (isset($_POST['archive_user'])) {
+    $search = $conn->escape_string($_POST['search']);
+
+    $res = user_search("deleted_user", $search);
+
+    $table = '<table class="adminAcc-table">
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Display Name</th>
+                    <th>Username</th>
+                    <th>Password</th>
+                    <th>Contact</th>
+                    <th>Date Created</th>
+                    <th>Date Modified</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>';
+
+    if ($res->num_rows > 0) {
+        while ($row = $res->fetch_assoc()) {
+
+            if ($row['active'] != 1) {
+                $status = "<span class='badge text-danger'>Deactivated</span>";
+            } else {
+                $status = "<span class='badge text-success'>Activated</span>";
+            }
+
+            $table .= ' <tr>
+                                    <td>' . $row['user_id'] . '</td>
+                                    <td>' . $row['display_name'] . '</td>
+                                    <td>' . $row['username'] . '</td>
+                                    <td>' . $row['password'] . '</td>
+                                    <td>' . $row['contact'] . '</td>
+                                    <td>' . $row['date_added'] . '</td>
+                                    <td>' . $row['date_modified'] . '</td>
+                                    <td>' . $status . '</td>
+                                    <td>
+                                        <!-- three btns for view, edit, and delete -->
+                                        
+                                        <button class="btn" onclick="retrieved(' . $row['id'] . ')" data-toggle="tooltip" data-placement="bottom" title="Retrieved">
+                                        <i class="bx bxs-download text-success"></i>
+                                        </button>
+                                        
+                                        <!-- delete -->
+                                        <button class="btn" onclick="askDelete(' . $row['id'] . ')" data-toggle="tooltip" data-placement="bottom" title="Delete">
+                                            <img src="icons/delete.svg" alt="view image" class="text-danger">
+                                        </button>
+                                        
+                                    </td>
+                                </tr>';
+        }
+        $table .= "</table>";
+
+        echo $table;
+    } else {
+        echo "<h6 class='text-danger'>No record found</h6>";
+    }
+}
+
 
 // view archive request
 // view_deleted_request
@@ -17,7 +193,6 @@ if (isset($_POST['view_deleted_request'])) {
 
     echo json_encode($response);
 }
-
 
 // archive request
 if (isset($_POST['archive_request'])) {
@@ -43,11 +218,11 @@ if (isset($_POST['archive_request'])) {
         $staus = "";
 
         if ($row['request_status'] == "pending") {
-            $status = '<button class="text-dark badge bg-warning" onclick="open_status_modal(' . $row["id"] . ')"> ' . $row["request_status"] . ' </button>';
+            $status = "<span class='badge text-info'>Pending</span>";
         } else if ($row['request_status'] == "approved") {
-            $status = '<button class="text-light badge bg-success" onclick="open_status_modal(' . $row["id"] . ')"> ' . $row["request_status"] . ' </button>';
+            $status = "<span class='badge text-success'>Approved</span>";
         } else {
-            $status = '<button class="text-light badge bg-danger " onclick="open_status_modal(' . $row["id"] . ')"> ' . $row["request_status"] . ' </button>';
+            $status = "<span class='badge text-danger'>Disapproved</span>";
         }
 
         $table .= ' <tr>
@@ -105,11 +280,11 @@ if (isset($_POST['request_sort_btn'])) {
         $staus = "";
 
         if ($row['request_status'] == "pending") {
-            $status = '<button class="text-dark badge bg-warning" onclick="open_status_modal(' . $row["id"] . ')"> ' . $row["request_status"] . ' </button>';
+            $status = '<button class="text-dark badge bg-warning" onclick="open_status_modal(' . $row["id"] . ', ' . $row["contact"] . ')"> ' . $row["request_status"] . ' </button>';
         } else if ($row['request_status'] == "approved") {
-            $status = '<button class="text-light badge bg-success" onclick="open_status_modal(' . $row["id"] . ')"> ' . $row["request_status"] . ' </button>';
+            $status = '<button class="text-light badge bg-success" onclick="open_status_modal(' . $row["id"] . ', ' . $row["contact"] . ')"> ' . $row["request_status"] . ' </button>';
         } else {
-            $status = '<button class="text-light badge bg-danger " onclick="open_status_modal(' . $row["id"] . ')"> ' . $row["request_status"] . ' </button>';
+            $status = '<button class="text-light badge bg-danger " onclick="open_status_modal(' . $row["id"] . ', ' . $row["contact"] . ')"> ' . $row["request_status"] . ' </button>';
         }
 
         $table .= ' <tr>
@@ -200,11 +375,11 @@ if (isset($_POST['get_user'])) {
         $staus = "";
 
         if ($row['request_status'] == "pending") {
-            $status = '<button class="text-dark badge bg-warning" onclick="open_status_modal(' . $row["id"] . ')"> ' . $row["request_status"] . ' </button>';
+            $status = '<button class="text-dark badge bg-warning" onclick="open_status_modal(' . $row["id"] . ', ' . $row["contact"] . ')"> ' . $row["request_status"] . ' </button>';
         } else if ($row['request_status'] == "approved") {
-            $status = '<button class="text-light badge bg-success" onclick="open_status_modal(' . $row["id"] . ')"> ' . $row["request_status"] . ' </button>';
+            $status = '<button class="text-light badge bg-success" onclick="open_status_modal(' . $row["id"] . ', ' . $row["contact"] . ')"> ' . $row["request_status"] . ' </button>';
         } else {
-            $status = '<button class="text-light badge bg-danger " onclick="open_status_modal(' . $row["id"] . ')"> ' . $row["request_status"] . ' </button>';
+            $status = '<button class="text-light badge bg-danger " onclick="open_status_modal(' . $row["id"] . ', ' . $row["contact"] . ')"> ' . $row["request_status"] . ' </button>';
         }
 
         $table .= ' <tr>
@@ -249,14 +424,21 @@ if (isset($_POST['deleted_user'])) {
     <th>Username</th>
     <th>Password</th>
     <th>Contact</th>
-    <th>Date Added</th>
+    <th>Date Created</th>
     <th>Date Modified</th>
-    <th>status</th>
+    <th>Status</th>
     <th>Actions</th>
 </tr>
     </thead>';
 
     while ($row = $res->fetch_assoc()) {
+
+        if ($row['active'] != 1) {
+            $status = "<span class='badge text-danger'>Deactivated</span>";
+        } else {
+            $status = "<span class='badge text-success'>Activated</span>";
+        }
+
         $table .= ' <tr>
                         <td>' . $row['user_id'] . '</td>
                         <td>' . $row['display_name'] . '</td>
@@ -265,7 +447,7 @@ if (isset($_POST['deleted_user'])) {
                         <td>' . $row['contact'] . '</td>
                         <td>' . $row['date_added'] . '</td>
                         <td>' . $row['date_modified'] . '</td>
-                        <td>' . $row['active'] . '</td>
+                        <td>' . $status . '</td>
                         <td>
                             <!-- three btns for view, edit, and delete -->
                             

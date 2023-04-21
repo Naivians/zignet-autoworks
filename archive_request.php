@@ -66,7 +66,8 @@ if (!isset($_SESSION['admin_role'])) {
             <!-- live search -->
             <div class="filter d-flex align-items-center mt-3 mb-3">
                 <div class="live-search">
-                    <input type="search" id="search" placeholder="Search by name">
+                    <input type="text" id="search" placeholder="Search Anything" class="border-0 search">
+                    <!-- <button class="btn btn-outline-light me-2" id="reset" onclick="reset()"><i class='bx bx-reset text-danger'></i></button> -->
                 </div>
             </div>
         </div>
@@ -93,9 +94,7 @@ if (!isset($_SESSION['admin_role'])) {
 
                     var data = {
                         search: search,
-                        action: 1,
-                        btn: "deletedSearch",
-                        table: "deleted_admin_account"
+                        search_archive_request:1
                     }
 
                     $.ajax({
@@ -141,14 +140,10 @@ if (!isset($_SESSION['admin_role'])) {
             });
         }
 
-
         function askDelete(id) {
-
             var data = {
                 id: id,
-                delete_client_btn: "delete_user_forever",
-                action: 1,
-                table: "deleted_user"
+                delete_archive_btn:1
             };
 
 
@@ -181,14 +176,12 @@ if (!isset($_SESSION['admin_role'])) {
                                 Swal.fire({
                                     position: 'top-center',
                                     icon: 'success',
-                                    title: 'Successfully Deleted User',
+                                    title: 'Successfully deleted request form',
                                     showConfirmButton: false,
-                                    timer: 1500
+                                    timer: 1000
                                 })
-
-                                setInterval(() => {
-                                    window.location.reload()
-                                }, 1500);
+                                
+                               displayAccounts();
                             }
                         }
                     });

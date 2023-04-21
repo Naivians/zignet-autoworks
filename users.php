@@ -194,13 +194,13 @@ if (isset($_POST['search'])) {
                 </select>
             </div> -->
 
-            <div class="btn-group mx-2">
+            <!-- <div class="btn-group mx-2">
                 <select name="" id="activations" class="filterBtn form-select" onchange="activate()">
                     <option disabled selected>Activations</option>
                     <option value="activate_all">Activate All</option>
                     <option value="deactivate_all">Deactivate All</option>
                 </select>
-            </div>
+            </div> -->
         </div>
 
         <div class="displayAccount mt-4" id="client_table">
@@ -230,7 +230,7 @@ if (isset($_POST['search'])) {
                                     <td><?= $row['user_id'] ?></td>
                                     <td><?= $row['display_name'] ?></td>
                                     <td><?= $row['username'] ?></td>
-                                    <td><?= md5($row['password']) ?></td>
+                                    <td><?= $row['password'] ?></td>
                                     <td><?= $row['contact'] ?></td>
                                     <td><?= $row['date_added'] ?></td>
                                     <td><?= $row['date_modified'] ?></td>
@@ -296,7 +296,7 @@ if (isset($_POST['search'])) {
                                 <td><?= $row['user_id'] ?></td>
                                 <td><?= $row['display_name'] ?></td>
                                 <td><?= $row['username'] ?></td>
-                                <td><?= md5($row['password']) ?></td>
+                                <td><?= $row['password'] ?></td>
                                 <td><?= $row['contact'] ?></td>
                                 <td><?= $row['date_added'] ?></td>
                                 <td><?= $row['date_modified'] ?></td>
@@ -446,7 +446,6 @@ if (isset($_POST['search'])) {
 
 
             if (status == "activate") {
-
                 Swal.fire({
                     title: 'Opppsss...!',
                     text: "Are you sure you want to activate this account?!",

@@ -63,11 +63,22 @@ if (isset($_SESSION['admin_role'])) {
                 <a href="index.php" class="text-decoration-none">
                     <img src="./img/logo.svg" alt="">
                 </a>
-
             </div>
             <a href="index.php" class="text-decoration-none text-light home_btn">Home</a>
         </div>
         <!-- HERO DESIGN -->
+        <?php
+        if (isset($_SESSION['msg'])) {
+            $msg = $_SESSION['msg'];
+            ?>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>Yeheyyyyyy!</strong><?=$msg?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <?php
+            unset($_SESSION['msg']);
+        }
+        ?>
         <section class="hero mt-5">
             <div class="hero-left">
                 <div class="hero-title">
@@ -83,9 +94,17 @@ if (isset($_SESSION['admin_role'])) {
                         <!-- password -->
                         <div class="mb3">
                             <input type="password" name="password" id="password" placeholder="Enter Password" autocomplete="off">
+                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                <div class="d-flex align-items-center">
+                                    <span class="me-3 text-light" style="font-size: 12px;">Show Password</span>
+                                    <input type="checkbox" onclick="showPass()">
+                                </div>
+                                <span><a href="forgot_password.php" style="font-size: 12px;">Forgot Password</a></span>
+                            </div>
+
+                            <button type="button" id="submit" class="mt-3" style="width: 100%;">Sign-in now!</button>
                         </div>
 
-                        <button type="button" id="submit">Sign-in now!</button>
                     </form>
                 </div>
 
@@ -117,7 +136,16 @@ if (isset($_SESSION['admin_role'])) {
     <script src="includes/app.js"></script>
 
     <script>
-        // login part
+        var x = document.getElementById('password');
+
+        function showPass() {
+            if (x.type === "password") {
+                x.type = "text";
+            } else {
+                x.type = "password";
+            }
+        }
+
         var swiper = new Swiper(".mySwiper", {
             spaceBetween: 30,
             centeredSlides: true,

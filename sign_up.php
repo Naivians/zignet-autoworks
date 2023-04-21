@@ -57,30 +57,34 @@
         <section class="hero">
             <div class="hero-left">
                 <div class="hero-title">
-                    <h1>Welcome to <span id="title">Zignet Autoworks</span> create your account here</h1>
+                    <h1>Welcome to <span id="title">Zignet Autoworks</span> Create your account here</h1>
                 </div>
 
                 <div class="form">
                     <form>
                         <!-- display name -->
                         <div class="">
-                            <input type="text" name="display_name" id="display_name" placeholder="Enter Full Name" autocomplete="off">
+                            <input type="text" name="display_name" id="display_name" placeholder="Enter Full Name" autocomplete="off" required>
                         </div>
 
                         <div class="">
-                            <input type="number" name="contact" id="contact" placeholder="Enter Contact" autocomplete="off" min="1">
+                            <input name="contact" id="contact" placeholder="Enter Contact" autocomplete="off" required type="number">
                         </div>
 
                         <!-- username -->
                         <div class="">
-                            <input type="text" name="username" id="username" placeholder="Enter Username" autocomplete="off">
+                            <input type="text" name="username" id="username" placeholder="Enter Username" autocomplete="off" required>
                         </div>
                         <!-- password -->
                         <div class="mb-3">
-                            <input type="password" name="password" id="password" placeholder="Enter Password" autocomplete="off">
+                            <input type="password" name="password" id="password" placeholder="Enter Password" autocomplete="off" required>
+                            <div class="d-flex align-items-center">
+                                <span class="me-3 text-light" style="font-size: 12px;">Show Password</span>
+                                <input type="checkbox" onclick="showPass()">
+                            </div>
                         </div>
 
-                        <button type="button" id="submit">Create Account</button>
+                        <button type="button" id="submit" style="width: 100%;">Create Account</button>
                         <!-- onclick="sign_up()" -->
                     </form>
                 </div>
@@ -113,6 +117,15 @@
     <script src="includes/app.js"></script>
 
     <script>
+        function showPass() {
+            var x = document.getElementById('password');
+            if (x.type === "password") {
+                x.type = "text";
+            } else {
+                x.type = "password";
+            }
+        }
+
         // login part
         var swiper = new Swiper(".mySwiper", {
             spaceBetween: 30,
@@ -121,14 +134,6 @@
                 delay: 2000,
                 disableOnInteraction: false,
             },
-            // pagination: {
-            //     el: ".swiper-pagination",
-            //     clickable: true,
-            // },
-            // navigation: {
-            //     nextEl: ".swiper-button-next",
-            //     prevEl: ".swiper-button-prev",
-            // },
         });
 
         let btn = document.getElementById('submit');
@@ -150,17 +155,17 @@
             }
 
         });
-        
+
 
         function sign_up() {
+
+            var pattern = new RegExp("^1?([1-9])(\\d{11})");
 
             let username = $("#username").val();
             let password = $("#password").val();
             let display_name = $("#display_name").val();
             let contact = $("#contact").val();
             // contact
-
-
 
             let data = {
                 username: username,
@@ -179,16 +184,16 @@
 
                 reset();
 
-            } else if (username.length < 9) {
-                alert("username must be atleast 8 characters long")
+            } else if (username.length <= 6) {
+                alert("username must be atleast 6 characters long")
                 $("#username").val('');
-            } else if (username.length < 9) {
+            } else if (password.length < 6) {
                 alert("password must be atleast 8 characters long")
                 $("#password").val('');
-            } else if (contact.length >= 11) {
+            } else if (pattern.test(contact)) {
                 alert("Invalid Contact Number")
-                $("#contact").val('');
             } else {
+
                 $.ajax({
                     url: "validate.php",
                     method: "POST",
@@ -197,12 +202,15 @@
                     success: (res) => {
                         if (res == "Registered") {
                             // window.location.href = "supAdminDashboard.php";
-                            Swal.fire(
-                                'Successfully Created Account!',
-                                'Please wait for the admin to activate your account',
-                                'success'
-                            )
-                            reset();
+                            // Swal.fire(
+                            //     'Successfully Created Account!',
+                            //     'Please wait for the admin to activate your account',
+                            //     'success'
+                            // )
+                            window.location.reload();
+                            window.location.href = "OTP.php";
+                            localStorage.setItem("timer", 60);
+                            // alert("success")
                         } else {
                             Swal.fire({
                                 icon: 'error',
@@ -213,7 +221,16 @@
                         }
                     }
                 });
+
+                // if(contact.length != 11){
+                //     alert("Invalid Contact Number")
+                // }else{
+                //     alert("Pass all")
+                // }
+
+
             }
+
 
         }
 

@@ -34,6 +34,8 @@ include "functions.php";
                         <p><span id="address"></span></p>
                         <h6><strong>DESCRIPTION OF SERVICE(S)</strong></h6>
                         <p id="description"></p>
+                        <h6><strong>Disapproval Message (if there is)</strong></h6>
+                        <p id="disapproved"></p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -146,8 +148,10 @@ include "functions.php";
                 },
                 success: (res) => {
                     var response = JSON.parse(res);
+                    // disapproved
                     document.getElementById("description").innerHTML = response.description_of_service;
                     document.getElementById("address").innerHTML = response.address;
+                    document.getElementById("disapproved").innerHTML = response.reason;
 
                 }
             });

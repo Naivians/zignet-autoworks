@@ -162,7 +162,7 @@ function liveSearch($table, $searchItem)
 function user_search($table, $searchItem)
 {
     global $conn;
-    $sql = "SELECT * FROM `$table` WHERE `user_id` LIKE '%{$searchItem}%' OR `display_name` LIKE '%{$searchItem}%'";
+    $sql = "SELECT * FROM `$table` WHERE `user_id` LIKE '%{$searchItem}%' OR `display_name` LIKE '%{$searchItem}%' OR `username` LIKE '%{$searchItem}%' OR `contact` LIKE '%{$searchItem}%' OR `date_added` LIKE '%{$searchItem}%' OR `active` LIKE '%{$searchItem}%'";
     return $conn->query($sql);
 }
 
@@ -189,29 +189,26 @@ function retrievedAdmin($adminName, $username, $password, $role, $dateAdded, $da
 // END OF RETIREVAL
 
 
-// INSERT
-
-
-function insert_form($user_id, $request_id, $display_name, $address, $service, $description_of_service, $request_status, $schedule)
+function insert_form($user_id, $request_id, $display_name, $address, $service, $description_of_service, $request_status, $schedule, $contact)
 {
     global $conn, $today;
     
-    $sql = "INSERT INTO `request_form` (`user_id`,`request_id` , `display_name`, `address`, `service`, `description_of_service`, `request_status`, `schedule`,`date_added`) VALUES(?,?,?,?,?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO `request_form` (`user_id`,`request_id` , `display_name`, `address`, `service`, `description_of_service`, `request_status`, `schedule`,`date_added`, `contact`) VALUES(?,?,?,?,?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sssssssss", $user_id, $request_id, $display_name, $address, $service, $description_of_service, $request_status,$schedule,$today);
+    $stmt->bind_param("ssssssssss", $user_id, $request_id, $display_name, $address, $service, $description_of_service, $request_status,$schedule,$today, $contact);
     // return true of false
     return $stmt->execute();
 }
 
-function insert_user($user_id, $display_name, $username, $password,  $contact)
+function insert_user($user_id, $display_name, $username, $password,  $contact, $OTP_code)
 {
     global $conn, $today;
 
     $role = "user";
 
-    $sql = "INSERT INTO `user` (`user_id`, `display_name`, `role`, `username`, `password`, `contact`, `date_added`) VALUES(?,?,?,?,?, ?, ?)";
+    $sql = "INSERT INTO `user` (`user_id`, `display_name`, `role`, `username`, `password`, `contact`, `date_added`, `OTP_code`) VALUES(?,?,?,?,?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sssssss", $user_id, $display_name, $role, $username, $password, $contact, $today);
+    $stmt->bind_param("sssssssi", $user_id, $display_name, $role, $username, $password, $contact, $today, $OTP_code);
     // return true of false
     $stmt->execute();
     return $stmt->insert_id;
@@ -392,7 +389,7 @@ function update_transact_img($img_path, $img_id)
 
 // USERS ACTIVATIONS
 function activate($user_id)
-{
+{   
     global $conn;
     $sql = "UPDATE `user` SET active = 1  WHERE `user_id` = '$user_id'";
     return $conn->query($sql);
@@ -469,6 +466,13 @@ function delete_request($id)
 {
     global $conn;
     $sql = "DELETE FROM `request_form` WHERE `id` = '$id'";
+    return $conn->query($sql);
+}
+
+function delete_archive_request($id)
+{
+    global $conn;
+    $sql = "DELETE FROM `deleted_request_form` WHERE `id` = '$id'";
     return $conn->query($sql);
 }
 

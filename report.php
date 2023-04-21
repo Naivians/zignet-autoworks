@@ -47,7 +47,7 @@ $res = $conn->query($sql);
     unset($_SESSION['error_msg']);
     ?>
 
-    <!-- generate between two dates with company  -->
+    <!-- generate between two dates with specific column  -->
     <div class="modal fade" id="generate_client_by_date" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog ">
             <div class="modal-content p-4">
@@ -57,27 +57,34 @@ $res = $conn->query($sql);
 
                         <form method="post" action="generate_report.php">
                             <div class="mb-3">
-                                <label for="tables" class="select-label">Select Table</label>
+                                <label for="tables" class="select-label text-secondary">Select Table</label>
                                 <select name="tables" id="" class="form-select">
                                     <option value="customer">Client</option>
                                     <option value="transactions_history">Transaction History</option>
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label for="tables" class="select-label">Select Company</label>
-                                <select name="company" id="" class="form-select">
-                                    <option value="lexus">lexus</option>
-                                    <option value="bmw">bmw</option>
+                                <label for="column" class="select-label text-secondary">Select Column</label>
+                                <select name="column" id="" class="form-select">
+                                    <option value="client_id">Client ID</option>
+                                    <option value="company">Company</option>
+                                    <option value="csNumber">CS Number</option>
+                                    <option value="paymentStatus">Payment Status</option>
                                 </select>
                             </div>
 
+                            <div class="input mt-3 mb-3">
+                                <label for="column_value" class="form-label text-secondary">Input value relevant from selected column</label>
+                                <input type="text" name="column_value" id="" class="form-control" placeholder="Type here!">
+                            </div>
+
                             <div class="mb-3">
-                                <label for="" class="form-label">From: </label>
+                                <label for="" class="form-label text-secondary">From: </label>
                                 <input type="date" name="from" id="from" class="form-control">
                             </div>
 
                             <div class="mb-3">
-                                <label for="" class="form-label">To: </label>
+                                <label for="" class="form-label text-secondary">To: </label>
                                 <input type="date" name="to" id="to" class="form-control">
                             </div>
 
@@ -91,7 +98,58 @@ $res = $conn->query($sql);
             </div>
         </div>
     </div>
+    
+    <!-- users between two dates with specific column -->
+    <div class="modal fade" id="users" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog ">
+            <div class="modal-content p-4">
+                <span class="text-center mt-2">In this section you can generate report either specific date or between two dates. input the same date for specific date</span>
+                <div class="modal-body">
+                    <div class="mb-3">
 
+                        <form method="post" action="generate_report.php">
+                            <div class="mb-3">
+                                <label for="tables" class="select-label text-secondary">Select Table</label>
+                                <select name="tables" id="" class="form-select">
+                                    <option value="user">Users</option>
+                                    <option value="request_form">Request Form</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="column" class="select-label text-secondary">Select Column</label>
+                                <select name="column" id="" class="form-select">
+                                    <option value="user_id">User Id</option>
+                                    <option value="request_id">Request ID</option>
+                                    <option value="display_name">Customer Name</option>
+                                </select>
+                            </div>
+
+                            <div class="input mt-3 mb-3">
+                                <label for="column_value" class="form-label text-secondary">Input value relevant from selected column</label>
+                                <input type="text" name="column_value" id="" class="form-control" placeholder="Type here!">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="" class="form-label text-secondary">From: </label>
+                                <input type="date" name="from" id="from" class="form-control">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="" class="form-label text-secondary">To: </label>
+                                <input type="date" name="to" id="to" class="form-control">
+                            </div>
+
+                            <div class="mb-3">
+                                <button type="submit" name="client" class="btn btn-success">Generate</button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <!-- between two dates -->
     <div class="modal fade" id="between_two_dates" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog ">
@@ -109,7 +167,6 @@ $res = $conn->query($sql);
                                     <option value="transactions_history">Transaction History</option>
                                     <option value="user">Users</option>
                                     <option value="request_form">Request Form</option>
-                                    <option value="login_history">Login History</option>
                                 </select>
                             </div>
 
@@ -166,7 +223,6 @@ $res = $conn->query($sql);
         </div>
     </div>
 
-
     <!-- main content -->
     <div class="wrapper" id="wrapper">
         <!-- import TopNavbar -->
@@ -176,52 +232,56 @@ $res = $conn->query($sql);
             <h5>Generate Reports</h5>
         </div>
 
-        <div class="row">
+        <div class="row d-flex align-items-center justify-content-center">
 
             <!-- Generate Client -->
-            <div class="col-md-3 me-3 report">
+            <div class="col-md-3 col-sm-12 me-3 report mt-3 mb-3">
                 <div class="title">
                     <i class="bx bxs-download text-light fs-1"></i>
-                    <h5 class="mt-2 mb-2 text-center">Generate by:</h5>
+                    <h5 class="mt-2 mb-2 text-center">Generate Transaction history and Client</h5>
                 </div>
 
                 <div class="dash-link mt-3">
                     <div class="mb-1">
-                        <button class="btn btn-outline-success text-light" onclick="open_generate_modal('date_with_company')">Between two dates by company</button>
+                        <button class="btn btn-outline-success text-light" onclick="open_generate_modal('date_with_company')">Between two dates by:</button>
                     </div>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-sm-12 me-3 report mt-3 mb-3">
+                <div class="title">
+                    <i class="bx bxs-download text-light fs-1"></i>
+                    <h5 class="mt-2 mb-2 text-center">Generate Users and Request Form</h5>
+                </div>
+
+                <div class="dash-link mt-3">
                     <div class="mb-1">
-                        <button class="btn btn-outline-success text-light" onclick="open_generate_modal('between_two_dates')">Between two dates</button>
+                        <button class="btn btn-outline-success text-light" onclick="open_generate_modal('users')">Between two dates by:</button>
                     </div>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-sm-12 me-3 report mt-3 mb-3">
+                <div class="title">
+                    <i class="bx bxs-download text-light fs-1"></i>
+                    <h5 class="mt-2 mb-2 text-center">Generate from between two dates according to table</h5>
+                </div>
+                <div class="mb-1">
+                    <button class="btn btn-outline-success text-light" onclick="open_generate_modal('between_two_dates')">Between two dates</button>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-sm-12 me-3 report mt-3 mb-3">
+                <div class="title">
+                    <i class="bx bxs-download text-light fs-1"></i>
+                    <h5 class="mt-2 mb-2 text-center">Generate data according to table</h5>
+                </div>
+                <div class="dash-link mt-3">
                     <div class="mb-1">
                         <a href="#" class="btn btn-outline-success text-light text-decoration-none " onclick="open_generate_modal('all')">All Data</a>
                     </div>
                 </div>
             </div>
-
-
-            <!-- Generate Archives -->
-            <!-- <div class="col-md-3 me-3 report">
-                <div class="title">
-                    <i class="bx bxs-download text-light fs-1"></i>
-                    <h5 class="mt-2 mb-2 text-center">Generate Archives by:</h5>
-                </div>
-
-                <div class="dash-link mt-3">
-            
-                    <div class="mb-1">
-                        <a href="generate_report.php?generate=deleted_client_account" class="btn btn-outline-success text-light" onclick="">Deleted Client</a>
-                    </div>
-
-                    <div class="mb-1">
-                        <a href="generate_report.php?generate=deleted_transactions_history" class="btn btn-outline-success text-light">Deleted Transactions</a>
-                    </div>
-
-                    <div class="mb-1">
-                        <a href="generate_report.php?generate=login_history" class="btn btn-outline-success text-light text-decoration-none ">Login History</a>
-                    </div>
-
-                </div>
-            </div> -->
         </div>
 
 
@@ -248,6 +308,10 @@ $res = $conn->query($sql);
 
             if (modal == 'all') {
                 $("#all_data").modal("show");
+            }
+
+            if (modal == 'users') {
+                $("#users").modal("show");
             }
 
             // all_data

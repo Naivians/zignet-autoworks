@@ -30,7 +30,8 @@ if (!isset($_SESSION['admin_role'])) {
             <!-- live search -->
             <div class="filter d-flex align-items-center mt-3 mb-3">
                 <div class="live-search">
-                    <input type="search" id="search" placeholder="Search by name">
+                    <input type="text" id="search" placeholder="Search Anything" class="border-0 search">
+                    <!-- <button class="btn btn-outline-light me-2" id="reset" onclick="reset()"><i class='bx bx-reset text-danger'></i></button> -->
                 </div>
             </div>
         </div>
@@ -56,10 +57,8 @@ if (!isset($_SESSION['admin_role'])) {
                 if (search != "") {
 
                     var data = {
-                        search: search,
-                        action: 1,
-                        btn: "deletedSearch",
-                        table: "deleted_admin_account"
+                        archive_user: 1,
+                        search: search
                     }
 
                     $.ajax({

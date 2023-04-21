@@ -2,49 +2,54 @@
 session_start();
 include "includes/config.php";
 include "functions.php";
+include "includes/sms.php";
+include "includes/date.php";
 
-
+$_SESSION['attempts'] = 0;
 /*
 status_id: status_id,
 status: status,
 update_status_btn: 1
 */
 
-if(isset($_POST['update_status_btn'])){
+if (isset($_POST['update_status_btn'])) {
     $status = $conn->escape_string($_POST['status']);
     $status_id = $conn->escape_string($_POST['status_id']);
+    $contact = $conn->escape_string($_POST['contact']);
 
     $sql = "UPDATE `request_form` SET `request_status` = '$status' WHERE `id` = '$status_id'";
     $res = $conn->query($sql);
 
-    if(!$res){
+    if (!$res) {
         echo "Failed to update request status";
-    }else{
+    } else {
+
+        if ($status == "approved") {
+            approved_request($contact);
+        }
+
         echo "success";
     }
 }
 
 
-if(isset($_POST['update_request_btn'])){
-    
+if (isset($_POST['update_request_btn'])) {
+
     $id = $conn->escape_string($_POST['id']);
-    $company = $conn->escape_string($_POST['company']);
-    $model = $conn->escape_string($_POST['model']);
-    $cs_number = $conn->escape_string($_POST['cs_number']);
+    $description = $conn->escape_string($_POST['description']);
     $schedule = $conn->escape_string($_POST['schedule']);
-    $front_windshield = $conn->escape_string($_POST['front_windshield']);
-    $rear_windshield = $conn->escape_string($_POST['rear_windshield']);
-    $front_side_windows = $conn->escape_string($_POST['front_side_windows']);
-    $rear_side_windows = $conn->escape_string($_POST['rear_side_windows']);
+    $address = $conn->escape_string($_POST['address']);
 
+    $description =  str_replace('\r\n', "<br>", $description);
+    $address =  str_replace('\r\n', "<br>", $address);
 
-    $sql = "UPDATE `request_form` SET `company` = '$company', `model` = '$model', `cs_number` = '$cs_number', `schedule` = '$schedule', `front_windshield` = '$front_windshield', `front_windshield` = '$rear_windshield', `front_side_windows` = '$front_side_windows', `rear_side_windows` = '$rear_side_windows' WHERE `id`='$id'";
+    $sql = "UPDATE `request_form` SET `description_of_service` = '$description', `schedule` = '$schedule', `address` = '$address', `schedule` = '$schedule', `date_modified` = '$today' WHERE `id`='$id'";
 
     $res = $conn->query($sql);
 
-    if(!$res){
+    if (!$res) {
         echo "Failed to update request";
-    }else{
+    } else {
         echo "success";
     }
 }
@@ -164,6 +169,8 @@ if (isset($_POST['update_user_btn'])) {
     $update_password = $conn->escape_string($_POST['update_password']);
     $update_contact = $conn->escape_string($_POST['update_contact']);
 
+    $update_password = md5($update_password);
+
     $res = update_user($user_id, $update_display_name, $update_username, $update_password, $update_contact);
 
     if (!$res) {
@@ -180,31 +187,57 @@ if (isset($_POST['update_user_btn'])) {
 // activate users
 if (isset($_POST['activate_btn'])) {
     $user_id = $conn->escape_string($_POST['user_id']);
-    $res = activate($user_id);
 
-    if (!$res) {
-        echo "Failed to Deactivate";
+    $sql = "SELECT `contact` FROM `user` WHERE `user_id` = '$user_id'";
+    $res = $conn->query($sql);
+
+    if ($res->num_rows > 0) {
+        $res = $res->fetch_assoc();
+
+        activate_account($res['contact']);
+
+        $res = activate($user_id);
+
+        if (!$res) {
+            echo "Failed to Activate";
+        } else {
+
+            echo "success";
+        }
     } else {
-        echo "success";
+        echo "Failed to Deactivate";
     }
 }
 
 // deactivate_btn
 if (isset($_POST['deactivate_btn'])) {
     $user_id = $conn->escape_string($_POST['user_id']);
-    $res = deactivate($user_id);
+    $sql = "SELECT `contact` FROM `user` WHERE `user_id` = '$user_id'";
+    $res = $conn->query($sql);
 
-    if (!$res) {
-        echo "Failed to Deactivate";
+    if ($res->num_rows > 0) {
+        $res = $res->fetch_assoc();
+
+        deactivate_account($res['contact']);
+
+        $res = deactivate($user_id);
+
+        if (!$res) {
+            echo "Failed to Activate";
+        } else {
+
+            echo "success";
+        }
     } else {
-        echo "success";
+        echo "Failed to Deactivate";
     }
 }
 
 // activate all 
 if (isset($_POST['activate_all'])) {
-    $res = activate_all();
 
+    // get contact of all deactivated account and send sms for each
+    $res = activate_all();
     if (!$res) {
         echo "Failed to activate all accounts";
     } else {
@@ -220,5 +253,90 @@ if (isset($_POST['deactivate_all'])) {
         echo "Failed to activate all accounts";
     } else {
         echo "success";
+    }
+}
+
+
+if (isset($_POST['disapproved_btn'])) {
+
+    $message = $conn->escape_string($_POST['message']);
+    $status = $conn->escape_string($_POST['status']);
+    $status_id = $conn->escape_string($_POST['status_id']);
+    $contact = $conn->escape_string($_POST['contact']);
+    $message =  str_replace('\r\n', "<br>", $message);
+
+    $sql = "UPDATE `request_form` SET `request_status` = '$status', `reason` = '$message' WHERE `id` = '$status_id'";
+    $res = $conn->query($sql);
+
+    if (!$res) {
+        echo "Failed to update request status";
+    } else {
+        disapproved_request($contact, $message);
+        echo "success";
+    }
+}
+
+
+if (isset($_POST['verify_btn'])) {
+    $user_id = $conn->escape_string($_POST['user_id']);
+    $otp = $conn->escape_string($_POST['otp']);
+
+    if ($otp != $_SESSION['otp']) {
+        echo "Please enter a valid OTP";
+    } else {
+        if ($conn->query("UPDATE `user` SET `active` = 1 WHERE `user_id` = '$user_id'")) {
+            // unset($_SESSION['otp']);
+            echo "verified";
+        } else {
+            echo "Failed";
+        }
+    }
+}
+
+
+// reset OTP
+/*
+ user_id: $("#user_id").val(),
+                        reset_otp_btn: 1
+*/
+// $_SESSION['attemp'] = 0;
+
+if (isset($_POST['reset_otp_btn'])) {
+    $user_id = $conn->escape_string($_POST['user_id']);
+    $contact = $conn->escape_string($_POST['contact']);
+    // contact  
+
+    $_SESSION['attemp'] += 1;
+
+    if ($_SESSION['attemp'] > 1) {
+        echo "attempt";
+        $_SESSION['attemp'] = 0;
+    } else {
+        $new_otp = generateNumericOTP();
+        $_SESSION['otp'] = $new_otp;
+        echo "success";
+        if ($conn->query("UPDATE `user` SET `OTP_code` = $new_otp WHERE `user_id` = '$user_id'")) {
+            send_otp($contact, $_SESSION['otp']);
+        } else {
+            echo "Failed to generate new OTP";
+        }
+    }
+}
+
+
+// $_SESSION['reset_otp']
+/**
+ *  reset_otp: reset_otp,
+                    reset_pass_btn: 1,
+ */
+
+if (isset($_POST['reset_otp'])) {
+    $otp = $conn->escape_string($_POST['reset_otp']);
+
+    if ($otp == $_SESSION['reset_otp']) {
+        echo "verified";
+        unset($_SESSION['reset_otp']);
+    } else {
+        echo "Invalid Reset OTP";
     }
 }

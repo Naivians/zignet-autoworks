@@ -2,6 +2,20 @@
 include "includes/config.php";
 include "functions.php";
 
+// delete_archive_btn
+
+if(isset($_POST['delete_archive_btn'])){
+    $id = $conn->escape_string($_POST['id']);
+    $res = delete_archive_request($id);
+
+    if(!$res){
+        echo "Failed to delete request form";
+    }else{
+        echo "success";
+    }
+}
+
+
 if (isset($_POST['action'])) {
     
     $id = $conn->escape_string($_POST['id']);
