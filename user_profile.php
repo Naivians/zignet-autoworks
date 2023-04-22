@@ -25,7 +25,13 @@ $res = validateCredential("user", $_SESSION['username']);
 <body>
     <main class="main">
         <div class="header">
-            <h2 class="text-center mt-2">User Profile</h2>
+            <h2 class="text-center mt-2" id="title">User Profile</h2>
+            <div class="user_nav_container">
+                <div class="user_nav">
+                    <h4 class="text-center text-light" id="sm_title"><?= $_SESSION['display_name'] ?></h4>
+                    <i class='bx bx-menu fs-1 me-2 text-light ' id="btn" onclick="toggle()"></i>
+                </div>
+            </div>
         </div>
 
         <div class="wrapper mt-3">
@@ -111,6 +117,11 @@ $res = validateCredential("user", $_SESSION['username']);
     ?>
 
     <script>
+        function toggle() {
+            var responsive_nav = document.querySelector(".sm-sidebar");
+            responsive_nav.classList.toggle("move");
+        }
+
         function showPass(id) {
             var x = document.getElementById(id);
             if (x.type === "password") {

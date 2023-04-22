@@ -46,36 +46,18 @@ include "functions.php";
         </div>
 
         <div class="header">
-            <h2 class="text-center mt-2">Submitted Form</h2>
+            <h2 class="text-center mt-2" id="title">Request Form</h2>
+            <div class="user_nav_container">
+                <div class="user_nav">
+                    <h4 class="text-center text-light" id="sm_title"><?= $_SESSION['display_name'] ?></h4>
+                    <i class='bx bx-menu fs-1 me-2 text-light ' id="btn" onclick="toggle()"></i>
+                </div>
+            </div>
         </div>
-        <?php
-        if (isset($msg)) : ?>
-            <div class="alert alert-warning alert-dismissible fade show wrapper" role="alert">
-                <strong>Warning!</strong> <?= $msg ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-            </div>
-            </div>
-        <?php endif;
-
-
-        if (isset($_SESSION['success'])) : ?>
-            <div class="alert alert-success alert-dismissible fade show wrapper" role="alert">
-                <strong>Warning!</strong> <?= $_SESSION['success'] ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-            </div>
-            </div>
-        <?php endif;
-
-        unset($_SESSION['success']);
-        unset($_SESSION['msg']);
-        ?>
-
 
         <div class=" mt-3">
             <div class="form">
-                <table class="table stripped">
+                <table class="table table-stripped" id="table">
                     <thead>
                         <tr>
                             <th>Request ID</th>
@@ -104,14 +86,14 @@ include "functions.php";
                                         <td><span class="badge text-warning"><?= $row['request_status'] ?></span></td>
                                     <?php
                                     }
-                                    
+
                                     if ($row['request_status'] == "disapproved") {
                                     ?>
                                         <td><span class="badge text-danger"><?= $row['request_status'] ?></span></td>
                                     <?php
-                                    } 
-                                    
-                                    if($row['request_status'] == "approved") {
+                                    }
+
+                                    if ($row['request_status'] == "approved") {
                                     ?>
                                         <td><span class="badge text-success"><?= $row['request_status'] ?></span></td>
                                     <?php
@@ -137,6 +119,11 @@ include "functions.php";
     ?>
 
     <script>
+        function toggle() {
+            var responsive_nav = document.querySelector(".sm-sidebar");
+            responsive_nav.classList.toggle("move");
+        }
+
         function view_description(id) {
             $("#view_request_modal").modal("show");
             $.ajax({

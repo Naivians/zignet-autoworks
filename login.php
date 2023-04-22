@@ -40,6 +40,24 @@ if (isset($_SESSION['admin_role'])) {
         .home_btn:hover {
             background-color: #dc3521;
         }
+
+        @media only screen and (min-width: 320px){
+            .swiper{
+                display: none;
+            }
+
+            .hero-title h1{
+                text-align: center;
+                /* font-size: 2rem !important; */
+            }
+            .hero-left{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+            }
+            
+        }
     </style>
 
 </head>

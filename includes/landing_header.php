@@ -52,7 +52,7 @@
         </div>
 
         <div class="nav-btn">
-            <i class='bx bx-menu fs-3 me-2 text-light' id="btn" onclick="toggle()"></i>
+            <i class='bx bx-menu fs-3 me-2 text-light ' id="btn" onclick="toggle()"></i>
         </div>
 
         <div class="nav-res-item" id="nav-res-container">

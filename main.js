@@ -8,8 +8,14 @@ $("#navs").niceScroll({
 });
 
 function toggle() {
-  var responsive_nav = document.getElementById("nav-res-container");  
+  var responsive_nav = document.getElementById("nav-res-container");
   responsive_nav.classList.toggle("move");
 }
 
+// document.addEventListener("click", function handleClickOutsideBox(event) {
+//   const box = document.getElementById("btn");
 
+//   if (!box.contains(event.target)) {
+//     box.style.display = "none";
+//   }
+// });

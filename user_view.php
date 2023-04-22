@@ -36,14 +36,14 @@ if (isset($_POST['submit'])) {
                 $_SESSION['msg'] = "Failed to send request!";
             } else {
                 $_SESSION['success'] = "request has been sent";
-                header("location:request_form");
+                header("location:requested_form.php");
                 exit;
             }
         }
 
         $sessions = array('success', 'msg');
 
-        foreach($sessions as $session){
+        foreach ($sessions as $session) {
             unset($session);
         }
     }
@@ -61,9 +61,17 @@ if (isset($_POST['submit'])) {
 
 <body>
     <main class="main">
+        
         <div class="header">
-            <h2 class="text-center mt-2">Request Form</h2>
+            <h2 class="text-center mt-2" id="title">Request Form</h2>
+            <div class="user_nav_container">
+                <div class="user_nav">
+                    <h4 class="text-center text-light" id="sm_title"><?=$_SESSION['display_name']?></h4>
+                    <i class='bx bx-menu fs-1 me-2 text-light ' id="btn" onclick="toggle()"></i>
+                </div>
+            </div>
         </div>
+
         <?php
         if (isset($_SESSION['msg'])) : ?>
             <div class="alert alert-warning alert-dismissible fade show wrapper" role="alert">
@@ -133,10 +141,7 @@ if (isset($_POST['submit'])) {
                         <div class="col-md-12 col-sm-12 mt-3">
                             <div class="mb-3">
                                 <label for="" class="form-label text-secondary">Description of Service(s) (maximum of 100 Character)</label>
-                                <textarea name="service_description" id="service_description" type="text" cols="30" rows="10" class="form-control" placeholder="Add a description for each service 
-                                ex: Glass Tinting:
-                                - Front Windows
-                                - Door Window" require></textarea>
+                                <textarea name="service_description" id="service_description" type="text" cols="30" rows="10" class="form-control" placeholder="Add a description for each service" require></textarea>
                             </div>
                         </div>
 
@@ -154,6 +159,13 @@ if (isset($_POST['submit'])) {
     include "includes/script.php";
     ?>
 
+    <script>
+        function toggle() {
+            // alert("awdwad")
+            var responsive_nav = document.querySelector(".sm-sidebar");
+            responsive_nav.classList.toggle("move");
+        }
+    </script>
 </body>
 
-</html> 
+</html>

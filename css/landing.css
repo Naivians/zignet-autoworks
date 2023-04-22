@@ -12,23 +12,22 @@
   font-family: "Poppins", sans-serif;
 }
 
-
 /* SERVICES */
-.big{
+.big {
   transform: scale(1.2);
 }
-.top{
+.top {
   z-index: 1;
 }
 
-.service_main_container{
+.service_main_container {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-evenly;
 }
 
-.service-container{
+.service-container {
   border-radius: 10px;
   width: 350px;
   height: auto;
@@ -36,26 +35,23 @@
   margin: 10px 20px;
 }
 
-.service-container img{
+.service-container img {
   width: 100%;
-  transition: .3s ease;
+  transition: 0.3s ease;
   border-top-right-radius: 10px;
   border-top-left-radius: 10px;
 }
 
-.service-container img:hover{
+.service-container img:hover {
   transform: scale(1.5);
   border-bottom-right-radius: 10px;
   border-bottom-left-radius: 10px;
 }
 
-.service-content{
+.service-content {
   /* border: 1px solid #000; */
   padding: 20px;
 }
-
-
-
 
 .wrapper {
   width: 90%;
@@ -311,7 +307,7 @@
   background-color: var(--darkBlue-);
   width: 200px;
   right: -200px;
-  transition: .3s ease-in-out;
+  transition: 0.3s ease-in-out;
   height: calc(100vh - 70px);
 }
 
@@ -340,21 +336,48 @@
   text-decoration: none;
   color: var(--primary-);
 }
-.move{
+
+.move {
   right: 0;
 }
 
-
-.name{
+.name {
   background-color: rgba(255, 255, 255, 0.2);
   padding: 10px;
 }
 
 /* MOBILE */
-@media only screen and (min-width: 320px) {
+@media only screen and (max-width: 500px) {
   .content h1 {
     font-size: 3.5rem;
   }
+
+  /* Services */
+  .big {
+    transform: scale(1);
+  }
+
+  .service-container {
+    width: 100%;
+    margin: 10px 0;
+  }
+
+  
+
+  #services_header {
+    margin: 30px 0 !important;
+  }
+
+  /* contacts */
+  #contact_header {
+    margin: 30px 0 !important;
+  }
+
+  .map {
+    height: auto;
+  }
+
+  /* sign up */
 }
 /* IPOD*/
 @media only screen and (min-width: 600px) {
@@ -369,6 +392,16 @@
   }
 }
 
+@media only screen and (max-width: 1300px) {
+  .big {
+    transform: scale(1);
+  }
+
+  .service-container img:hover {
+    transform: scale(1.1);
+  }
+}
+
 @media only screen and (max-width: 900px) {
   #nav,
   .fix-nav,
@@ -376,8 +409,13 @@
     display: none;
   }
 
-  .nav-responsive{
+  .nav-responsive {
     display: block;
+  }
+
+   .service-container {
+    width: 90%;
+    margin: 10px 0;
   }
 
 }

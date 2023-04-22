@@ -11,8 +11,7 @@
     <?php include "includes/landing_header.php"; ?>
     <main>
         <div class="wrapper">
-            <h1 class="text-center mt-5 dark-blue about mb-5">HOME SERVICES OFFERED</h1>
-
+            <h1 class="text-center mt-5 dark-blue about mb-5" id="services_header">HOME SERVICES OFFERED</h1>
             <div class="service_main_container">
 
                 <div class="service-container">
@@ -64,7 +63,7 @@
     <!-- Swiper -->
     <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
     <?php include "includes/script.php" ?>
-
+    <script src="main.js"></script>
 </body>
 
 </html>
