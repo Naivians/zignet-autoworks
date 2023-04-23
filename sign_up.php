@@ -28,14 +28,33 @@
         }
 
 
-        @media only screen and (min-width: 320px) {
+        @media only screen and (max-width: 850px) {
             .swiper {
                 display: none;
             }
 
             .hero-title h1 {
                 text-align: center;
-                /* font-size: 2rem !important; */
+            }
+
+
+            .hero-left {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+            }
+            
+        }
+
+
+        /* @media only screen and (min-width: 320px) {
+            .swiper {
+                display: none;
+            }
+
+            .hero-title h1 {
+                text-align: center;
             }
 
             .hero-left {
@@ -45,7 +64,7 @@
                 flex-direction: column;
             }
 
-        }
+        } */
     </style>
 
 </head>
@@ -137,6 +156,15 @@
     <script src="includes/app.js"></script>
 
     <script>
+        $("body").niceScroll({
+            cursorwidth: "8px",
+            autohidemode: true,
+            zindex: 999,
+            cursorcolor: "#FF70DF",
+            cursorborder: "none",
+            horizrailenabled: false,
+        });
+
         function showPass() {
             var x = document.getElementById('password');
             if (x.type === "password") {

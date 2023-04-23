@@ -84,6 +84,15 @@ if (!isset($_SESSION['admin_role'])) {
 
 
     <script>
+        $("#adminTable").niceScroll({
+            cursorwidth: "8px",
+            autohidemode: true,
+            zindex: 999,
+            cursorcolor: "#FF70DF",
+            cursorborder: "none",
+            horizrailenabled: false,
+        });
+
         $(document).ready(() => {
             displayAccounts();
 
@@ -94,7 +103,7 @@ if (!isset($_SESSION['admin_role'])) {
 
                     var data = {
                         search: search,
-                        search_archive_request:1
+                        search_archive_request: 1
                     }
 
                     $.ajax({
@@ -143,7 +152,7 @@ if (!isset($_SESSION['admin_role'])) {
         function askDelete(id) {
             var data = {
                 id: id,
-                delete_archive_btn:1
+                delete_archive_btn: 1
             };
 
 
@@ -180,8 +189,8 @@ if (!isset($_SESSION['admin_role'])) {
                                     showConfirmButton: false,
                                     timer: 1000
                                 })
-                                
-                               displayAccounts();
+
+                                displayAccounts();
                             }
                         }
                     });

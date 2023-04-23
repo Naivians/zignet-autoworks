@@ -61,12 +61,12 @@ if (isset($_POST['submit'])) {
 
 <body>
     <main class="main">
-        
+
         <div class="header">
             <h2 class="text-center mt-2" id="title">Request Form</h2>
             <div class="user_nav_container">
                 <div class="user_nav">
-                    <h4 class="text-center text-light" id="sm_title"><?=$_SESSION['display_name']?></h4>
+                    <h4 class="text-center text-light" id="sm_title"><?= $_SESSION['display_name'] ?></h4>
                     <i class='bx bx-menu fs-1 me-2 text-light ' id="btn" onclick="toggle()"></i>
                 </div>
             </div>
@@ -160,6 +160,15 @@ if (isset($_POST['submit'])) {
     ?>
 
     <script>
+        $("body").niceScroll({
+            cursorwidth: "8px",
+            autohidemode: true,
+            zindex: 999,
+            cursorcolor: "#FF70DF",
+            cursorborder: "none",
+            horizrailenabled: false,
+        });
+
         function toggle() {
             // alert("awdwad")
             var responsive_nav = document.querySelector(".sm-sidebar");

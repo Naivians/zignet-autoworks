@@ -27,32 +27,42 @@
         </div>
 
         <section class="sponsor">
-                <div class="wrapper">
-                    <h2 class="text-center dark-blue mb-5">Sponsored by:</h2>
-                    <div class="sponsor-content">
-                        <div class="row d-flex align-items-center justify-content-between">
-                            <div class="col-md-3">
-                                <img src="img/Lexus-Logo.png" alt="">
-                            </div>
-                            <div class="col-md-3">
-                                <img src="img/bwm.png" alt="">
-                            </div>
-                            <div class="col-md-3">
-                                <img src="img/3m.png" alt="">
-                            </div>
-                            <div class="col-md-3">
-                                <img src="img/V-KOOL-Logo-bk.png" alt="">
-                            </div>
+            <div class="wrapper">
+                <h2 class="text-center dark-blue mb-5">Sponsored by:</h2>
+                <div class="sponsor-content">
+                    <div class="row d-flex align-items-center justify-content-between">
+                        <div class="col-md-3">
+                            <img src="img/Lexus-Logo.png" alt="">
+                        </div>
+                        <div class="col-md-3">
+                            <img src="img/bwm.png" alt="">
+                        </div>
+                        <div class="col-md-3">
+                            <img src="img/3m.png" alt="">
+                        </div>
+                        <div class="col-md-3">
+                            <img src="img/V-KOOL-Logo-bk.png" alt="">
                         </div>
                     </div>
                 </div>
-            </section>
+            </div>
+        </section>
     </main>
     <!-- Swiper -->
     <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
     <?php include "includes/script.php" ?>
     <script src="main.js"></script>
 
+    <script>
+        $("body").niceScroll({
+            cursorwidth: "8px",
+            autohidemode: true,
+            zindex: 999,
+            cursorcolor: "#FF70DF",
+            cursorborder: "none",
+            horizrailenabled: false,
+        });
+    </script>
 </body>
 
 </html>

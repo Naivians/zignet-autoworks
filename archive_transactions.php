@@ -65,6 +65,15 @@ if (!isset($_SESSION['admin_role'])) {
 
 
     <script>
+        $("#adminTable").niceScroll({
+            cursorwidth: "8px",
+            autohidemode: true,
+            zindex: 999,
+            cursorcolor: "#FF70DF",
+            cursorborder: "none",
+            horizrailenabled: false,
+        });
+
         $(document).ready(() => {
             displayAccounts();
 

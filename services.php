@@ -31,7 +31,7 @@
                 </div>
 
                 <div class="service-container">
-                    <img src="img/SECURITY FILM.jpg"  alt="...">
+                    <img src="img/SECURITY FILM.jpg" alt="...">
                     <div class="service-content">
                         <h2 class="tetx-dark">SECURITY FILM</h2>
                         <p>Car and Home/Business installation of non-fading film that protects interior from heat and visibility.</p>
@@ -64,6 +64,17 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
     <?php include "includes/script.php" ?>
     <script src="main.js"></script>
+
+    <script>
+        $("body").niceScroll({
+            cursorwidth: "8px",
+            autohidemode: true,
+            zindex: 999,
+            cursorcolor: "#FF70DF",
+            cursorborder: "none",
+            horizrailenabled: false,
+        });
+    </script>
 </body>
 
 </html>

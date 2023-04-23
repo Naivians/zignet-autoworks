@@ -39,6 +39,16 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
     <?php include "includes/script.php" ?>
     <script src="main.js"></script>
+    <script>
+        $("body").niceScroll({
+            cursorwidth: "8px",
+            autohidemode: true,
+            zindex: 999,
+            cursorcolor: "#FF70DF",
+            cursorborder: "none",
+            horizrailenabled: false,
+        });
+    </script>
 </body>
 
 </html>

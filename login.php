@@ -41,22 +41,24 @@ if (isset($_SESSION['admin_role'])) {
             background-color: #dc3521;
         }
 
-        @media only screen and (min-width: 320px){
-            .swiper{
+
+        @media only screen and (max-width: 850px) {
+            .swiper {
                 display: none;
             }
 
-            .hero-title h1{
+            .hero-title h1 {
                 text-align: center;
-                /* font-size: 2rem !important; */
             }
-            .hero-left{
+
+            
+            .hero-left {
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 flex-direction: column;
-            }
-            
+            } 
+
         }
     </style>
 
@@ -88,12 +90,12 @@ if (isset($_SESSION['admin_role'])) {
         <?php
         if (isset($_SESSION['msg'])) {
             $msg = $_SESSION['msg'];
-            ?>
+        ?>
             <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <strong>Yeheyyyyyy!</strong><?=$msg?>
+                <strong>Yeheyyyyyy!</strong><?= $msg ?>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-            <?php
+        <?php
             unset($_SESSION['msg']);
         }
         ?>

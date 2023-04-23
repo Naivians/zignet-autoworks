@@ -151,6 +151,15 @@ if (!isset($_SESSION['admin_role'])) {
 
 
     <script>
+        $("#adminTable").niceScroll({
+            cursorwidth: "8px",
+            autohidemode: true,
+            zindex: 999,
+            cursorcolor: "#FF70DF",
+            cursorborder: "none",
+            horizrailenabled: false,
+        });
+
         $(document).ready(() => {
             displayAccounts();
 
@@ -189,7 +198,7 @@ if (!isset($_SESSION['admin_role'])) {
             var description = $("#description").val();
             var schedule = $("#schedule").val();
 
-           
+
             if (address == "" || description == "" || schedule == "") {
                 Swal.fire({
                     icon: 'error',
@@ -388,7 +397,7 @@ if (!isset($_SESSION['admin_role'])) {
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
                 cancelButtonColor: "#d33",
-                confirmButtonText: "Yes, delete it!",
+                confirmButtonText: "Yes",
             }).then((result) => {
 
 
