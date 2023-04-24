@@ -41,10 +41,16 @@ $res = validateCredential("user", $_SESSION['username']);
                 <div class="form">
                     <form>
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="" class="form-label text-secondary">User ID</label>
                                     <input type="text" name="user_id" id="user_id" class="form-control" value="<?= $row['user_id'] ?>" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="" class="form-label text-secondary">Date Created</label>
+                                    <input type="text" name="update_date_added" id="update_date_added" class="form-control" value="<?= $row['date_added'] ?>" disabled>
                                 </div>
                             </div>
                         </div>
@@ -66,21 +72,24 @@ $res = validateCredential("user", $_SESSION['username']);
                         </div>
 
                         <div class="row">
+
+
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="" class="form-label text-secondary">Password</label>
-                                    <input type="password" name="update_password" id="update_password" class="form-control mb-2" value="<?= $row['password'] ?>">
-                                    <input type="checkbox" name="" onclick="showPass('update_password')">
+                                    <label for="" class="form-label text-secondary">Password (encrypted)</label>
+                                    <input type="password" name="update_password" id="update_password" disabled class="form-control mb-2" value="<?= $row['password'] ?>">
                                     <span class="">show password</span>
+                                    <input type="checkbox" name="" onclick="showPass('update_password')">
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="" class="form-label text-secondary">Date Created</label>
-                                    <input type="text" name="update_date_added" id="update_date_added" class="form-control" value="<?= $row['date_added'] ?>" disabled>
+                                    <label for="" class="form-label text-secondary">Change Password</label>
+                                    <input type="password" name="change_password" id="change_password" class="form-control mb-2" required>
                                 </div>
                             </div>
+
                         </div>
 
                         <div class="row">
@@ -124,21 +133,26 @@ $res = validateCredential("user", $_SESSION['username']);
 
         function showPass(id) {
             var x = document.getElementById(id);
+            var change_pass = document.getElementById("change_password");
+            // change_password
             if (x.type === "password") {
                 x.type = "text";
+                change_pass.type = "text";
             } else {
                 x.type = "password";
+                change_pass.type = "password";
+
             }
         }
 
         function update_user() {
             var user_id = $("#user_id").val();
             var update_display_name = $("#update_display_name").val();
-            var update_password = $("#update_password").val();
+            var update_password = $("#change_password").val();
             var update_contact = $("#update_contact").val();
             var update_contact = $("#update_username").val();
 
-            var inputs = [$("#update_display_name"), $("#update_password"), $("#update_contact"), $("#update_username")];
+            var inputs = [$("#update_display_name"), $("#change_password"), $("#update_contact"), $("#update_username")];
 
             // check for empty fields
             for (let i = 0; i < inputs.length; i++) {
@@ -151,7 +165,7 @@ $res = validateCredential("user", $_SESSION['username']);
             if (update_display_name == "") {
                 $("#update_display_name").css("border", "1px solid red");
             } else if (update_password == "") {
-                $("#update_password").css("border", "1px solid red");
+                $("#change_password").css("border", "1px solid red");
             } else if (update_contact == "") {
                 $("#update_contact").css("border", "1px solid red");
             } else if (update_username == "") {
@@ -162,7 +176,7 @@ $res = validateCredential("user", $_SESSION['username']);
                     user_id: $("#user_id").val(),
                     update_display_name: $("#update_display_name").val(),
                     update_username: $("#update_username").val(),
-                    update_password: $("#update_password").val(),
+                    update_password: $("#change_password").val(),
                     update_contact: $("#update_contact").val(),
                     update_user_btn: 1,
                 }
@@ -194,8 +208,6 @@ $res = validateCredential("user", $_SESSION['username']);
                     }
                 });
             }
-
-
         }
     </script>
 </body>
