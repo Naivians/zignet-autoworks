@@ -179,7 +179,7 @@ if(!isset($_SESSION['user_id'])){
 
         submitButton.addEventListener('click', function() {
             var user_id = $("#user_id").val()
-
+            submitButton.disabled = true;
             $.ajax({
                 url: "updateData.php",
                 method: "POST",

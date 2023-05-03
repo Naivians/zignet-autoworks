@@ -67,7 +67,7 @@ function getData($table)
 function getById($table, $id)
 {
     global $conn;
-    $sql = "SELECT * FROM `$table` WHERE `id` = '$id' ORDER BY date_added ASC ";
+    $sql = "SELECT * FROM `$table` WHERE `id` = '$id' ORDER BY dateAdded ASC ";
     return $conn->query($sql);
 }
 
