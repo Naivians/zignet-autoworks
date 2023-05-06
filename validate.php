@@ -106,14 +106,16 @@ if (isset($_POST['register_btn'])) {
                 $otp = generateNumericOTP();
                 $user_id = uniqid();
                 $password = md5($password);
-                $lastInsertId = insert_user($user_id, $display_name, $username, $password,  $contact, $otp);
-                $_SESSION['new_id'] = $lastInsertId;
-                $_SESSION['user_id'] = $user_id;
-                // save otp in a session and verify in otp page
+                
                 $_SESSION['otp'] = $otp;
                 $_SESSION['contact'] = $contact;
-
+                $_SESSION['password'] = $password;
+                $_SESSION['display_name'] = $display_name;
+                $_SESSION['user_id'] = $user_id;
+                $_SESSION['username'] = $username;
+                
                 send_otp($contact, $_SESSION['otp']);
+
                 echo "Registered";
             }
         }

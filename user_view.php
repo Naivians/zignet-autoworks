@@ -11,7 +11,7 @@ include "functions.php";
 $description = '';
 
 if (isset($_POST['submit'])) {
-
+    
     $service_description = $conn->escape_string($_POST['service_description']);
     $address = $conn->escape_string($_POST['address']);
     $schedule = $conn->escape_string($_POST['schedule']);
@@ -80,20 +80,9 @@ if (isset($_POST['submit'])) {
             </div>
             </div>
             </div>
+           <?php  unset($_SESSION['msg']); ?>
         <?php endif;
 
-
-        if (isset($_SESSION['success'])) : ?>
-            <div class="alert alert-success alert-dismissible fade show wrapper" role="alert">
-                <strong>Warning!</strong> <?= $_SESSION['success'] ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-            </div>
-            </div>
-        <?php endif;
-
-        unset($_SESSION['success']);
-        unset($_SESSION['msg']);
         ?>
         <div class="wrapper mt-3">
             <div class="form">
@@ -131,7 +120,7 @@ if (isset($_POST['submit'])) {
                                 <label for="" class="form-label text-secondary">Address</label>
                                 <textarea name="address" id="" cols="30" rows="2" class="form-control"></textarea>
                             </div>
-                            
+
                             <div class="mb-3">
                                 <label for="" class="form-label text-secondary">Schedule</label>
                                 <input type="date" name="schedule" id="sched" class="form-control" require>
@@ -140,8 +129,9 @@ if (isset($_POST['submit'])) {
 
                         <div class="col-md-12 col-sm-12 mt-3">
                             <div class="mb-3">
-                                <label for="" class="form-label text-secondary">Description of Service(s) (maximum of 100 Character)</label>
-                                <textarea name="service_description" id="service_description" type="text" cols="30" rows="10" class="form-control" placeholder="Add a description for each service" require></textarea>
+                                <label for="" class="form-label text-secondary">Description of Service(s) (maximum of 200 Characters)</label>
+                                <textarea name="service_description" id="service_description" type="text" cols="30" rows="10" class="form-control" placeholder="Add a description for each service" onkeyup="check_char(this)"></textarea>
+                                <span class="text-secondary" id="count">0 </span><span class="text-secondary"> of 200 characters</span>
                             </div>
                         </div>
 
@@ -158,21 +148,26 @@ if (isset($_POST['submit'])) {
     include "includes/user_sidebar.php";
     include "includes/script.php";
     ?>
-
+    
     <script>
-        $("body").niceScroll({
-            cursorwidth: "8px",
-            autohidemode: true,
-            zindex: 999,
-            cursorcolor: "#FF70DF",
-            cursorborder: "none",
-            horizrailenabled: false,
-        });
-
+        
         function toggle() {
             // alert("awdwad")
             var responsive_nav = document.querySelector(".sm-sidebar");
             responsive_nav.classList.toggle("move");
+        }
+
+        function check_char(textarea) {
+            var len = textarea.value.length;
+            var char_counter = document.getElementById("count");
+            var max = 200;
+
+            if (len > max) {
+                textarea.value = textarea.value.substring(0, 200);
+            } else {
+                char_counter.innerHTML = len;
+            }
+
         }
     </script>
 </body>

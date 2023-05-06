@@ -77,61 +77,7 @@ if (!isset($_SESSION['admin_role'])) {
         </div>
     </div>
 
-    <!-- Add new admin Modal -->
-    <div class="modal fade" id="adminModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog ">
-            <div class="modal-content modal-color modal-client">
-                <div class="car">
-                    <img src="img/car3.png" alt="cars">
-                </div>
-
-                <div class="shape">
-                    <img src="img/Rectangle.png" alt="rectangle shape">
-                </div>
-                <h5 class="text-center text-light mt-2">Add New Admin</h5>
-                <form method="post">
-                    <div class="modal-body ">
-                        <!-- form here -->
-                        <div class="mb-3">
-                            <label for="" class="form-label gray small-font">Admin Name</label>
-                            <input type="text" name="adminName" id="adminName" placeholder="John" class="form-control text-dark" autocomplete="off">
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="" class="form-label gray small-font">Username</label>
-                            <input type="text" name="username" id="username" placeholder="JohnDoe@00" class="form-control text-dark" autocomplete="off">
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="" class="form-label text-secondary small-font">Password</label>
-                            <input type="password" name="password" id="password" placeholder="***********" class="form-control text-dark" autocomplete="off">
-                            <div class="d-flex align-items-center">
-                                <span class="mt-1 text-secondary small-font me-2">Show Password</span>
-                                <input type="checkbox" onclick="showPass('password')">
-                            </div>
-                        </div>
-
-
-                        <div class="mb-3">
-                            <label for="" class="form-label text-secondary small-font">Role</label>
-                            <select class="form-select" aria-label="Default select example" id="role">
-                                <option selected disabled value="">Select Role</option>
-                                <option value="super admin">Super Admin</option>
-                                <option value="admin">Admin</option>
-                            </select>
-                        </div>
-
-                        <div class="mt-4 mb-2">
-
-                            <button type="button" class="btns fullwidth mb-2 small-font" onclick="submitData()">Save</button>
-
-                            <button type="button" class="btns fullwidth dark small-font" data-bs-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+  
 
     <!-- Edit Modal -->
     <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -157,11 +103,7 @@ if (!isset($_SESSION['admin_role'])) {
 
                         <div class="mb-3">
                             <label for="" class="form-label text-light small-font">Role</label>
-                            <select class="form-select" aria-label="Default select example" id="editRole">
-                                <option selected disabled value="">Select Role</option>
-                                <option value="super admin">Super Admin</option>
-                                <option value="admin">Admin</option>
-                            </select>
+                            <input type="text" name="" id="editRole" class="form-control text-dark">
                         </div>
 
                         <div class="mb-3">
@@ -186,7 +128,6 @@ if (!isset($_SESSION['admin_role'])) {
                     </div>
                 </form>
 
-
             </div>
         </div>
     </div>
@@ -198,7 +139,6 @@ if (!isset($_SESSION['admin_role'])) {
 
         <div class="adminTable d-flex justify-content-between align-items-center mt-4">
             <h5>Admin Account</h5>
-            <button data-bs-toggle="modal" data-bs-target="#adminModal" class="btns">Add new admin</button>
         </div>
 
         <!-- live search -->
@@ -238,15 +178,7 @@ if (!isset($_SESSION['admin_role'])) {
 
 
     <script>
-        $("#adminTable").niceScroll({
-            cursorwidth: "8px",
-            autohidemode: true,
-            zindex: 999,
-            cursorcolor: "#FF70DF",
-            cursorborder: "none",
-            horizrailenabled: false,
-        });
-
+    
         $(document).ready(() => {
             displayAccounts();
 
@@ -519,61 +451,7 @@ if (!isset($_SESSION['admin_role'])) {
                 x.type = "password";
             }
         }
-
-        function submitData() {
-            // e.preventDefault();
-            var name = $("#adminName").val();
-            var pass = $("#password").val();
-            var role = $("#role").val();
-            var username = $("#username").val();
-
-            var data = {
-                adminName: $("#adminName").val(),
-                password: $("#password").val(),
-                role: $("#role").val(),
-                username: $("#username").val(),
-                action: 1
-            }
-
-            // client side validations
-            if (name == "" || pass == "" || role == null) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'all fields are mandatory',
-                });
-            } else {
-                // process data
-                $.ajax({
-                    url: "insertData.php",
-                    method: "post",
-                    data: data,
-                    success: (res) => {
-
-                        var response = JSON.parse(res);
-                        if (response.status == 200) {
-                            Swal.fire({
-                                position: 'top-center',
-                                icon: 'success',
-                                title: response.message,
-                                showConfirmButton: false,
-                                timer: 1500
-                            });
-                            reset();
-                            $("#adminModal").modal("hide");
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Oops...',
-                                text: response.message,
-                            });
-                        }
-
-                        displayAccounts();
-                    }
-                });
-            }
-        }
+        
     </script>
 
 

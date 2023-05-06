@@ -67,7 +67,7 @@ function getData($table)
 function getById($table, $id)
 {
     global $conn;
-    $sql = "SELECT * FROM `$table` WHERE `id` = '$id' ORDER BY dateAdded ASC ";
+    $sql = "SELECT * FROM `$table` WHERE `id` = '$id' ";
     return $conn->query($sql);
 }
 
@@ -205,13 +205,13 @@ function insert_user($user_id, $display_name, $username, $password,  $contact, $
     global $conn, $today;
 
     $role = "user";
+    $active = 1;
 
-    $sql = "INSERT INTO `user` (`user_id`, `display_name`, `role`, `username`, `password`, `contact`, `date_added`, `OTP_code`) VALUES(?,?,?,?,?, ?, ?, ?)";
+    $sql = "INSERT INTO `user` (`user_id`, `display_name`, `role`, `username`, `password`, `contact`, `date_added`, `active`, `OTP_code`) VALUES(?,?,?,?,?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sssssssi", $user_id, $display_name, $role, $username, $password, $contact, $today, $OTP_code);
+    $stmt->bind_param("sssssssii", $user_id, $display_name, $role, $username, $password, $contact, $today, $active, $OTP_code);
     // return true of false
-    $stmt->execute();
-    return $stmt->insert_id;
+    return $stmt->execute();
 }
 
 function addAdmin($adminName, $username, $password, $role)
@@ -221,7 +221,6 @@ function addAdmin($adminName, $username, $password, $role)
     $sql = "INSERT INTO `admins` (`adminName`, `role`, `username`, `password`, `dateAdded`) VALUES(?,?,?,?,?)";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("sssss", $adminName, $role, $username, $password, $today);
-
     // return true of false
     return $stmt->execute();
 }

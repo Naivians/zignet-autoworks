@@ -4,7 +4,10 @@
     <div class="wrapper fix-nav">
         <nav class="nav" id="nav">
             <div id="logo">
-                <img src="img/ZIGNET.png" alt="">
+                <a href="index.php">
+                    <img src="img/ZIGNET.png" alt="">
+                </a>
+
             </div>
             <ul>
                 <li>

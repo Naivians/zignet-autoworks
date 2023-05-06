@@ -5,7 +5,7 @@ include "functions.php";
 include "includes/sms.php";
 include "includes/date.php";
 
-$_SESSION['attempts'] = 0;
+// $_SESSION['attempts'] = 0;
 /*
 status_id: status_id,
 status: status,
@@ -284,22 +284,27 @@ if (isset($_POST['verify_btn'])) {
     if ($otp != $_SESSION['otp']) {
         echo "Please enter a valid OTP";
     } else {
-        if ($conn->query("UPDATE `user` SET `active` = 1 WHERE `user_id` = '$user_id'")) {
-            // unset($_SESSION['otp']);
+
+        $_SESSION['otp'];
+        $_SESSION['contact'];
+        $_SESSION['password'];
+        $_SESSION['display_name'];
+        $_SESSION['user_id'];
+        $_SESSION['username'];
+
+        $res = insert_user($_SESSION['user_id'], $_SESSION['display_name'], $_SESSION['username'], $_SESSION['password'],  $_SESSION['contact'],  $_SESSION['otp']);
+        $_SESSION['user_id'] = $user_id;
+
+        if ($res) {
+            unset($_SESSION['otp']);
             echo "verified";
         } else {
+            // unset($_SESSION['otp']);
             echo "Failed";
         }
     }
 }
 
-
-// reset OTP
-/*
- user_id: $("#user_id").val(),
-                        reset_otp_btn: 1
-*/
-// $_SESSION['attemp'] = 0;
 
 if (isset($_POST['reset_otp_btn'])) {
     $user_id = $conn->escape_string($_POST['user_id']);
@@ -308,27 +313,23 @@ if (isset($_POST['reset_otp_btn'])) {
 
     $_SESSION['attemp'] += 1;
 
-    if ($_SESSION['attemp'] > 1) {
+    if ($_SESSION['attemp'] > 3) {
         echo "attempt";
         $_SESSION['attemp'] = 0;
     } else {
         $new_otp = generateNumericOTP();
         $_SESSION['otp'] = $new_otp;
         echo "success";
-        if ($conn->query("UPDATE `user` SET `OTP_code` = $new_otp WHERE `user_id` = '$user_id'")) {
-            send_otp($contact, $_SESSION['otp']);
-        } else {
-            echo "Failed to generate new OTP";
-        }
+
+        send_otp($contact, $_SESSION['otp']);
+
+        // if ($conn->query("UPDATE `user` SET `OTP_code` = $new_otp WHERE `user_id` = '$user_id'")) {
+        //     send_otp($contact, $_SESSION['otp']);
+        // } else {
+        //     echo "Failed to generate new OTP";
+        // }
     }
 }
-
-
-// $_SESSION['reset_otp']
-/**
- *  reset_otp: reset_otp,
-                    reset_pass_btn: 1,
- */
 
 if (isset($_POST['reset_otp'])) {
     $otp = $conn->escape_string($_POST['reset_otp']);

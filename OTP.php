@@ -130,7 +130,7 @@ if(!isset($_SESSION['user_id'])){
 
                                 setInterval(() => {
                                     localStorage.removeItem("timer");
-                                    localStorage.setItem("timer", 5);
+                                    localStorage.setItem("timer", 60);
                                     window.location.reload()
                                 }, 1500);
 
@@ -175,8 +175,7 @@ if(!isset($_SESSION['user_id'])){
                 errorText.innerHTML = 'Please enter a valid OTP';
             }
         }
-
-
+        
         submitButton.addEventListener('click', function() {
             var user_id = $("#user_id").val()
             submitButton.disabled = true;
@@ -198,6 +197,7 @@ if(!isset($_SESSION['user_id'])){
             });
 
         });
+
     </script>
 </body>
 

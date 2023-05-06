@@ -44,7 +44,7 @@
                 justify-content: center;
                 flex-direction: column;
             }
-            
+
         }
 
 
@@ -107,7 +107,7 @@
                         </div>
 
                         <div class="">
-                            <input name="contact" id="contact" placeholder="Enter Contact" autocomplete="off" required type="number">
+                            <input name="contact" id="contact" placeholder="Enter Contact" autocomplete="off" required type="text" maxlength="11">
                         </div>
 
                         <!-- username -->
@@ -156,15 +156,6 @@
     <script src="includes/app.js"></script>
 
     <script>
-        $("body").niceScroll({
-            cursorwidth: "8px",
-            autohidemode: true,
-            zindex: 999,
-            cursorcolor: "#FF70DF",
-            cursorborder: "none",
-            horizrailenabled: false,
-        });
-
         function showPass() {
             var x = document.getElementById('password');
             if (x.type === "password") {
@@ -207,13 +198,18 @@
 
         function sign_up() {
 
-            var pattern = new RegExp("^1?([1-9])(\\d{11})");
-
             let username = $("#username").val();
             let password = $("#password").val();
             let display_name = $("#display_name").val();
             let contact = $("#contact").val();
             // contact
+
+
+            function isNumber(value) {
+                if (typeof value === "string") {
+                    return isNaN(value);
+                }
+            }
 
             let data = {
                 username: username,
@@ -238,10 +234,11 @@
             } else if (password.length < 6) {
                 alert("password must be atleast 8 characters long")
                 $("#password").val('');
-            } else if (pattern.test(contact)) {
+            } else if (isNumber(contact)) {
                 alert("Invalid Contact Number")
             } else {
 
+                
                 $.ajax({
                     url: "validate.php",
                     method: "POST",
@@ -249,13 +246,8 @@
 
                     success: (res) => {
                         if (res == "Registered") {
-                            // window.location.href = "supAdminDashboard.php";
-                            // Swal.fire(
-                            //     'Successfully Created Account!',
-                            //     'Please wait for the admin to activate your account',
-                            //     'success'
-                            // )
-                            window.location.reload();
+
+                            // window.location.reload();
                             window.location.href = "OTP.php";
                             localStorage.setItem("timer", 60);
                             // alert("success")
@@ -270,15 +262,7 @@
                     }
                 });
 
-                // if(contact.length != 11){
-                //     alert("Invalid Contact Number")
-                // }else{
-                //     alert("Pass all")
-                // }
-
-
             }
-
 
         }
 
