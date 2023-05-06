@@ -2,9 +2,12 @@
 
 session_start();
 
+if (!isset($_SESSION['admin_role'])) {
+    header("Location:login.php");
+}
+
 include "includes/config.php";
 include "functions.php";
-
 
 
 if (isset($_POST['search'])) {

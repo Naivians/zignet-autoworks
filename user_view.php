@@ -11,7 +11,7 @@ include "functions.php";
 $description = '';
 
 if (isset($_POST['submit'])) {
-    
+
     $service_description = $conn->escape_string($_POST['service_description']);
     $address = $conn->escape_string($_POST['address']);
     $schedule = $conn->escape_string($_POST['schedule']);
@@ -80,7 +80,7 @@ if (isset($_POST['submit'])) {
             </div>
             </div>
             </div>
-           <?php  unset($_SESSION['msg']); ?>
+            <?php unset($_SESSION['msg']); ?>
         <?php endif;
 
         ?>
@@ -123,7 +123,7 @@ if (isset($_POST['submit'])) {
 
                             <div class="mb-3">
                                 <label for="" class="form-label text-secondary">Schedule</label>
-                                <input type="date" name="schedule" id="sched" class="form-control" require>
+                                <input type="date" name="schedule" id="sched" min="2023-05-06" class="form-control" require>
                             </div>
                         </div>
 
@@ -148,9 +148,28 @@ if (isset($_POST['submit'])) {
     include "includes/user_sidebar.php";
     include "includes/script.php";
     ?>
-    
+
     <script>
-        
+        // disable past dates
+        function disable_dates() {
+            var date = new Date();
+            var day = date.getDate();
+            var month = date.getMonth();
+            var year = date.getFullYear();
+
+
+            if (month < 10) {
+                month = "0" + month;
+                day = "0" + day;
+            }
+
+            var min = year + "-" + month + "-" + day;
+
+            document.getElementById("sched").setAttribute("min", min);
+
+            // console.log(min)
+        }
+
         function toggle() {
             // alert("awdwad")
             var responsive_nav = document.querySelector(".sm-sidebar");
