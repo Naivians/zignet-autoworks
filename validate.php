@@ -103,20 +103,25 @@ if (isset($_POST['register_btn'])) {
             if (strlen($contact) != 11) {
                 echo "Invalid Contact Number";
             } else {
-                $otp = generateNumericOTP();
-                $user_id = uniqid();
-                $password = md5($password);
-                
-                $_SESSION['otp'] = $otp;
-                $_SESSION['contact'] = $contact;
-                $_SESSION['password'] = $password;
-                $_SESSION['display_name'] = $display_name;
-                $_SESSION['user_id'] = $user_id;
-                $_SESSION['username'] = $username;
-                
-                send_otp($contact, $_SESSION['otp']);
 
-                echo "Registered";
+                if (check_number($contact)->num_rows > 0) {
+                    echo "Contact number already Exist!";
+                } else {
+                    $otp = generateNumericOTP();
+                    $user_id = uniqid();
+                    $password = md5($password);
+
+                    $_SESSION['otp'] = $otp;
+                    $_SESSION['contact'] = $contact;
+                    $_SESSION['password'] = $password;
+                    $_SESSION['display_name'] = $display_name;
+                    $_SESSION['user_id'] = $user_id;
+                    $_SESSION['username'] = $username;
+
+                    send_otp($contact, $_SESSION['otp']);
+
+                    echo "Registered";
+                }
             }
         }
     }

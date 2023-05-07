@@ -516,3 +516,10 @@ function update_user($user_id, $update_display_name, $update_username, $update_p
     return $conn->query($sql);
 }
 
+// check if number exist
+
+function check_number($contact){
+    global $conn;
+    $sql = "SELECT `contact` FROM user WHERE `contact` = '$contact'";
+    return $conn->query($sql);
+}
