@@ -15,6 +15,18 @@ if (!isset($_SESSION['reset_password'])) {
     <title>Forgot Password OTP</title>
 
     <style>
+        /* Chrome, Safari, Edge, Opera */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Firefox */
+        input[type='number'] {
+            -moz-appearance: textfield;
+        }
+
         .container {
             max-width: 400px;
             margin: 0 auto;
@@ -63,7 +75,7 @@ if (!isset($_SESSION['reset_password'])) {
         <p id="timer" class="fs-1 text-danger mt-5"></p>
         <h2 id="title">Enter your reset password OTP</h2>
 
-        <input type="text" id="otp" maxlength="6" oninput="checkInput()" class="text-center" />
+        <input type="number" id="otp" class="text-center" />
         <p id="error"></p>
 
         <!--  $_SESSION['contact'] -->
@@ -80,6 +92,14 @@ if (!isset($_SESSION['reset_password'])) {
         const resend = document.getElementById('resend');
         const title = document.getElementById('title');
         var count = Number(localStorage.getItem("timer"));
+
+        otpInput.addEventListener('input', () => {
+            const value = otpInput.value.replace(/\D/g, ''); // Remove non-digit characters
+
+            if (value.length > 6) {
+                otpInput.value = value.slice(0, 6);
+            }
+        });
 
         let timerId = setInterval(function() {
             timer.innerHTML = count--;

@@ -4,10 +4,6 @@ session_start();
 
 if (!isset($_SESSION['admin_role'])) {
     header("Location:login.php");
-} else {
-    if ($_SESSION['admin_role'] != "super admin") {
-        header("Location:logout.php?access=1");
-    }
 }
 
 include "includes/config.php";

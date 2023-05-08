@@ -1,6 +1,6 @@
-<?php session_start(); 
+<?php session_start();
 
-if(!isset($_SESSION['user_id'])){
+if (!isset($_SESSION['user_id'])) {
     header("location:login.php");
 }
 
@@ -15,6 +15,18 @@ if(!isset($_SESSION['user_id'])){
     <title>OTP Page</title>
 
     <style>
+        /* Chrome, Safari, Edge, Opera */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Firefox */
+        input[type='number'] {
+            -moz-appearance: textfield;
+        }
+
         .container {
             max-width: 400px;
             margin: 0 auto;
@@ -63,7 +75,7 @@ if(!isset($_SESSION['user_id'])){
         <p id="timer" class="fs-1 text-danger mt-5"></p>
         <h2 id="title">Enter your OTP</h2>
 
-        <input type="text" id="otp" maxlength="6" oninput="checkInput()" class="text-center"/>
+        <input type="number" id="otp" maxlength="6" oninput="checkInput()" class="text-center" />
         <p id="error"></p>
         <input type="hidden" name="" id="user_id" value="<?php if (isset($_SESSION['user_id'])) {
                                                                 echo $_SESSION['user_id'];
@@ -88,6 +100,16 @@ if(!isset($_SESSION['user_id'])){
         const resend = document.getElementById('resend');
         const title = document.getElementById('title');
         var count = Number(localStorage.getItem("timer"));
+
+
+
+        otpInput.addEventListener('input', () => {
+            const value = otpInput.value.replace(/\D/g, ''); // Remove non-digit characters
+
+            if (value.length > 6) {
+                otpInput.value = value.slice(0, 6);
+            }
+        });
 
         let timerId = setInterval(function() {
             timer.innerHTML = count--;
@@ -175,7 +197,7 @@ if(!isset($_SESSION['user_id'])){
                 errorText.innerHTML = 'Please enter a valid OTP';
             }
         }
-        
+
         submitButton.addEventListener('click', function() {
             var user_id = $("#user_id").val()
             submitButton.disabled = true;
@@ -197,7 +219,6 @@ if(!isset($_SESSION['user_id'])){
             });
 
         });
-
     </script>
 </body>
 
